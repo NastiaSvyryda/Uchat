@@ -1,48 +1,89 @@
-APP_NAME = uchat
+CL_NAME = uchat
+SV_NAME = uchat_server
 
-LIBMXF = libmx
+CCFLG = clang -std=c11 $(addprefix -W, all extra error pedantic) -g
 
-LIB_NAME = libmx.a
+CL_SRC_DIR = client/src
+SV_SRC_DIR = server/src
 
-INC = \
-inc/ \
-libmx/inc/
+CL_INC_DIR = client/inc
+SV_INC_DIR = server/inc
 
-SRC_DIR = src
+LIBMX_DIR = libmx
+LIBMX = $(LIBMX_DIR)/libmx.a
 
-OBJ_DIR = obj
+CL_OBJ_DIR = client/obj
+SV_OBJ_DIR = server/obj
 
-SRC = $(addprefix $(SRC_DIR)/,\
-	main.c \
-)
+GTK_FLAGS = `pkg-config --cflags  --libs gtk+-3.0`
+GTK_SORT_FLAGS = `pkg-config --cflags gtk+-3.0`
 
-OBJ = main.o \
+CL_INC = $(CL_INC_DIR)/client.h
+SV_INC = $(SV_INC_DIR)/server.h
 
-	
-CC = clang
+CL_SRC = main.c \
 
-CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
+SV_SRC = main.c \
 
-all : install
+CL_SRCS = $(addprefix $(CL_SRC_DIR)/, $(CL_SRC))
+CL_OBJS = $(addprefix $(CL_OBJ_DIR)/, $(CL_SRC:%.c=%.o))
 
-install : libmx/libmx.a uchat
+SV_SRCS = $(addprefix $(SV_SRC_DIR)/, $(SV_SRC))
+SV_OBJS = $(addprefix $(SV_OBJ_DIR)/, $(SV_SRC:%.c=%.o))
 
-libmx/libmx.a:
-	@make -C $(LIBMXF)
+all: install
 
-uchat : $(SRC) inc/uchat.h libmx/libmx.a
-	@$(CC) $(CFLAGS) -c $(SRC) $(foreach d, $(INC), -I $d)
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBMXF)/$(LIB_NAME) -o $(APP_NAME) -ltermcap
-	@printf "\r\33[2Kuchat\t   \033[32;1mcreated\033[0m\n"
-	@mkdir -p $(OBJ_DIR)
-	@mv $(OBJ) $(OBJ_DIR)
+install: install_client install_server
 
-uninstall : clean
-	@make uninstall -C $(LIBMXF)
-	@rm -rf $(APP_NAME)
+install_client: $(LIBMX) $(CL_NAME)
 
-clean :
-	@make clean -C $(LIBMXF)
-	@rm -rf $(OBJ_DIR)
+$(CL_NAME): $(CL_OBJS)
+	@$(CCFLG) $(CL_OBJS) -L$(LIBMX_DIR) -lmx -o $@
+	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
 
-reinstall : uninstall install
+$(CL_OBJ_DIR)/%.o: $(CL_SRC_DIR)/%.c $(CL_INC)
+	@$(CCFLG) -c $(CL_SRCS) -I$(CL_INC_DIR)
+	@printf "\r\33[2K$(CL_NAME) \033[33;1mcompile \033[0m$(<:$(CL_SRC_DIR)/%.c=%)"
+	@mv $(CL_SRC:%.c=%.o) $(CL_OBJ_DIR)
+    
+$(CL_OBJS): | $(CL_OBJ_DIR)
+
+$(CL_OBJ_DIR):
+	@mkdir -p $@
+	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
+
+install_server: $(LIBMX) $(SV_NAME)
+
+$(SV_NAME): $(SV_OBJS)
+	@$(CCFLG) $(SV_OBJS) -L$(LIBMX_DIR) -lmx -o $@
+	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
+
+$(SV_OBJ_DIR)/%.o: $(SV_SRC_DIR)/%.c $(SV_INC)
+	@$(CCFLG) -c $(SV_SRCS) -I$(SV_INC_DIR)
+	@printf "\r\33[2K$(SV_NAME) \033[33;1mcompile \033[0m$(<:$(SV_SRC_DIR)/%.c=%) "
+	@mv $(SV_SRC:%.c=%.o) $(SV_OBJ_DIR)
+
+$(SV_OBJS): | $(SV_OBJ_DIR)
+
+$(SV_OBJ_DIR):
+	@mkdir -p $@
+	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
+
+$(LIBMX):
+	@make -sC $(LIBMX_DIR)
+
+clean:
+	@make -sC $(LIBMX_DIR) $@
+	@rm -rf $(CL_OBJ_DIR)
+	@rm -rf $(SV_OBJ_DIR)
+	@printf "$(CL_OBJ_DIR)\t   \033[31;1mdeleted\033[0m\n"
+	@printf "$(SV_OBJ_DIR)\t   \033[31;1mdeleted\033[0m\n"
+
+uninstall: clean
+	@make -sC $(LIBMX_DIR) $@
+	@rm -rf $(CL_NAME)
+	@rm -rf $(SV_NAME)
+	@printf "$(CL_NAME) \033[31;1muninstalled\033[0m\n"
+	@printf "$(SV_NAME) \033[31;1muninstalled\033[0m\n"
+
+reinstall: uninstall install
