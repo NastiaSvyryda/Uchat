@@ -8,54 +8,94 @@
 #include <unistd.h>
 #include <errno.h>
 #include <arpa/inet.h>
+#include "../../libmx/inc/libmx.h"
+#include <gtk/gtk.h>
 
-int main(int argc, char *argv[]) {
-    int sockfd = 0, n = 0;
+//int main(int argc, char *argv[]) {
+//    int sockfd = 0, n = 0;
+//    char recvBuff[1024];
+//    struct sockaddr_in serv_addr;
+//
+//    if(argc != 2) {
+//        printf("\n Usage: %s <ip of server> \n",argv[0]);
+//        return 1;
+//    }
+//
+//    memset(recvBuff, '0',sizeof(recvBuff));
+//    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+//    {
+//        printf("\n Error : Could not create socket \n");
+//        return 1;
+//    }
+//
+//    memset(&serv_addr, '0', sizeof(serv_addr));
+//
+//    serv_addr.sin_family = AF_INET;
+//    serv_addr.sin_port = htons(5000);
+//
+//    if(inet_pton(AF_INET, argv[1], &serv_addr.sin_addr)<=0)
+//    {
+//        printf("\n inet_pton error occured\n");
+//        return 1;
+//    }
+//
+//    if( connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+//    {
+//        printf("\n Error : Connect Failed \n");
+//        return 1;
+//    }
+//
+//    while ( (n = read(sockfd, recvBuff, sizeof(recvBuff)-1)) > 0)
+//    {
+//        recvBuff[n] = 0;
+//        if(fputs(recvBuff, stdout) == EOF)
+//        {
+//            printf("\n Error : Fputs error\n");
+//        }
+//    }
+//
+//    if(n < 0)
+//    {
+//        printf("\n Read error \n");
+//    }
+//
+//    return 0;
+//}
+
+int main(int argc, char **argv) {
+    int sockfd = 0;
+    struct sockaddr_in serv;
     char recvBuff[1024];
-    struct sockaddr_in serv_addr;
 
-    if(argc != 2) {
-        printf("\n Usage: %s <ip of server> \n",argv[0]);
-        return 1;
+    if (argc != 3) {
+        mx_printerr("uchat_server: error args\n");
+        mx_printerr("example: ./uchat ip port\n");
+        exit(1);
     }
 
-    memset(recvBuff, '0',sizeof(recvBuff));
-    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-        printf("\n Error : Could not create socket \n");
-        return 1;
+    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        mx_printerr("uchat: couldn't create socket");
+        exit(1);
     }
 
-    memset(&serv_addr, '0', sizeof(serv_addr));
+    serv.sin_family = AF_INET;
+    serv.sin_port = htons(atoi(argv[2]));
 
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(5000);
-
-    if(inet_pton(AF_INET, argv[1], &serv_addr.sin_addr)<=0)
-    {
-        printf("\n inet_pton error occured\n");
-        return 1;
+    if ((inet_pton(AF_INET, argv[1], &serv.sin_addr)) <= 0) {
+        mx_printerr("uchat: network adress isn't valid");
+        exit(1);
     }
-
-    if( connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
-    {
-        printf("\n Error : Connect Failed \n");
-        return 1;
+    if ((connect(sockfd, (struct sockaddr *)&serv, sizeof(serv))) < 0) {
+        mx_printerr("uchat: connection failed\n");
+        exit(1);
     }
+    while (read(sockfd, recvBuff, sizeof(recvBuff))) {
 
-    while ( (n = read(sockfd, recvBuff, sizeof(recvBuff)-1)) > 0)
-    {
-        recvBuff[n] = 0;
-        if(fputs(recvBuff, stdout) == EOF)
-        {
-            printf("\n Error : Fputs error\n");
-        }
+//        if (mx_strcmp(recvBuff, "exit\n") == 0) {
+//            mx_printstr("mission completed");
+//            break;
+//        }
+        mx_printstr(recvBuff);
+
     }
-
-    if(n < 0)
-    {
-        printf("\n Read error \n");
-    }
-
-    return 0;
 }

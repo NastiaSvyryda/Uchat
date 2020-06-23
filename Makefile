@@ -38,11 +38,11 @@ install: install_client install_server
 install_client: $(LIBMX) $(CL_NAME)
 
 $(CL_NAME): $(CL_OBJS)
-	@$(CCFLG) $(CL_OBJS) -L$(LIBMX_DIR) -lmx -o $@
+	@$(CCFLG) $(CL_OBJS) $(GTK_FLAGS) -L$(LIBMX_DIR) -lmx -o $@
 	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
 
 $(CL_OBJ_DIR)/%.o: $(CL_SRC_DIR)/%.c $(CL_INC)
-	@$(CCFLG) -c $(CL_SRCS) -I$(CL_INC_DIR)
+	@$(CCFLG) -c $(GTK_SORT_FLAGS) $(CL_SRCS) -I$(CL_INC_DIR)
 	@printf "\r\33[2K$(CL_NAME) \033[33;1mcompile \033[0m$(<:$(CL_SRC_DIR)/%.c=%)"
 	@mv $(CL_SRC:%.c=%.o) $(CL_OBJ_DIR)
     
