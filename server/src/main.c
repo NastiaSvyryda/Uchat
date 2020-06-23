@@ -10,48 +10,30 @@
 #include <sys/types.h>
 #include <time.h>
 #include "../../libmx/inc/libmx.h"
-#define MX_PORT 5000
+#include <pthread.h>
 
-//int main() {
-//    int listenfd = 0, connfd = 0;
-//    struct sockaddr_in serv_addr;
-//
-//    char sendBuff[1025];
-//    //time_t ticks;
-//
-//    listenfd = socket(AF_INET, SOCK_STREAM, 0);
-//    memset(&serv_addr, '0', sizeof(serv_addr));
-//    memset(sendBuff, '0', sizeof(sendBuff));
-//
-//    serv_addr.sin_family = AF_INET;
-//    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-//    serv_addr.sin_port = htons(5000);
-//
-//    bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-//
-//    listen(listenfd, 10);
-//    mx_printint(5);
-//    char *mess;
-//
-//    while(1) {
-//        mess = mx_strnew(1000);
-//        connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);
-//
-//        //ticks = time(NULL);
-//        scanf("%s", mess);
-//        mx_printstr(mess);
-//        write(connfd, mess, strlen(mess));
-//        close(connfd);
-//        sleep(1);
-//        mx_strdel(&mess);
-//    }
-//}
+void *cycle(void *newfd) {
+    char buff[1024];
+    int *x_ptr = (int *)newfd;
+    mx_printint(*x_ptr);
+    while(1) {
+        memset(buff, '\0', 1024);
+        mx_printstr("ARNI");
+        scanf("%s", buff);
+
+        write(*x_ptr, buff, mx_strlen(buff));
+    }
+    return NULL;
+}
+
 int main(int argc, char **argv) {
     int listenfd = 0;
     int newfd = 0;
     int cli_size;
     struct sockaddr_in serv;
     struct sockaddr_in cli;
+    pthread_t thread;
+    int status = 0;
 
     if (argc != 2) {
         mx_printerr("uchat_server: error args\n");
@@ -76,18 +58,20 @@ int main(int argc, char **argv) {
     }
     cli_size = sizeof(cli);
     while (1) {
-        if((newfd = accept(listenfd, (struct sockaddr*)&cli, (socklen_t *)&cli_size)
-                ) == -1) {
+        if((newfd = accept(listenfd, (struct sockaddr*)&cli, (socklen_t *)&cli_size)) == -1) {
             mx_printerr("uchat_server: error accepting connection on a socket");
             exit(1);
         }
-        printf("%s ", "\033[0;32mUser connected from port:\033[0;32m");
+        mx_printint(newfd);
+        printf("%s ", "\033[0;32mUser connected from ip:\033[0;32m");
         printf("%s\n", inet_ntoa(cli.sin_addr));
-        write(newfd, "HALLO", mx_strlen("HALLO"));
+        if ((status = pthread_create(&thread, NULL, cycle, &newfd)) != 0) {
+            mx_printerr("uchat_server: thread creating error");
+            exit(1);
+        }
+        pthread_join(thread,NULL);
+
+
         close(newfd);
-//        mx_strdel(&str);
     }
-
-
-
 }
