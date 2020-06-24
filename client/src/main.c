@@ -39,15 +39,17 @@ int main(int argc, char **argv) {
         exit(1);
     }
     while (1) {
-        if (read(sockfd, recvBuff, sizeof(recvBuff)) == -1) {
-            mx_printerr("uchat: error read");
-            exit(1);
-        }
+//        if (read(sockfd, recvBuff, sizeof(recvBuff)) == -1) {
+//            mx_printerr("uchat: error read");
+//            exit(1);
+//        }
+        scanf("%s", recvBuff);
+        write(sockfd, recvBuff, mx_strlen(recvBuff));
         if (mx_strcmp(recvBuff, "exit") == 0) {
             mx_printstr("mission completed");
             break;
         }
-        mx_printstr(recvBuff);
+//        mx_printstr(recvBuff);
         memset(recvBuff, '\0', 1024);
 
     }
