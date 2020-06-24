@@ -13,26 +13,45 @@
 #include <pthread.h>
 
 void *cycle(void *newfd) {
-    char buff[1024];
     int *x_ptr = (int *)newfd;
-    mx_printint(*x_ptr);
-    while(1) {
-        memset(buff, '\0', 1024);
-        mx_printstr("ARNI");
-        scanf("%s", buff);
-
-        write(*x_ptr, buff, mx_strlen(buff));
-    }
+    char recvBuff[1024];
+//    mx_printint(*x_ptr);
+//    mx_printstr("\nhallo world\n");
+//    write(*x_ptr, "pussy", mx_strlen("pussy"));
+    read(*x_ptr, recvBuff, sizeof(recvBuff));
+//    char buff[1024];
+    mx_printstr("\n");
+    mx_printstr(recvBuff);
+    mx_printstr("\n");
+//    int i = 0;
+//    void web_child(int);
+//
+//    pthread_detach(pthread_self());
+//
+////    web_child((int)arg);
+//
+////    while(i < 2) {
+//        memset(buff, '\0', 1024);
+////        mx_printstr("ARNI");
+//        scanf("%s", buff);
+//
+//        write(*x_ptr, buff, mx_strlen(buff));
+//        i++;
+////    }
+////        pthread_join(thread,NULL);
+//    close(*x_ptr);
     return NULL;
 }
 
 int main(int argc, char **argv) {
+    int fd[2];
+    int i = 0;
     int listenfd = 0;
     int newfd = 0;
     int cli_size;
     struct sockaddr_in serv;
     struct sockaddr_in cli;
-    pthread_t thread;
+    pthread_t thread = NULL;
     int status = 0;
 
     if (argc != 2) {
@@ -61,17 +80,14 @@ int main(int argc, char **argv) {
         if((newfd = accept(listenfd, (struct sockaddr*)&cli, (socklen_t *)&cli_size)) == -1) {
             mx_printerr("uchat_server: error accepting connection on a socket");
             exit(1);
+        } else {
+            fd[i] = newfd;
+            if ((status = pthread_create(&thread, NULL, cycle, &fd[i])) != 0) {
+                mx_printerr("uchat_server: thread creating error");
+                exit(1);
+            }
         }
-        mx_printint(newfd);
         printf("%s ", "\033[0;32mUser connected from ip:\033[0;32m");
         printf("%s\n", inet_ntoa(cli.sin_addr));
-        if ((status = pthread_create(&thread, NULL, cycle, &newfd)) != 0) {
-            mx_printerr("uchat_server: thread creating error");
-            exit(1);
-        }
-        pthread_join(thread,NULL);
-
-
-        close(newfd);
     }
 }
