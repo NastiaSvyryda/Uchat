@@ -14,25 +14,52 @@
 typedef struct s_clients {
     struct s_clients *next;
     int fd;
+    char *name_to;
+    char *name_from;
     struct s_clients *first;
 }t_clients;
 
 void *cycle(void *newfd) {
     char buff[1024];
+    char name[100];
     t_clients *fd = (t_clients *)newfd;
+    int curr_fd = fd->fd;
     t_clients *fd_f = fd->first;
     while(1) {
         fd = fd_f;
-        read(fd->fd, buff, 1024);
-        fd = fd->next;
-        mx_printstr("message recived");
+
+        read(curr_fd, name, 100);
+        printf("name to recived %s\n", name);
+        fd->name_to = mx_strdup(name);
+        read(curr_fd, buff, 1024);
+        printf("message recived %s\n", buff);
+       // fd = fd->next;
+        mx_printstr(buff);
+        mx_printchar('\n');
 //        scanf("%s", buff);
         while (fd != NULL) {
-            write(fd->fd, buff, mx_strlen(buff));
-            mx_printstr("message delivered");
-            fd = fd->next;
+            mx_printstr("\npuk1\n");
+            //исправить сегфоулт 44 строка нужно продебажить
+            if (strcmp(fd->name_from, fd_f->name_to) == 0 && strcmp(fd_f->name_to, "all") != 0) {
+                mx_printstr("\npuk2\n");
+                write(fd->fd, buff, mx_strlen(buff));
+                mx_printstr("message delivered to ");
+                mx_printstr(fd->name_to);
+                mx_printchar('\n');
+                break;
+            }
+            else if (strcmp(fd->name_to, "all") == 0) {
+                write(fd->fd, buff, mx_strlen(buff));
+                mx_printstr("message delivered to ");
+                mx_printstr(fd->name_to);
+                mx_printchar('\n');
+                fd = fd->next;
+            }
+            else
+                fd = fd->next;
         }
         memset(buff, '\0', 1024);
+        memset(name, '\0', 100);
     }
     return NULL;
 }
@@ -43,6 +70,7 @@ int main(int argc, char **argv) {
     client->first = client;
     client->next = NULL;
     client->fd = 0;
+    char buff[100];
 //    int i = 0;
     int listenfd = 0;
     int cli_size;
@@ -74,15 +102,16 @@ int main(int argc, char **argv) {
     }
     cli_size = sizeof(cli);
     while (1) {
-        int a = 0;
-        if ((a = accept(listenfd, (struct sockaddr *) &cli,
+        if ((client->fd = accept(listenfd, (struct sockaddr *) &cli,
                 (socklen_t *)&cli_size)) == -1) {
             mx_printerr(
                     "uchat_server: error accepting connection on a socket");
             exit(1);
         }
-        client->fd = a;
-        mx_printint(client->fd);
+        memset(buff, '\0', 100);
+        read(client->fd, buff, 100);
+        mx_printstr("name recived\n");
+        client->name_from = mx_strdup(buff);
         if ((status = pthread_create(&thread, NULL, cycle, client)) != 0) {
             mx_printerr("uchat_server: thread creating error");
             exit(1);

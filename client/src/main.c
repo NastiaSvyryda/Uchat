@@ -15,10 +15,16 @@
 void *input(void *sock) {
     int *sockfd = (int *) sock;
     char recvBuff[1024];
+    char name[100];
     while(1) {
+        mx_printstr("NAME, WHO YOU WANNA SEND THE MESSAGE: ");
+        scanf("%s", name);
+        write(*sockfd, name, mx_strlen(name));
+        mx_printstr("YOUR MESSAGE: ");
         scanf("%s", recvBuff);
         write(*sockfd, recvBuff, mx_strlen(recvBuff));
         memset(recvBuff, '\0', 1024);
+        memset(name, '\0', 100);
     }
     return NULL;
 }
@@ -29,6 +35,7 @@ int main(int argc, char **argv) {
     //char recvBuff[1024];
     char buf[1024];
     pthread_t thread = NULL;
+    char name[100];
 
     if (argc != 3) {
         mx_printerr("uchat_server: error args\n");
@@ -52,6 +59,10 @@ int main(int argc, char **argv) {
         mx_printerr("uchat: connection failed\n");
         exit(1);
     }
+    memset(name, '\0', 100);
+    mx_printstr("YOUR NAME: ");
+    scanf("%s", name);
+    write(sockfd, name, mx_strlen(name));
     if (pthread_create(&thread, NULL, input, &sockfd) != 0) {
         mx_printerr("uchat_server: thread creating error");
         exit(1);
@@ -63,10 +74,6 @@ int main(int argc, char **argv) {
 //        }
         recv(sockfd, buf, 1024, 0);
 
-        if (mx_strcmp(buf, "exit") == 0) {
-            mx_printstr("mission completed");
-            break;
-        }
         mx_printstr(buf);
         memset(buf, '\0', 1024);
 
