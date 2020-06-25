@@ -11,43 +11,40 @@
 #include <time.h>
 #include "../../libmx/inc/libmx.h"
 #include <pthread.h>
+typedef struct s_clients {
+    struct s_clients *next;
+    int fd;
+    struct s_clients *first;
+}t_clients;
 
 void *cycle(void *newfd) {
-    int *x_ptr = (int *)newfd;
-    char recvBuff[1024];
-//    mx_printint(*x_ptr);
-//    mx_printstr("\nhallo world\n");
-//    write(*x_ptr, "pussy", mx_strlen("pussy"));
-    read(*x_ptr, recvBuff, sizeof(recvBuff));
-//    char buff[1024];
-    mx_printstr("\n");
-    mx_printstr(recvBuff);
-    mx_printstr("\n");
-//    int i = 0;
-//    void web_child(int);
-//
-//    pthread_detach(pthread_self());
-//
-////    web_child((int)arg);
-//
-////    while(i < 2) {
-//        memset(buff, '\0', 1024);
-////        mx_printstr("ARNI");
+    char buff[1024];
+    t_clients *fd = (t_clients *)newfd;
+    t_clients *fd_f = fd->first;
+    while(1) {
+        fd = fd_f;
+        read(fd->fd, buff, 1024);
+        fd = fd->next;
+        mx_printstr("message recived");
 //        scanf("%s", buff);
-//
-//        write(*x_ptr, buff, mx_strlen(buff));
-//        i++;
-////    }
-////        pthread_join(thread,NULL);
-//    close(*x_ptr);
+        while (fd != NULL) {
+            write(fd->fd, buff, mx_strlen(buff));
+            mx_printstr("message delivered");
+            fd = fd->next;
+        }
+        memset(buff, '\0', 1024);
+    }
     return NULL;
 }
 
+
 int main(int argc, char **argv) {
-    int fd[2];
-    int i = 0;
+    t_clients *client = malloc(sizeof(t_clients));
+    client->first = client;
+    client->next = NULL;
+    client->fd = 0;
+//    int i = 0;
     int listenfd = 0;
-    int newfd = 0;
     int cli_size;
     struct sockaddr_in serv;
     struct sockaddr_in cli;
@@ -67,27 +64,34 @@ int main(int argc, char **argv) {
     serv.sin_family = AF_INET;
     serv.sin_addr.s_addr = htonl(INADDR_ANY);
     serv.sin_port = htons(atoi(argv[1]));
-    if (bind(listenfd, (struct sockaddr *)&serv, sizeof(serv)) < 0) {
+    if (bind(listenfd, (struct sockaddr *) &serv, sizeof(serv)) < 0) {
         mx_printerr("uchat_server: couldn't connect socket with ip or port");
         exit(1);
     }
-    if (listen(listenfd, 2) < 0) {
+    if (listen(listenfd, 100) < 0) {
         mx_printerr("uchat_server: couldn't listen for connections");
         exit(1);
     }
     cli_size = sizeof(cli);
     while (1) {
-        if((newfd = accept(listenfd, (struct sockaddr*)&cli, (socklen_t *)&cli_size)) == -1) {
-            mx_printerr("uchat_server: error accepting connection on a socket");
+        int a = 0;
+        if ((a = accept(listenfd, (struct sockaddr *) &cli,
+                (socklen_t *)&cli_size)) == -1) {
+            mx_printerr(
+                    "uchat_server: error accepting connection on a socket");
             exit(1);
-        } else {
-            fd[i] = newfd;
-            if ((status = pthread_create(&thread, NULL, cycle, &fd[i])) != 0) {
-                mx_printerr("uchat_server: thread creating error");
-                exit(1);
-            }
         }
+        client->fd = a;
+        mx_printint(client->fd);
+        if ((status = pthread_create(&thread, NULL, cycle, client)) != 0) {
+            mx_printerr("uchat_server: thread creating error");
+            exit(1);
+        }
+
         printf("%s ", "\033[0;32mUser connected from ip:\033[0;32m");
         printf("%s\n", inet_ntoa(cli.sin_addr));
+        client->next = malloc(sizeof(t_clients));
+        client->next->first = client->first;
+        client = client->next;
     }
 }
