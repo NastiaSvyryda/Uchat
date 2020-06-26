@@ -1,0 +1,7 @@
+{
+    "type": "message_edit_out",
+    "message_id": 55,
+    "new_message": "new_text",
+    "client1_id": 1,
+    "token": "0001"
+}

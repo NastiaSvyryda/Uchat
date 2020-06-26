@@ -1,0 +1,6 @@
+{
+    "type": "message_edit_in",
+    "message_id": 55,
+    "new_message": "new_text",
+    "client1_id": 1
+}
