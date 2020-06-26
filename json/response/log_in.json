@@ -1,0 +1,8 @@
+{
+    "type": "log_in",
+    "status": 200,
+    "token": "0001",
+    "user_id": 1,
+    "name": "John",
+    "last_name": "Doe"
+}
