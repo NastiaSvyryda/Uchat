@@ -73,9 +73,14 @@ int main(int argc, char **argv) {
 //            exit(1);
 //        }
         recv(sockfd, buf, 1024, 0);
-
+        mx_printstr("\033[2K");
+        mx_printstr("\033[G");
+        mx_printstr("Message recived: ");
         mx_printstr(buf);
+        mx_printstr("\nNAME, WHO YOU WANNA SEND THE MESSAGE: ");
         memset(buf, '\0', 1024);
+//        pthread_join(thread, NULL);
+//        pthread_cancel(thread);
 
     }
 }

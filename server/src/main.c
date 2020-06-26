@@ -39,12 +39,12 @@ void *cycle(void *newfd) {
 //        scanf("%s", buff);
         while (fd != NULL) {
             mx_printstr("\npuk1\n");
-            //исправить сегфоулт 44 строка нужно продебажить
-            if (strcmp(fd->name_from, fd_f->name_to) == 0 && strcmp(fd_f->name_to, "all") != 0) {
+            //исправить сегфоулт 44 строка нужно продебажить  && strcmp(fd_f->name_to, "all") != 0
+            if (strcmp(fd->name_from, fd_f->name_to) == 0) {
                 mx_printstr("\npuk2\n");
                 write(fd->fd, buff, mx_strlen(buff));
                 mx_printstr("message delivered to ");
-                mx_printstr(fd->name_to);
+                mx_printstr(fd_f->name_to);
                 mx_printchar('\n');
                 break;
             }
