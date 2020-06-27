@@ -77,7 +77,8 @@ void glitch_in_the_matrix(struct json_object *jobj) {
 }
 
 void fn(void) {
-	struct json_object *jo, *jo1, *jo2, *obj1, *jo3, *jo4, *obj2, *res, *sub_obj1, *sub_obj2, *tmp;
+	// struct json_object *jo, *jo1, *jo2, *obj1, *jo3, *jo4, *obj2, *res, *sub_obj1, *sub_obj2, *tmp;
+	struct json_object *jo;
 	// struct array_list *joarr;
 	// char *str = mx_file_to_str("./.vscode/c_cpp_properties.json");
 	// char *str1;
@@ -89,6 +90,7 @@ void fn(void) {
 	printf("jo from str:\n---\n%s\n---\n",
 		   json_object_to_json_string_ext(jo, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY));
 	json_object_put(jo);
+	free(s);
 	return;
 
 
@@ -142,6 +144,6 @@ void fn(void) {
 }
 int main() {
 	fn();
-	system("leaks -q json1");
+	system("leaks -q json");
 	return 0;
 }

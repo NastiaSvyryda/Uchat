@@ -1,1 +1,1 @@
-clang  -g -I/usr/include/json-c/ `pkg-config --cflags json-c` `pkg-config --libs json-c` -o json *.c -ljson-c && ./json
+clang -Wall -Wall -Wextra -Werror -Wpedantic -g -I/usr/include/json-c/ `pkg-config --cflags json-c` `pkg-config --libs json-c` -o json *.c -ljson-c && ./json
