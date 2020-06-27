@@ -9,7 +9,6 @@
 #include <string.h>
 #include <sys/types.h>
 #include <time.h>
-#include "../../libmx/inc/libmx.h"
 #include <pthread.h>
 
 typedef struct s_clients {
