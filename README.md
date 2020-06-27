@@ -28,7 +28,7 @@ Creativity, Problem Solving, Analysis, Reasoning & Argumentation, Innovation Thi
 1. <a href="https://github.com/viacheslavpleshkov" target="_blank">Viacheslav Pleshkov</a>
 1. <a href="https://github.com/arni30" target="_blank">Oleksandr Arnopolin</a>
 1. <a href="https://github.com/NastiaSvyryda" target="_blank">Anastasiia Svyryda</a>
-1. <a href="https://github.com/NastiaSvyryda" target="_blank">Vladyslav Nazarenko</a>
+1. <a href="https://github.com/vladyslav-n" target="_blank">Vladyslav Nazarenko</a>
 
 
 ## License
