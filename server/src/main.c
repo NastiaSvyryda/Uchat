@@ -1,23 +1,4 @@
-#include <stdio.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <sys/types.h>
-#include <time.h>
-#include <pthread.h>
-
-typedef struct s_clients {
-    struct s_clients *next;
-    int fd;
-    char *name_to;
-    char *name_from;
-    struct s_clients *first;
-}t_clients;
+#include "server.h"
 
 void *send_message(void *newfd) {
     char buff[1024];
@@ -25,7 +6,7 @@ void *send_message(void *newfd) {
     t_clients *fd = (t_clients *)newfd;
     int curr_fd = fd->fd;
     t_clients *fd_f = fd->first;
-    while(1) {
+    while(true) {
         fd = fd_f;
 
         read(curr_fd, name, 100);
@@ -62,14 +43,6 @@ void *send_message(void *newfd) {
     return NULL;
 }
 
-static void check_argc_error(int argc) {
-    if (argc != 2) {
-        mx_printerr("uchat_server: error args\n");
-        mx_printerr("example: ./uchat_server port\n");
-        exit(1);
-    }
-}
-
 static void conn_list_sock(int *fd, char **argv) {
     struct sockaddr_in serv;
 
@@ -102,6 +75,7 @@ static struct sockaddr_in accept_connections(t_clients *client, int listenfd) {
     }
     return cli;
 }
+
 static void thread_create(t_clients *client, struct sockaddr_in cli) {
     pthread_t thread = NULL;
 
@@ -122,11 +96,13 @@ static t_clients *create_clients() {
     client->name_from = NULL;
     return  client;
 }
+
 static void next_list_elem (t_clients *client) {
     client->next = malloc(sizeof(t_clients));
     client->next->first = client->first;
     client = client->next;
 }
+
 static void get_client_name(t_clients *client) {
     char buff[100];
 
@@ -140,10 +116,10 @@ int main(int argc, char **argv) {
     t_clients *client = create_clients();
     int listenfd = 0;
     struct sockaddr_in cli;
-
-    check_argc_error(argc);
+    migration(argv[1]);
+    valid_check_argc_error(argc);
     conn_list_sock(&listenfd, argv);
-    while (1) {
+    while (true) {
         cli = accept_connections(client, listenfd);
         get_client_name(client);
         thread_create(client, cli);
