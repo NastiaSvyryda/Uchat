@@ -14,7 +14,7 @@ static void create_table_for_sqlite3(void) {
                          "FOREIGN KEY(user_id) REFERENCES %s(id), \n"
                          "FOREIGN KEY(message_id) REFERENCES messages(id) );",
                          model_delivery_user_name_table(), model_user_name_table(), model_message_name_table());
-    rc = sqlite3_exec(db, sql, callback, 0, &err_msg);
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     valid_sqlite3_failed_data(rc, db, err_msg);
     sqlite3_close(db);
 }
@@ -27,7 +27,7 @@ static void delete_table_for_sqlite3(void) {
 
     valid_sqlite3_open_db(rc, db);
     asprintf(sql_create, "DROP TABLE %s ;", model_delivery_user_name_table());
-    rc = sqlite3_exec(db, sql, callback, 0, &err_msg);
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     valid_sqlite3_failed_data(rc, db, err_msg);
     sqlite3_close(db);
 }

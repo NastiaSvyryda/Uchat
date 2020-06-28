@@ -64,4 +64,10 @@ void migration_user_channel(bool status);
 void migration_delivery_user(bool status);
 ///end migrations
 
+//CRUD
+void create_databases(char *database, char *table, char *fill_table, char *value_table);
+void read_database(char *database, char *table, char *set, char *where);
+void update_database(char *database, char *table, char *set, char *where);
+void delete_database(char *table, char *fill_table, char *where);
+//end crud
 #endif //UCHAT_SERVER_H
