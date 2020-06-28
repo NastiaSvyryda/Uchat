@@ -57,11 +57,11 @@ char **model_user_channel_fill_table(void);
 
 ///Migrations
 void migration(char *argv);
-void migration_users(void);
-void migration_channels(void);
-void migration_messages(void);
-void migration_user_channel(void);
-void migration_delivery_user(void);
+void migration_users(bool status);
+void migration_channels(bool status);
+void migration_messages(bool status);
+void migration_user_channel(bool status);
+void migration_delivery_user(bool status);
 ///end migrations
 
 #endif //UCHAT_SERVER_H
