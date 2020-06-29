@@ -1,11 +1,11 @@
-#include "server.h"
+#include "uchat_server.h"
 
 char *model_delivery_user_database(void) {
     return "sqlite3";
 }
 
 char *model_delivery_user_name_table(void) {
-    retrun "delivery_user";
+    return "delivery_user";
 }
 
 char **model_delivery_user_fill_table(void) {
@@ -14,5 +14,6 @@ char **model_delivery_user_fill_table(void) {
     fill_table[0] = mx_strdup("user_id");
     fill_table[1] = mx_strdup("message_id");
     fill_table[2] = NULL;
-    return name;
+    return fill_table;
 }
+

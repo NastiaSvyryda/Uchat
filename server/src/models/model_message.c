@@ -1,10 +1,10 @@
-#include "server.h"
+#include "uchat_server.h"
 
 char *model_message_database(void) {
     return "sqlite3";
 }
 
-char **model_message_name_table(void) {
+char *model_message_name_table(void) {
     return "messages";
 }
 
@@ -16,5 +16,6 @@ char **model_message_fill_table(void) {
     fill_table[2] = mx_strdup("create_at");
     fill_table[3] = mx_strdup("channel_id");
     fill_table[4] = NULL;
-    return name;
+    return fill_table;
 }
+

@@ -1,4 +1,4 @@
-#include "server.h"
+#include "uchat_server.h"
 
 void migration(char *argv) {
     if (strcmp(argv, "migration up") == 0) {

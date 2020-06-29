@@ -1,4 +1,4 @@
-#include "server.h"
+#include "uchat_server.h"
 
 void valid_sqlite3_failed_data(int rc, sqlite3 *db, char *err_msg) {
     if (rc != SQLITE_OK ) {
@@ -8,6 +8,6 @@ void valid_sqlite3_failed_data(int rc, sqlite3 *db, char *err_msg) {
 
         sqlite3_free(err_msg);
         sqlite3_close(db);
-        exit(1)
+        exit(1);
     }
 }

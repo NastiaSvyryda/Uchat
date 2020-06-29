@@ -12,7 +12,7 @@
 #include <time.h>
 #include <pthread.h>
 #include <sqlite3.h>
-#include "libmx.h"
+#include "../../libmx/inc/libmx.h"
 
 typedef struct s_clients {
     struct s_clients *next;
@@ -43,7 +43,7 @@ char *model_delivery_user_name_table(void);
 char **model_delivery_user_fill_table(void);
 //model_message
 char *model_message_database(void);
-char **model_message_name_table(void);
+char *model_message_name_table(void);
 char **model_message_fill_table(void);
 //model_user
 char *model_user_database(void);
@@ -68,6 +68,6 @@ void migration_delivery_user(bool status);
 void create_databases(char *database, char *table, char *fill_table, char *value_table);
 void read_database(char *database, char *table, char *set, char *where);
 void update_database(char *database, char *table, char *set, char *where);
-void delete_database(char *table, char *fill_table, char *where);
+void delete_database(char *database, char *table, char *fill_table, char *where);
 //end crud
-#endif //UCHAT_SERVER_H
+#endif

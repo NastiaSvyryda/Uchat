@@ -1,4 +1,4 @@
-#include "server.h"
+#include "uchat_server.h"
 
 void valid_sqlite3_open_db(int rc, sqlite3 *db) {
     if (rc != SQLITE_OK) {
