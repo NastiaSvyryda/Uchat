@@ -147,7 +147,10 @@ int main() {
 	// char *token = "SKDJFKSBDKF";
 	t_message message = {"This is the text of the message", 1, 2, 10, 55, 10923};
 	char *str = mx_json_message_edit_in_request(&message);
+	printf(" str:\n---\n%s\n---\n", str);
 	t_json_data *data = mx_json_parse(str);
+	printf(MX_REQ_MES_EDIT_IN "\n---\n", data->type, data->data.message.message_id,
+		   data->data.message.text, data->data.message.client1_id);
 	char *s = mx_json_message_edit_in_request(&data->data.message);
 	struct json_object *jo = json_tokener_parse(s);
 	// free(str);
