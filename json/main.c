@@ -83,8 +83,8 @@ void fn(void) {
 	// char *str = mx_file_to_str("./.vscode/c_cpp_properties.json");
 	// char *str1;
 	// printf("JSON:\n%s\n\n", str);
-	t_personal_data p = {"xlogin", "xpass123", "0001", 1, "Steve", "Goy"};
-	char *s = mx_json_register_response(&p, 200);
+	t_personal_data p = {"xlogin", "xpass123", 1, "Steve", "Goy"};
+	char *s = mx_json_register_response(&p, 200, "SDFSDF");
 	jo = json_tokener_parse(s);
 	// free(str);
 	printf("jo from str:\n---\n%s\n---\n",
@@ -143,7 +143,19 @@ void fn(void) {
 	
 }
 int main() {
-	fn();
+	// fn();
+	// char *token = "SKDJFKSBDKF";
+	t_message message = {"This is the text of the message", 1, 2, 10, 55, 10923};
+	char *str = mx_json_message_edit_in_request(&message);
+	t_json_data *data = mx_json_parse(str);
+	char *s = mx_json_message_edit_in_request(&data->data.message);
+	struct json_object *jo = json_tokener_parse(s);
+	// free(str);
+	printf("jo from str:\n---\n%s\n---\n",
+		   json_object_to_json_string_ext(jo, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY));
+	json_object_put(jo);
+	free(s);
+	free(data->data.message.text);
 	system("leaks -q json");
 	return 0;
 }
