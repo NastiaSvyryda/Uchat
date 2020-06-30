@@ -15,15 +15,39 @@ LIBMX = $(LIBMX_DIR)/libmx.a
 CL_OBJ_DIR = client/obj
 SV_OBJ_DIR = server/obj
 
-GTK_FLAGS = `pkg-config --cflags  --libs gtk+-3.0`
-GTK_SORT_FLAGS = `pkg-config --cflags gtk+-3.0`
+GTK_FLAGS = `pkg-config --cflags  --libs gtk+-3.0` `pkg-config --libs json-c`
+GTK_SORT_FLAGS = `pkg-config --cflags gtk+-3.0` `pkg-config --cflags json-c`
 
-CL_INC = $(CL_INC_DIR)/client.h
-SV_INC = $(SV_INC_DIR)/server.h
-
+#CL_INC = $(CL_INC_DIR)/client.h
+#SV_INC = $(SV_INC_DIR)/server.h
+INC = inc/header.h
 CL_SRC = main.c \
+         mx_json_log_in.c \
+         mx_json_log_out.c\
+   		 mx_json_message_delete_in.c\
+   		 mx_json_message_delete_out.c\
+         mx_json_message_edit_in.c\
+         mx_json_message_edit_out.c\
+         mx_json_message_in.c\
+         mx_json_message_out.c\
+         mx_json_parse.c\
+         mx_json_register.c\
+         mx_json_type.c\
+         mx_str_to_file.c
 
 SV_SRC = main.c \
+		 mx_json_log_in.c \
+		 mx_json_log_out.c\
+		 mx_json_message_delete_in.c\
+		 mx_json_message_delete_out.c\
+		 mx_json_message_edit_in.c\
+		 mx_json_message_edit_out.c\
+		 mx_json_message_in.c\
+		 mx_json_message_out.c\
+		 mx_json_parse.c\
+		 mx_json_register.c\
+		 mx_json_type.c\
+		 mx_str_to_file.c
 
 CL_SRCS = $(addprefix $(CL_SRC_DIR)/, $(CL_SRC))
 CL_OBJS = $(addprefix $(CL_OBJ_DIR)/, $(CL_SRC:%.c=%.o))
@@ -42,7 +66,7 @@ $(CL_NAME): $(CL_OBJS)
 	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
 
 $(CL_OBJ_DIR)/%.o: $(CL_SRC_DIR)/%.c $(CL_INC)
-	@$(CCFLG) -c $(GTK_SORT_FLAGS) $(CL_SRCS) -I$(CL_INC_DIR)
+	@$(CCFLG) -c $(GTK_SORT_FLAGS) $(CL_SRCS) -I$(INC)
 	@printf "\r\33[2K$(CL_NAME) \033[33;1mcompile \033[0m$(<:$(CL_SRC_DIR)/%.c=%)"
 	@mv $(CL_SRC:%.c=%.o) $(CL_OBJ_DIR)
     
@@ -55,11 +79,11 @@ $(CL_OBJ_DIR):
 install_server: $(LIBMX) $(SV_NAME)
 
 $(SV_NAME): $(SV_OBJS)
-	@$(CCFLG) $(SV_OBJS) -L$(LIBMX_DIR) -lmx -o $@
+	@$(CCFLG) $(SV_OBJS) $(GTK_FLAGS) -L$(LIBMX_DIR) -lmx -o $@
 	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
 
 $(SV_OBJ_DIR)/%.o: $(SV_SRC_DIR)/%.c $(SV_INC)
-	@$(CCFLG) -c $(SV_SRCS) -I$(SV_INC_DIR)
+	@$(CCFLG) -c $(GTK_SORT_FLAGS) $(SV_SRCS) -I$(INC)
 	@printf "\r\33[2K$(SV_NAME) \033[33;1mcompile \033[0m$(<:$(SV_SRC_DIR)/%.c=%) "
 	@mv $(SV_SRC:%.c=%.o) $(SV_OBJ_DIR)
 

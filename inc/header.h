@@ -24,6 +24,9 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <json.h>
+#include "../server/inc/server.h"
+#include "../client/inc/client.h"
+
 
 #include "../libmx/inc/libmx.h"
 #include "../inc/header.h"
