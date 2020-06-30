@@ -1,0 +1,6 @@
+{
+    "type": "message_delete_out",
+    "message_id": 55,
+    "client1_id": 1,
+    "token": "0001"
+}

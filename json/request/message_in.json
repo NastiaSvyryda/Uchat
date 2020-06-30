@@ -1,0 +1,7 @@
+{
+    "type": "message_in",
+    "from_id": 1,
+    "to_id": 2,
+    "message": "asdasdasd",
+    "message_id": 55
+}

@@ -1,0 +1,7 @@
+{
+    "type": "register",
+    "login": "xlogin",
+    "password": "pass123",
+    "name": "John",
+    "last_name": "Doe"
+}
