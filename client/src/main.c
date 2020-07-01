@@ -11,28 +11,30 @@
 #include "../../libmx/inc/libmx.h"
 //#include <gtk/gtk.h>
 #include <pthread.h>
+#include "../../inc/header.h"
 
 void *input(void *sock) {
     int *sockfd = (int *) sock;
     char recvBuff[1024];
     char name[100];
-    while(1) {
-        mx_printstr("NAME, WHO YOU WANNA SEND THE MESSAGE: ");
-        scanf("%s", name);
-        write(*sockfd, name, mx_strlen(name));
-        mx_printstr("YOUR MESSAGE: ");
-        scanf("%s", recvBuff);
-        write(*sockfd, recvBuff, mx_strlen(recvBuff));
+    char *json_str = NULL;
+    t_message *message = malloc(sizeof(t_message));
+    message->client1_id = 1;
+    message->client2_id = 2;
+    message->text = mx_strdup("hallo");
+    //    while(1) {
+        json_str = mx_json_message_out_request(message);
+    mx_printint(mx_strlen(json_str));
+        write(*sockfd, json_str, mx_strlen(json_str));
         memset(recvBuff, '\0', 1024);
         memset(name, '\0', 100);
-    }
+//    }
     return NULL;
 }
 
 int main(int argc, char **argv) {
     int sockfd = 0;
     struct sockaddr_in serv;
-    //char recvBuff[1024];
     char buf[1024];
     pthread_t thread = NULL;
     char name[100];
@@ -68,19 +70,9 @@ int main(int argc, char **argv) {
         exit(1);
     }
     while (1) {
-//        if (read(sockfd, recvBuff, sizeof(recvBuff)) == -1) {
-//            mx_printerr("uchat: error read");
-//            exit(1);
-//        }
         recv(sockfd, buf, 1024, 0);
-        mx_printstr("\033[2K");
-        mx_printstr("\033[G");
         mx_printstr("Message recived: ");
         mx_printstr(buf);
-        mx_printstr("\nNAME, WHO YOU WANNA SEND THE MESSAGE: ");
         memset(buf, '\0', 1024);
-//        pthread_join(thread, NULL);
-//        pthread_cancel(thread);
-
     }
 }

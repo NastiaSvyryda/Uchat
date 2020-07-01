@@ -11,54 +11,55 @@
 #include <time.h>
 #include "../../libmx/inc/libmx.h"
 #include <pthread.h>
+#include "../../inc/header.h"
 
 typedef struct s_clients {
     struct s_clients *next;
     int fd;
-    char *name_to;
-    char *name_from;
+    int name_to;
+    int name_from;
+    int index;
     struct s_clients *first;
 }t_clients;
 
 void *send_message(void *newfd) {
-    char buff[1024];
-    char name[100];
-    t_clients *fd = (t_clients *)newfd;
-    int curr_fd = fd->fd;
-    t_clients *fd_f = fd->first;
-    while(1) {
-        fd = fd_f;
+    char *buff = NULL;
+    char json_str[100];
+    t_json_data *json = NULL;
+    t_clients *client = (t_clients *)newfd;
+    int curr_fd = client->fd;
+    t_clients *cur_client = client;
 
-        read(curr_fd, name, 100);
-        printf("name to recived %s\n", name);
-        fd->name_to = mx_strdup(name);
-        read(curr_fd, buff, 1024);
-        printf("message recived %s\n", buff);
-        // fd = fd->next;
-        mx_printstr(buff);
-        mx_printchar('\n');
-//        scanf("%s", buff);
-        while (fd != NULL) {
-            //исправить сегфоулт 44 строка нужно продебажить  && strcmp(fd_f->name_to, "all") != 0
-            if (strcmp(fd_f->name_to, "all") != 0 &&
-                strcmp(fd->name_from, fd_f->name_to) == 0) {
-                write(fd->fd, buff, mx_strlen(buff));
-                mx_printstr("message delivered to ");
-                mx_printstr(fd_f->name_to);
-                mx_printchar('\n');
-                mx_strdel(&fd_f->name_to);
-                break;
-            } else if (strcmp(fd_f->name_to, "all") == 0) {
-                write(fd->fd, buff, mx_strlen(buff));
-                mx_printstr("message delivered to ");
-                mx_printstr(fd->name_to);
-                mx_printchar('\n');
-                fd = fd->next;
-            } else
-                fd = fd->next;
+    while(1) {
+        if(client->first->index > 1) { // количество пользователей
+            client = client->first;
+            read(curr_fd, json_str, 100);
+            json = mx_json_parse(json_str);
+            cur_client->name_to = json->data.message.client2_id;
+            buff = mx_strdup(json->data.message.text);
+            while (client->next != NULL) {
+                if (cur_client->name_to != 3 && client->name_from == cur_client->name_to) {
+                    write(client->fd, buff, mx_strlen(buff));
+                    mx_printstr("message delivered to ");
+                    mx_printint(cur_client->name_to);
+                    mx_printchar('\n');
+                    break;
+                }
+                else if (cur_client->name_to == 3) {
+                    if (cur_client->name_from != client->name_from) {
+                        write(client->fd, buff, mx_strlen(buff));
+                        mx_printstr("message delivered to ");
+                        mx_printint(client->name_from);
+                        mx_printchar('\n');
+                    }
+                    client = client->next;
+                }
+                else
+                    client = client->next;
+            }
+            mx_strdel(&buff);
+            memset(json_str, '\0', 100);
         }
-        memset(buff, '\0', 1024);
-        memset(name, '\0', 100);
     }
     return NULL;
 }
@@ -89,7 +90,6 @@ static void conn_list_sock(int *fd, char **argv) {
         mx_printerr("uchat_server: couldn't listen for connections");
         exit(1);
     }
-    mx_printint(*fd);
 }
 
 static struct sockaddr_in accept_connections(t_clients *client, int listenfd) {
@@ -119,14 +119,10 @@ static t_clients *create_clients() {
     client->first = client;
     client->next = NULL;
     client->fd = 0;
-    client->name_to = NULL;
-    client->name_from = NULL;
+    client->name_to = 0;
+    client->name_from = 0;
+    client->index = 0;
     return  client;
-}
-static void next_list_elem (t_clients *client) {
-    client->next = malloc(sizeof(t_clients));
-    client->next->first = client->first;
-    client = client->next;
 }
 static void get_client_name(t_clients *client) {
     char buff[100];
@@ -134,21 +130,23 @@ static void get_client_name(t_clients *client) {
     memset(buff, '\0', 100);
     read(client->fd, buff, 100);
     mx_printstr("name recived\n");
-    client->name_from = mx_strdup(buff);
+    client->name_from = mx_atoi(buff);
 }
 
 int main(int argc, char **argv) {
     t_clients *client = create_clients();
     int listenfd = 0;
     struct sockaddr_in cli;
-
     check_argc_error(argc);
     conn_list_sock(&listenfd, argv);
     while (1) {
         cli = accept_connections(client, listenfd);
+        client->first->index++;
         get_client_name(client);
         thread_create(client, cli);
-        next_list_elem(client);
+        client->next = create_clients();//next_list_elem(client);
+        client->next->first = client->first;
+        client = client->next;
     }
 }
 
