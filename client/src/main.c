@@ -11,7 +11,7 @@
 #include "../../libmx/inc/libmx.h"
 //#include <gtk/gtk.h>
 #include <pthread.h>
-#include "../../inc/header.h"
+#include "../inc/client.h"
 
 void *input(void *sock) {
     int *sockfd = (int *) sock;

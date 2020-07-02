@@ -1,4 +1,4 @@
-#include "../../inc/header.h"
+#include "../inc/server.h"
 
 void mx_str_to_file(const char *filepath, const char *data) {
     FILE *fp = fopen(filepath, "ab");

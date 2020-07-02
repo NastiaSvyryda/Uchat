@@ -1,4 +1,4 @@
-#include "../../inc/header.h"
+#include "../inc/server.h"
 
 static void fill_message_data(t_json_data *json, struct json_object *jo,
                               struct json_object *buf) {

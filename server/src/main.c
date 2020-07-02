@@ -11,7 +11,7 @@
 #include <time.h>
 #include "../../libmx/inc/libmx.h"
 #include <pthread.h>
-#include "../../inc/header.h"
+#include "../inc/server.h"
 
 typedef struct s_clients {
     struct s_clients *next;
@@ -57,7 +57,7 @@ void *main_cycle(void *newfd) {
     int curr_fd = client->fd;
     t_clients *cur_client = client;
 
-    while(1) {
+    while (1) {
         if (client->first->index > 1) { // количество пользователей
             client = client->first;
             read(curr_fd, json_str, 100);
@@ -149,6 +149,7 @@ int main(int argc, char **argv) {
     t_clients *client = create_clients();
     int listenfd = 0;
     struct sockaddr_in cli;
+
     check_argc_error(argc);
     conn_list_sock(&listenfd, argv);
     while (1) {

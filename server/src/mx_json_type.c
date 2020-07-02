@@ -1,2 +1,2 @@
-#include "../../inc/header.h"
+#include "../inc/server.h"
 
