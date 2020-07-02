@@ -26,9 +26,6 @@
 #include <json.h>
 
 #include "../libmx/inc/libmx.h"
-#include "../inc/header.h"
-// #include "inc/libmx.h"
-
 #define MX_JS_TYPE "{ \"type\": %d, "
 #define MX_JS_TOKEN "\"token\": \"%s\" }"
 #define MX_JS_STATUS "\"status\": %d, "
@@ -78,9 +75,6 @@
 #define MX_MAX_NAME_LEN 100
 // #define MX_MAX_MESSAGE_LEN 65000
 
-
-
-
 typedef enum e_json_types {
     JS_REG,  // JSON Type - register
     JS_LOG_IN,  // JSON Type - log in
@@ -90,7 +84,8 @@ typedef enum e_json_types {
     JS_MES_EDIT_IN,  // JSON Type - edit message
     JS_MES_EDIT_OUT,  // JSON Type - edit message
     JS_MES_IN,  // JSON Type - input message
-    JS_MES_OUT  // JSON Type - output message
+    JS_MES_OUT,  // JSON Type - output message
+    JS_NUM  // JSON types number
 }            t_json_types;
 
 typedef struct s_personal_data {
@@ -121,31 +116,33 @@ typedef struct s_json_data {
     int type;
     int status;
     char token[MX_TOKEN_LEN];
-    union u_json_data data;
+    t_personal_data pers_info;
+    t_message message;
+    int user_id;
 }              t_json_data;
 
 void mx_str_to_file(const char *filepath, const char *data);
 
-char *mx_json_log_in_request(t_personal_data *data, char *token);
-char *mx_json_log_in_response(t_personal_data *data, int status, char *token);
-char *mx_json_log_out_request(int user_id, char *token);
-char *mx_json_log_out_response(int status);
-char *mx_json_message_delete_in_request(t_message *data);
-char *mx_json_message_delete_in_response(t_message *data, int status,
-                                         char *token);
-char *mx_json_message_delete_out_request(t_message *data, char *token);
-char *mx_json_message_delete_out_response(t_message *data, int status);
-char *mx_json_message_edit_in_request(t_message *data);
-char *mx_json_message_edit_in_response(t_message *data, int status,
-                                       char *token);
-char *mx_json_message_edit_out_request(t_message *data, char *token);
-char *mx_json_message_edit_out_response(t_message *data, int status);
-char *mx_json_message_in_request(t_message *data);
-char *mx_json_message_in_response(t_message *data, int status);
-char *mx_json_message_out_request(t_message *data);
-char *mx_json_message_out_response(t_message *data, int status);
-char *mx_json_register_request(t_personal_data *data);
-char *mx_json_register_response(t_personal_data *data, int status, char *token);
+char *mx_json_log_in_request(t_json_data *data);
+char *mx_json_log_in_response(t_json_data *data);
+char *mx_json_log_out_request(t_json_data *data);
+char *mx_json_log_out_response(t_json_data *data);
+char *mx_json_message_delete_in_request(t_json_data *data);
+char *mx_json_message_delete_in_response(t_json_data *data);
+char *mx_json_message_delete_out_request(t_json_data *data);
+char *mx_json_message_delete_out_response(t_json_data *data);
+char *mx_json_message_edit_in_request(t_json_data *data);
+char *mx_json_message_edit_in_response(t_json_data *data);
+char *mx_json_message_edit_out_request(t_json_data *data);
+char *mx_json_message_edit_out_response(t_json_data *data);
+char *mx_json_message_in_request(t_json_data *data);
+char *mx_json_message_in_response(t_json_data *data);
+char *mx_json_message_out_request(t_json_data *data);
+char *mx_json_message_out_response(t_json_data *data);
+char *mx_json_register_request(t_json_data *data);
+char *mx_json_register_response(t_json_data *data);
+char *mx_json_make_json(enum e_json_types n, t_json_data *data,
+                        bool is_request);
 t_json_data *mx_json_parse(char *s);
 
 
