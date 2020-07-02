@@ -22,7 +22,31 @@ typedef struct s_clients {
     struct s_clients *first;
 }t_clients;
 
-void *send_message(void *newfd) {
+static void message(t_clients *client, t_clients *cur_client, t_json_data *json) {
+    cur_client->name_to = json->data.message.client2_id;
+
+    while (client->next != NULL) {
+        if (cur_client->name_to != 3 &&
+            client->name_from == cur_client->name_to) {
+            write(client->fd, json->data.message.text, mx_strlen(json->data.message.text));
+            mx_printstr("message delivered to ");
+            mx_printint(cur_client->name_to);
+            mx_printchar('\n');
+            break;
+        } else if (cur_client->name_to == 3) {
+            if (cur_client->name_from != client->name_from) {
+                write(client->fd, json->data.message.text, mx_strlen(json->data.message.text));
+                mx_printstr("message delivered to ");
+                mx_printint(client->name_from);
+                mx_printchar('\n');
+            }
+        }
+        client = client->next;
+    }
+}
+
+
+void *main_cycle(void *newfd) {
     char *buff = NULL;
     char json_str[100];
     t_json_data *json = NULL;
@@ -31,32 +55,15 @@ void *send_message(void *newfd) {
     t_clients *cur_client = client;
 
     while(1) {
-        if(client->first->index > 1) { // количество пользователей
+        if (client->first->index > 1) { // количество пользователей
             client = client->first;
             read(curr_fd, json_str, 100);
             json = mx_json_parse(json_str);
-            cur_client->name_to = json->data.message.client2_id;
-            buff = mx_strdup(json->data.message.text);
-            while (client->next != NULL) {
-                if (cur_client->name_to != 3 && client->name_from == cur_client->name_to) {
-                    write(client->fd, buff, mx_strlen(buff));
-                    mx_printstr("message delivered to ");
-                    mx_printint(cur_client->name_to);
-                    mx_printchar('\n');
-                    break;
-                }
-                else if (cur_client->name_to == 3) {
-                    if (cur_client->name_from != client->name_from) {
-                        write(client->fd, buff, mx_strlen(buff));
-                        mx_printstr("message delivered to ");
-                        mx_printint(client->name_from);
-                        mx_printchar('\n');
-                    }
-                    client = client->next;
-                }
-                else
-                    client = client->next;
-            }
+            if (json->type == 8)
+                message(client, cur_client, json);
+            //    логин и регистрация
+            //    заполнение user_id
+
             mx_strdel(&buff);
             memset(json_str, '\0', 100);
         }
@@ -106,7 +113,7 @@ static struct sockaddr_in accept_connections(t_clients *client, int listenfd) {
 static void thread_create(t_clients *client, struct sockaddr_in cli) {
     pthread_t thread = NULL;
 
-    if ((pthread_create(&thread, NULL, send_message, client)) != 0) {
+    if ((pthread_create(&thread, NULL, main_cycle, client)) != 0) {
         mx_printerr("uchat_server: thread creating error");
         exit(1);
     }

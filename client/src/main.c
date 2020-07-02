@@ -19,16 +19,20 @@ void *input(void *sock) {
     char name[100];
     char *json_str = NULL;
     t_message *message = malloc(sizeof(t_message));
+
+    clie
+
     message->client1_id = 1;
     message->client2_id = 2;
     message->text = mx_strdup("hallo");
-    //    while(1) {
+//        while(1) {
         json_str = mx_json_message_out_request(message);
     mx_printint(mx_strlen(json_str));
         write(*sockfd, json_str, mx_strlen(json_str));
         memset(recvBuff, '\0', 1024);
         memset(name, '\0', 100);
 //    }
+
     return NULL;
 }
 
