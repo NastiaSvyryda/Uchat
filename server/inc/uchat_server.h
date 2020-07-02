@@ -1,6 +1,7 @@
 #ifndef UCHAT_SERVER_H
 #define UCHAT_SERVER_H
 
+#include "../../libmx/inc/libmx.h"
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -12,7 +13,6 @@
 #include <time.h>
 #include <pthread.h>
 #include <sqlite3.h>
-#include "../../libmx/inc/libmx.h"
 
 #define MX_JS_TYPE "{ \"type\": %d, "
 #define MX_JS_TOKEN "\"token\": \"%s\" }"
@@ -62,13 +62,19 @@
 #define MX_LAST_NAME_LEN 256
 #define MX_MAX_NAME_LEN 100
 // #define MX_MAX_MESSAGE_LEN 65000
+//Struct
+typedef enum e_json_types t_json_types;
+typedef struct s_json_data t_json_data;
+typedef struct s_clients t_clients;
+typedef struct s_message t_message;
+typedef struct s_personal_data t_personal_data;
 
 union u_json_data {
     t_personal_data pers_info;
     t_message message;
 };
 
-typedef enum e_json_types {
+enum e_json_types {
     JS_REG,  // JSON Type - register
     JS_LOG_IN,  // JSON Type - log in
     JS_LOG_OUT,  // JSON Type - log out
@@ -78,14 +84,14 @@ typedef enum e_json_types {
     JS_MES_EDIT_OUT,  // JSON Type - edit message
     JS_MES_IN,  // JSON Type - input message
     JS_MES_OUT  // JSON Type - output message
-}             t_json_types;
+};
 
-typedef struct s_json_data {
+struct s_json_data {
     int type;
     int status;
     char token[MX_TOKEN_LEN];
     union u_json_data data;
-}              t_json_data;
+};
 
 struct s_clients {
     struct s_clients *next;
@@ -93,7 +99,7 @@ struct s_clients {
     char *name_to;
     char *name_from;
     struct s_clients *first;
-}      t_clients;
+};
 
 struct s_message {
     char *text;
@@ -103,7 +109,7 @@ struct s_message {
     int message_id;
     time_t delivery_time;
     // char token[MX_TOKEN_LEN];
-}      t_message;
+};
 
 struct s_personal_data {
     char login[MX_VARCHAR_LEN];
@@ -112,7 +118,7 @@ struct s_personal_data {
     char first_name[MX_MAX_NAME_LEN];
     char last_name[MX_MAX_NAME_LEN];
     // char token[MX_TOKEN_LEN];
-}      t_personal_data;
+};
 
 ///Config
 char *mx_config_sqlite3_db_name(void);

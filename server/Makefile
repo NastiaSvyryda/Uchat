@@ -1,11 +1,10 @@
 APP_NAME = uchat_server
 
-LIBMXF = libmx
+LIBMXF = ../libmx
 
 LIB_NAME = libmx.a
 
 INC = \
-../ \
 inc/ \
 libmx/inc/
 
@@ -75,12 +74,12 @@ CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
 
 all : install
 
-install : ../libmx/libmx.a uchat_server
+install : libmx/libmx.a uchat_server
 
-../libmx/libmx.a:
+libmx/libmx.a:
 	@make -C $(LIBMXF)
 
-uchat_server : $(SRC) inc/uchat_server.h ../libmx/libmx.a
+uchat_server : $(SRC) inc/uchat_server.h libmx/libmx.a
 	@$(CC) $(CFLAGS) -c $(SRC) $(foreach d, $(INC), -I $d)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBMXF)/$(LIB_NAME) -o $(APP_NAME) -ltermcap
 	@printf "\r\33[2Kuchat_server \033[32;1mcreated\033[0m\n"
