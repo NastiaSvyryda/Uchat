@@ -45,7 +45,7 @@
     \"new_message\": \"%s\", \"client1_id\": %d }"
 #define MX_REQ_MES_EDIT_OUT MX_JS_TYPE MX_JS_MSSGE_ID ", \
     \"new_message\": \"%s\", \"client1_id\": %d, " MX_JS_TOKEN
-#define MX_REQ_MES_IN MX_JS_TYPE MX_JS_MSSGE_ID "\", client1_id\": %d, \
+#define MX_REQ_MES_IN MX_JS_TYPE MX_JS_MSSGE_ID ", \"client1_id\": %d, \
     \"client2_id\": %d, \"new_message\": \"%s\" }"
 #define MX_REQ_MES_OUT MX_JS_TYPE "\"client1_id\": %d, \
     \"client2_id\": %d, \"new_message\": \"%s\" }"
