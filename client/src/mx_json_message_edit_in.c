@@ -1,18 +1,19 @@
 #include "../../inc/header.h"
 
-char *mx_json_message_edit_in_request(t_message *data) {
+char *mx_json_message_edit_in_request(t_json_data *data) {
     char *s;
+    int len = asprintf(&s, "0000" MX_REQ_MES_EDIT_IN, JS_MES_EDIT_IN, data->message.message_id,
+             data->message.text, data->message.client1_id);
+    *(int *)s = len;
 
-    asprintf(&s, MX_REQ_MES_EDIT_IN, JS_MES_EDIT_IN, data->message_id,
-             data->text, data->client1_id);
     return s;
 }
 
-char *mx_json_message_edit_in_response(t_message *data, int status,
-                                       char *token) {
+char *mx_json_message_edit_in_response(t_json_data *data) {
     char *s;
+    int len = asprintf(&s, "0000" MX_RESP_MES_EDIT_IN, JS_MES_EDIT_IN, data->status,
+             data->message.message_id, data->message.client2_id, data->token);
+    *(int *)s = len;
 
-    asprintf(&s, MX_RESP_MES_EDIT_IN, JS_MES_EDIT_IN, status,
-             data->message_id, data->client2_id, token);
     return s;
 }

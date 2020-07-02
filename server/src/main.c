@@ -23,7 +23,7 @@ typedef struct s_clients {
 }t_clients;
 
 static void message(t_clients *client, t_clients *cur_client, t_json_data *json) {
-    cur_client->name_to = json->data.message.client2_id;
+    cur_client->name_to = json->message.client2_id;
     t_message *message = malloc(sizeof(t_message));
     char *json_str = NULL;
 
@@ -32,8 +32,8 @@ static void message(t_clients *client, t_clients *cur_client, t_json_data *json)
             client->name_from == cur_client->name_to) {
 //            message->client1_id = json->data.message.client1_id;
 //            message->client2_id = json->data.message.client2_id;
-            message->text = mx_strdup(json->data.message.text);
-            json_str = mx_json_message_in_request(message);
+            message->text = mx_strdup(json->message.text);
+            json_str = mx_json_message_in_request(json);
 //            write(client->fd, json_str, mx_strlen(json_str));
             write(client->fd, message->text, mx_strlen(message->text));
             mx_printstr("message delivered to ");
@@ -68,7 +68,7 @@ void *main_cycle(void *newfd) {
             //    заполнение user_id
 
             memset(json_str, '\0', 100);
-            mx_strdel(&json->data.message.text);
+            mx_strdel(&json->message.text);
             //free(&json->data.message);
             free(json);
         }

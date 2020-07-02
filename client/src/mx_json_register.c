@@ -1,17 +1,19 @@
 #include "../../inc/header.h"
 
-char *mx_json_register_request(t_personal_data *data) {
+char *mx_json_register_request(t_json_data *data) {
     char *s;
+    int len = asprintf(&s, "0000" MX_REQ_REG, JS_REG, data->pers_info.login, data->pers_info.password,
+             data->pers_info.first_name, data->pers_info.last_name);
+    *(int *)s = len;
 
-    asprintf(&s, MX_REQ_REG, JS_REG, data->login, data->password,
-             data->first_name, data->last_name);
     return s;
 }
 
-char *mx_json_register_response(t_personal_data *data, int status, char *token) {
+char *mx_json_register_response(t_json_data *data) {
     char *s;
+    int len = asprintf(&s, "0000" MX_RESP_REG, JS_REG, data->status, data->user_id,
+             data->pers_info.first_name, data->pers_info.last_name, data->token);
+    *(int *)s = len;
 
-    asprintf(&s, MX_RESP_REG, JS_REG, status, data->user_id,
-             data->first_name, data->last_name, token);
     return s;
 }

@@ -27,7 +27,6 @@
 #include "../server/inc/server.h"
 #include "../client/inc/client.h"
 
-
 #include "../libmx/inc/libmx.h"
 #define MX_JS_TYPE "{ \"type\": %d, "
 #define MX_JS_TOKEN "\"token\": \"%s\" }"
@@ -147,6 +146,11 @@ char *mx_json_register_response(t_json_data *data);
 char *mx_json_make_json(enum e_json_types n, t_json_data *data,
                         bool is_request);
 t_json_data *mx_json_parse(char *s);
+
+
+
+
+
 
 
 

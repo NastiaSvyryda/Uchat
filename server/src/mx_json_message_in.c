@@ -1,15 +1,18 @@
 #include "../../inc/header.h"
-char *mx_json_message_in_request(t_message *data) {
-    char *s;
 
-    asprintf(&s, MX_REQ_MES_IN, JS_MES_IN, data->message_id,
-             data->client1_id, data->client2_id, data->text);
+char *mx_json_message_in_request(t_json_data *data) {
+    char *s;
+    int len = asprintf(&s, "0000" MX_REQ_MES_IN, JS_MES_IN, data->message.message_id,
+             data->message.client1_id, data->message.client2_id, data->message.text);
+    *(int *)s = len;
+
     return s;
 }
 
-char *mx_json_message_in_response(t_message *data, int status) {
+char *mx_json_message_in_response(t_json_data *data) {
     char *s;
+    int len = asprintf(&s, "0000" MX_RESP_MES_IN, JS_MES_IN, data->status, data->message.message_id);
+    *(int *)s = len;
 
-    asprintf(&s, MX_RESP_MES_IN, JS_MES_IN, status, data->message_id);
     return s;
 }
