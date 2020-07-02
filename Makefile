@@ -1,0 +1,109 @@
+CL_NAME = uchat
+SV_NAME = uchat_server
+
+CCFLG = clang -std=c11 $(addprefix -W, all extra error pedantic) -g
+
+CL_SRC_DIR = client/src
+SV_SRC_DIR = server/src
+
+CL_INC_DIR = client/inc
+SV_INC_DIR = server/inc
+
+LIBMX_DIR = libmx
+LIBMX = $(LIBMX_DIR)/libmx.a
+
+CL_OBJ_DIR = client/obj
+SV_OBJ_DIR = server/obj
+
+GTK_FLAGS = `pkg-config --cflags  --libs gtk+-3.0`
+GTK_SORT_FLAGS = `pkg-config --cflags gtk+-3.0`
+
+CL_INC = $(CL_INC_DIR)/client.h
+SV_INC = $(SV_INC_DIR)/server.h
+
+CL_SRC = main.c \
+
+SV_SRC = migrations/mx_migration.c \
+             migrations/mx_migration_channels.c \
+             migrations/mx_migration_delivery_user.c \
+             migrations/mx_migration_messages.c \
+             migrations/mx_migration_user_channel.c \
+             migrations/mx_migration_users.c \
+             models/mx_model_channel.c \
+             models/mx_model_delivery_user.c \
+             models/mx_model_message.c \
+             models/mx_model_user.c \
+             models/mx_model_user_channel.c \
+             system/database_crud/mx_create_database.c \
+             system/database_crud/mx_delete_database.c \
+             system/database_crud/mx_read_database.c \
+             system/database_crud/mx_update_database.c \
+             validations/mx_valid_check_argc_error.c \
+             validations/mx_valid_sqlite3_failed_data.c \
+             validations/mx_valid_sqlite3_open_db.c \
+             mx_config.c \
+             main.c \
+             mx_routes.c
+
+CL_SRCS = $(addprefix $(CL_SRC_DIR)/, $(CL_SRC))
+CL_OBJS = $(addprefix $(CL_OBJ_DIR)/, $(CL_SRC:%.c=%.o))
+
+SV_SRCS = $(addprefix $(SV_SRC_DIR)/, $(SV_SRC))
+SV_OBJS = $(addprefix $(SV_OBJ_DIR)/, $(SV_SRC:%.c=%.o))
+
+all: install
+
+install: install_client install_server
+
+install_client: $(LIBMX) $(CL_NAME)
+
+$(CL_NAME): $(CL_OBJS)
+	@$(CCFLG) $(CL_OBJS) $(GTK_FLAGS) -L$(LIBMX_DIR) -lmx -o $@
+	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
+
+$(CL_OBJ_DIR)/%.o: $(CL_SRC_DIR)/%.c $(CL_INC)
+	@$(CCFLG) -c $(GTK_SORT_FLAGS) $(CL_SRCS) -I$(CL_INC_DIR)
+	@printf "\r\33[2K$(CL_NAME) \033[33;1mcompile \033[0m$(<:$(CL_SRC_DIR)/%.c=%)"
+	@mv $(CL_SRC:%.c=%.o) $(CL_OBJ_DIR)
+
+$(CL_OBJS): | $(CL_OBJ_DIR)
+
+$(CL_OBJ_DIR):
+	@mkdir -p $@
+	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
+
+install_server: $(LIBMX) $(SV_NAME)
+
+$(SV_NAME): $(SV_OBJS)
+	@$(CCFLG) $(SV_OBJS) -L$(LIBMX_DIR) -lmx -o $@
+	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
+
+$(SV_OBJ_DIR)/%.o: $(SV_SRC_DIR)/%.c $(SV_INC)
+	@$(CCFLG) -c $(SV_SRCS) -I$(SV_INC_DIR)
+	@printf "\r\33[2K$(SV_NAME) \033[33;1mcompile \033[0m$(<:$(SV_SRC_DIR)/%.c=%) "
+	@mv $(SV_SRC:%.c=%.o) $(SV_OBJ_DIR)
+
+$(SV_OBJS): | $(SV_OBJ_DIR)
+
+$(SV_OBJ_DIR):
+	@mkdir -p $@
+	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
+
+$(LIBMX):
+	@make -sC $(LIBMX_DIR)
+
+clean:
+	@make -sC $(LIBMX_DIR) $@
+	@rm -rf $(CL_OBJ_DIR)
+	@rm -rf $(SV_OBJ_DIR)
+	@printf "$(CL_OBJ_DIR)\t   \033[31;1mdeleted\033[0m\n"
+	@printf "$(SV_OBJ_DIR)\t   \033[31;1mdeleted\033[0m\n"
+
+uninstall: clean
+	@make -sC $(LIBMX_DIR) $@
+	@rm -rf $(CL_NAME)
+	@rm -rf $(SV_NAME)
+	@printf "$(CL_NAME) \033[31;1muninstalled\033[0m\n"
+	@printf "$(SV_NAME) \033[31;1muninstalled\033[0m\n"
+
+reinstall: uninstall install

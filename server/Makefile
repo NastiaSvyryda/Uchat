@@ -14,50 +14,60 @@ SRC_DIR = src
 OBJ_DIR = obj
 
 SRC = $(addprefix $(SRC_DIR)/,\
-    migrations/migration.c \
-    migrations/migration_channels.c \
-    migrations/migration_delivery_user.c \
-    migrations/migration_messages.c \
-    migrations/migration_user_channel.c \
-    migrations/migration_users.c \
-    models/model_channel.c \
-    models/model_delivery_user.c \
-    models/model_message.c \
-    models/model_user.c \
-    models/model_user_channel.c \
-    system/database_crud/create_database.c \
-    system/database_crud/delete_database.c \
-    system/database_crud/read_database.c \
-    system/database_crud/update_database.c \
-    validations/valid_check_argc_error.c \
-    validations/valid_sqlite3_failed_data.c \
-    validations/valid_sqlite3_open_db.c \
-    config.c \
+	json/mx_str_to_file.c \
+	json/mx_json_parse.c \
+	json/mx_json_log_in.c \
+	json/mx_json_register.c \
+	json/mx_json_log_out.c \
+    migrations/mx_migration.c \
+    migrations/mx_migration_channels.c \
+    migrations/mx_migration_delivery_user.c \
+    migrations/mx_migration_messages.c \
+    migrations/mx_migration_user_channel.c \
+    migrations/mx_migration_users.c \
+    models/mx_model_channel.c \
+    models/mx_model_delivery_user.c \
+    models/mx_model_message.c \
+    models/mx_model_user.c \
+    models/mx_model_user_channel.c \
+    system/database_crud/mx_create_database.c \
+    system/database_crud/mx_delete_database.c \
+    system/database_crud/mx_read_database.c \
+    system/database_crud/mx_update_database.c \
+    validations/mx_valid_check_argc_error.c \
+    validations/mx_valid_sqlite3_failed_data.c \
+    validations/mx_valid_sqlite3_open_db.c \
+    mx_config.c \
     main.c \
-    routes.c)
+    mx_routes.c)
 
 OBJ = \
-    migration.o \
-    migration_channels.o \
-    migration_delivery_user.o \
-    migration_messages.o \
-    migration_user_channel.o \
-    migration_users.o \
-    model_channel.o \
-    model_delivery_user.o \
-    model_message.o \
-    model_user.o \
-    model_user_channel.o \
-    create_database.o \
-    delete_database.o \
-    read_database.o \
-    update_database.o \
-    valid_check_argc_error.o \
-    valid_sqlite3_failed_data.o \
-    valid_sqlite3_open_db.o \
-    config.o \
+	mx_str_to_file.c \
+	mx_json_parse.c \
+	mx_json_log_in.c \
+	mx_json_register.c \
+	mx_json_log_out.c \
+    mx_migration.o \
+    mx_migration_channels.o \
+    mx_migration_delivery_user.o \
+    mx_migration_messages.o \
+    mx_migration_user_channel.o \
+    mx_migration_users.o \
+    mx_model_channel.o \
+    mx_model_delivery_user.o \
+    mx_model_message.o \
+    mx_model_user.o \
+    mx_model_user_channel.o \
+    mx_create_database.o \
+    mx_delete_database.o \
+    mx_read_database.o \
+    mx_update_database.o \
+    mx_valid_check_argc_error.o \
+    mx_valid_sqlite3_failed_data.o \
+    mx_valid_sqlite3_open_db.o \
+    mx_config.o \
     main.o \
-    routes.o
+    mx_routes.o
 
 CC = clang
 
