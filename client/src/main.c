@@ -20,8 +20,6 @@ void *input(void *sock) {
     char *json_str = NULL;
     t_message *message = malloc(sizeof(t_message));
 
-    clie
-
     message->client1_id = 1;
     message->client2_id = 2;
     message->text = mx_strdup("hallo");
@@ -42,6 +40,7 @@ int main(int argc, char **argv) {
     char buf[1024];
     pthread_t thread = NULL;
     char name[100];
+//    t_json_data *json = NULL;
 
     if (argc != 3) {
         mx_printerr("uchat_server: error args\n");
@@ -75,8 +74,15 @@ int main(int argc, char **argv) {
     }
     while (1) {
         recv(sockfd, buf, 1024, 0);
+//        json = mx_json_parse(buf);
+
         mx_printstr("Message recived: ");
         mx_printstr(buf);
+//        mx_printstr(json->data.message.text);
+        mx_printstr("\n from: ");
+//        mx_printint(json->data.message.client1_id);
         memset(buf, '\0', 1024);
+//        mx_strdel(&json->data.message.text);
+//        free(json);
     }
 }

@@ -24,30 +24,33 @@ typedef struct s_clients {
 
 static void message(t_clients *client, t_clients *cur_client, t_json_data *json) {
     cur_client->name_to = json->data.message.client2_id;
+    t_message *message = malloc(sizeof(t_message));
+    char *json_str = NULL;
 
     while (client->next != NULL) {
         if (cur_client->name_to != 3 &&
             client->name_from == cur_client->name_to) {
-            write(client->fd, json->data.message.text, mx_strlen(json->data.message.text));
+//            message->client1_id = json->data.message.client1_id;
+//            message->client2_id = json->data.message.client2_id;
+            message->text = mx_strdup(json->data.message.text);
+            json_str = mx_json_message_in_request(message);
+//            write(client->fd, json_str, mx_strlen(json_str));
+            write(client->fd, message->text, mx_strlen(message->text));
             mx_printstr("message delivered to ");
             mx_printint(cur_client->name_to);
             mx_printchar('\n');
             break;
-        } else if (cur_client->name_to == 3) {
-            if (cur_client->name_from != client->name_from) {
-                write(client->fd, json->data.message.text, mx_strlen(json->data.message.text));
-                mx_printstr("message delivered to ");
-                mx_printint(client->name_from);
-                mx_printchar('\n');
-            }
         }
+
         client = client->next;
     }
+    mx_strdel(&message->text);
+    free(message);
+    message = NULL;
 }
 
 
 void *main_cycle(void *newfd) {
-    char *buff = NULL;
     char json_str[100];
     t_json_data *json = NULL;
     t_clients *client = (t_clients *)newfd;
@@ -64,8 +67,10 @@ void *main_cycle(void *newfd) {
             //    логин и регистрация
             //    заполнение user_id
 
-            mx_strdel(&buff);
             memset(json_str, '\0', 100);
+            mx_strdel(&json->data.message.text);
+            //free(&json->data.message);
+            free(json);
         }
     }
     return NULL;
@@ -157,3 +162,13 @@ int main(int argc, char **argv) {
     }
 }
 
+
+
+//        } else if (cur_client->name_to == 3) {
+//            if (cur_client->name_from != client->name_from) {
+//                write(client->fd, json->data.message.text, mx_strlen(json->data.message.text));
+//                mx_printstr("message delivered to ");
+//                mx_printint(client->name_from);
+//                mx_printchar('\n');
+//            }
+//        }
