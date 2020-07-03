@@ -1,7 +1,8 @@
 #ifndef UCHAT_SERVER_H
 #define UCHAT_SERVER_H
 
-#include "../../libmx/inc/libmx.h"
+#include "libmx.h"
+#include <json.h>
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -20,22 +21,10 @@
 #define MX_JS_MSSGE_ID "\"message_id\": %d"
 #define MX_JS_FST_LST_NAMES "\"first_name\": \"%s\", \"last_name\": \"%s\""
 
-#define MX_REQ_LOG_IN MX_JS_TYPE "\"login\": \"%s\", \
-    \"password\": \"%s\", " MX_JS_TOKEN
-#define MX_REQ_LOG_OUT MX_JS_TYPE "\"user_id\": %d, \
-    " MX_JS_TOKEN
-#define MX_REQ_REG MX_JS_TYPE "\"login\": \"%s\", \
-    \"password\": \"%s\", " MX_JS_FST_LST_NAMES " }"
 #define MX_REQ_MES_DEL_IN MX_JS_TYPE MX_JS_MSSGE_ID ", \"client1_id\": %d }"
-#define MX_REQ_MES_DEL_OUT MX_JS_TYPE MX_JS_MSSGE_ID ", \
-    \"client1_id\": %d, " MX_JS_TOKEN
 #define MX_REQ_MES_EDIT_IN MX_JS_TYPE MX_JS_MSSGE_ID ", \
     \"new_message\": \"%s\", \"client1_id\": %d }"
-#define MX_REQ_MES_EDIT_OUT MX_JS_TYPE MX_JS_MSSGE_ID ", \
-    \"new_message\": \"%s\", \"client1_id\": %d, " MX_JS_TOKEN
-#define MX_REQ_MES_IN MX_JS_TYPE MX_JS_MSSGE_ID "\", client1_id\": %d, \
-    \"client2_id\": %d, \"new_message\": \"%s\" }"
-#define MX_REQ_MES_OUT MX_JS_TYPE "\"client1_id\": %d, \
+#define MX_REQ_MES_IN MX_JS_TYPE MX_JS_MSSGE_ID ", \"client1_id\": %d, \
     \"client2_id\": %d, \"new_message\": \"%s\" }"
 
 #define MX_RESP_LOG_IN MX_JS_TYPE MX_JS_STATUS "\
@@ -43,14 +32,9 @@
 #define MX_RESP_LOG_OUT MX_JS_TYPE "\"status\": %d }"
 #define MX_RESP_REG MX_JS_TYPE MX_JS_STATUS "\
         \"user_id\": %d, " MX_JS_FST_LST_NAMES ", " MX_JS_TOKEN
-#define MX_RESP_MES_DEL_IN MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID \
-        ", \"client2_id\": %d, " MX_JS_TOKEN
 #define MX_RESP_MES_DEL_OUT MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID \
         " }"
-#define MX_RESP_MES_EDIT_IN MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID \
-        ", \"client2_id\": %d, " MX_JS_TOKEN
 #define MX_RESP_MES_EDIT_OUT MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID " }"
-#define MX_RESP_MES_IN MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID " }"
 #define MX_RESP_MES_OUT MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID ", \
         \"delivery_time\": %ld }"
 
@@ -62,19 +46,8 @@
 #define MX_LAST_NAME_LEN 256
 #define MX_MAX_NAME_LEN 100
 // #define MX_MAX_MESSAGE_LEN 65000
-//Struct
-typedef enum e_json_types t_json_types;
-typedef struct s_json_data t_json_data;
-typedef struct s_clients t_clients;
-typedef struct s_message t_message;
-typedef struct s_personal_data t_personal_data;
 
-union u_json_data {
-    t_personal_data pers_info;
-    t_message message;
-};
-
-enum e_json_types {
+typedef enum e_json_types {
     JS_REG,  // JSON Type - register
     JS_LOG_IN,  // JSON Type - log in
     JS_LOG_OUT,  // JSON Type - log out
@@ -83,25 +56,20 @@ enum e_json_types {
     JS_MES_EDIT_IN,  // JSON Type - edit message
     JS_MES_EDIT_OUT,  // JSON Type - edit message
     JS_MES_IN,  // JSON Type - input message
-    JS_MES_OUT  // JSON Type - output message
-};
+    JS_MES_OUT,  // JSON Type - output message
+    JS_NUM  // JSON types number
+}            t_json_types;
 
-struct s_json_data {
-    int type;
-    int status;
-    char token[MX_TOKEN_LEN];
-    union u_json_data data;
-};
+typedef struct s_personal_data {
+    char login[MX_VARCHAR_LEN];
+    char password[MX_VARCHAR_LEN];
+    int user_id;
+    char first_name[MX_MAX_NAME_LEN];
+    char last_name[MX_MAX_NAME_LEN];
+    // char token[MX_TOKEN_LEN];
+}              t_personal_data;
 
-struct s_clients {
-    struct s_clients *next;
-    int fd;
-    char *name_to;
-    char *name_from;
-    struct s_clients *first;
-};
-
-struct s_message {
+typedef struct s_message {
     char *text;
     int client1_id;
     int client2_id;
@@ -109,16 +77,29 @@ struct s_message {
     int message_id;
     time_t delivery_time;
     // char token[MX_TOKEN_LEN];
+}              t_message;
+
+union u_json_data {
+    t_personal_data pers_info;
+    t_message message;
 };
 
-struct s_personal_data {
-    char login[MX_VARCHAR_LEN];
-    char password[MX_VARCHAR_LEN];
+typedef struct s_json_data {
+    int type;
+    int status;
+    char token[MX_TOKEN_LEN];
+    t_personal_data pers_info;
+    t_message message;
     int user_id;
-    char first_name[MX_MAX_NAME_LEN];
-    char last_name[MX_MAX_NAME_LEN];
-    // char token[MX_TOKEN_LEN];
-};
+}              t_json_data;
+
+struct s_clients {
+    struct s_clients *next;
+    int fd;
+    char *name_to;
+    char *name_from;
+    struct s_clients *first;
+}      t_clients;
 
 ///Config
 char *mx_config_sqlite3_db_name(void);
@@ -131,11 +112,21 @@ void mx_valid_sqlite3_failed_data(int rc, sqlite3 *db, char *err_msg);
 ///end validation
 
 ///JSON
+//Basic
 void mx_str_to_file(const char *filepath, const char *data);
 t_json_data *mx_json_parse(char *s);
-char *mx_json_log_in_response(t_personal_data *data, int status, char *token);
-char *mx_json_register_response(t_personal_data *data, int status, char *token);
-char *mx_json_log_out_response(int status);
+char *mx_json_make_json(enum e_json_types type, t_json_data *data);
+//Auth
+char *mx_json_log_in_response(t_json_data *data);
+char *mx_json_log_out_response(t_json_data *data);
+char *mx_json_register_response(t_json_data *data);
+//Message
+char *mx_json_message_in_request(t_json_data *data);
+char *mx_json_message_out_response(t_json_data *data);
+char *mx_json_message_edit_in_request(t_json_data *data);
+char *mx_json_message_edit_out_response(t_json_data *data);
+char *mx_json_message_delete_in_request(t_json_data *data);
+char *mx_json_message_delete_out_response(t_json_data *data);
 ///end JSON
 
 ///Models
