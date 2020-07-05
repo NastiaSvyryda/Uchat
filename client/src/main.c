@@ -1,41 +1,33 @@
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <arpa/inet.h>
-#include "../../libmx/inc/libmx.h"
-//#include <gtk/gtk.h>
-#include <pthread.h>
+#include "uchat_client.h"
 
 void *input(void *sock) {
     int *sockfd = (int *) sock;
     char recvBuff[1024];
     char name[100];
-    while(1) {
-        mx_printstr("NAME, WHO YOU WANNA SEND THE MESSAGE: ");
-        scanf("%s", name);
-        write(*sockfd, name, mx_strlen(name));
-        mx_printstr("YOUR MESSAGE: ");
-        scanf("%s", recvBuff);
-        write(*sockfd, recvBuff, mx_strlen(recvBuff));
-        memset(recvBuff, '\0', 1024);
-        memset(name, '\0', 100);
-    }
+    char *json_str = NULL;
+    t_json_data *json = malloc(sizeof(t_json_data));
+
+    json->message.client1_id = 1;
+    json->message.client2_id = 2;
+    json->message.text = mx_strdup("hallo");
+//        while(1) {
+    json_str = mx_json_message_out_request(json);
+    mx_printint(mx_strlen(json_str));
+    write(*sockfd, json_str, mx_strlen(json_str));
+    memset(recvBuff, '\0', 1024);
+    memset(name, '\0', 100);
+//    }
+
     return NULL;
 }
 
 int main(int argc, char **argv) {
     int sockfd = 0;
     struct sockaddr_in serv;
-    //char recvBuff[1024];
     char buf[1024];
     pthread_t thread = NULL;
     char name[100];
+//    t_json_data *json = NULL;
 
     if (argc != 3) {
         mx_printerr("uchat_server: error args\n");
@@ -68,19 +60,16 @@ int main(int argc, char **argv) {
         exit(1);
     }
     while (1) {
-//        if (read(sockfd, recvBuff, sizeof(recvBuff)) == -1) {
-//            mx_printerr("uchat: error read");
-//            exit(1);
-//        }
         recv(sockfd, buf, 1024, 0);
-        mx_printstr("\033[2K");
-        mx_printstr("\033[G");
+//        json = mx_json_parse(buf);
+
         mx_printstr("Message recived: ");
         mx_printstr(buf);
-        mx_printstr("\nNAME, WHO YOU WANNA SEND THE MESSAGE: ");
+//        mx_printstr(json->data.message.text);
+        mx_printstr("\n from: ");
+//        mx_printint(json->data.message.client1_id);
         memset(buf, '\0', 1024);
-//        pthread_join(thread, NULL);
-//        pthread_cancel(thread);
-
+//        mx_strdel(&json->data.message.text);
+//        free(json);
     }
 }
