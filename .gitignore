@@ -4,7 +4,8 @@ cmake-build-debug
 obj
 *.a
 .idea
-ush
+uchat
+uchat_server
 ._.DS_Store
 *.o
 *.out

@@ -1,17 +1,4 @@
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <arpa/inet.h>
-#include "../../libmx/inc/libmx.h"
-//#include <gtk/gtk.h>
-#include <pthread.h>
-#include "../inc/client.h"
+#include "uchat_client.h"
 
 void *input(void *sock) {
     int *sockfd = (int *) sock;
@@ -19,16 +6,18 @@ void *input(void *sock) {
     char name[100];
     char *json_str = NULL;
     t_json_data *json = malloc(sizeof(t_json_data));
+    enum e_json_types type;
 
+    type = JS_MES_OUT;
     json->message.client1_id = 1;
     json->message.client2_id = 2;
     json->message.text = mx_strdup("hallo");
 //        while(1) {
-        json_str = mx_json_message_out_request(json);
-        mx_printint(mx_strlen(json_str));
-        write(*sockfd, json_str, mx_strlen(json_str));
-        memset(recvBuff, '\0', 1024);
-        memset(name, '\0', 100);
+    json_str = mx_json_make_json(type, json);
+    mx_printint(mx_strlen(json_str));
+    write(*sockfd, json_str, mx_strlen(json_str));
+    memset(recvBuff, '\0', 1024);
+    memset(name, '\0', 100);
 //    }
 
     return NULL;
