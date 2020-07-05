@@ -6,12 +6,14 @@ void *input(void *sock) {
     char name[100];
     char *json_str = NULL;
     t_json_data *json = malloc(sizeof(t_json_data));
+    enum e_json_types type;
 
+    type = JS_MES_OUT;
     json->message.client1_id = 1;
     json->message.client2_id = 2;
     json->message.text = mx_strdup("hallo");
 //        while(1) {
-    json_str = mx_json_message_out_request(json);
+    json_str = mx_json_make_json(type, json);
     mx_printint(mx_strlen(json_str));
     write(*sockfd, json_str, mx_strlen(json_str));
     memset(recvBuff, '\0', 1024);

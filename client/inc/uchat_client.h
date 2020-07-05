@@ -13,7 +13,7 @@
 #include <arpa/inet.h>
 #include "libmx.h"
 #include <pthread.h>
-#include <json-c/json.h>
+#include <json.h>
 
 typedef enum e_json_types {
     JS_REG,  // JSON Type - register
