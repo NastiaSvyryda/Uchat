@@ -1,4 +1,4 @@
-#include "../inc/header.h"
+#include "uchat_client.h"
 
 static void fill_message_data(t_json_data *json, struct json_object *jo,
                               struct json_object *buf) {
@@ -6,14 +6,14 @@ static void fill_message_data(t_json_data *json, struct json_object *jo,
         json->message.message_id = atoi(json_object_get_string(buf));
     if (json->status == -1) {
         json->message.client1_id = atoi(json_object_get_string(
-            json_object_object_get(jo, "client1_id")));
+                json_object_object_get(jo, "client1_id")));
         if (json->type != JS_MES_DEL_OUT && json->type != JS_MES_DEL_IN)
             json->message.text = strdup(json_object_get_string(
-               json_object_object_get(jo, "new_message")));
+                    json_object_object_get(jo, "new_message")));
     }
     else if (json->type == JS_MES_OUT)
         sscanf(json_object_get_string(json_object_object_get(
-            jo, "delivery_time")), "%ld", &json->message.delivery_time);
+                jo, "delivery_time")), "%ld", &json->message.delivery_time);
     if ((buf = json_object_object_get(jo, "client2_id")))
         json->message.client2_id = atoi(json_object_get_string(buf));
 }
@@ -24,9 +24,9 @@ static void fill_personal_data(t_json_data *json, struct json_object *jo) {
     if (json->status == -1) {
         if (json->type == JS_LOG_IN || json->type == JS_REG) {
             strcpy(json->pers_info.login, json_object_get_string(
-                   json_object_object_get(jo, "login")));
+                    json_object_object_get(jo, "login")));
             strcpy(json->pers_info.password, json_object_get_string(
-                   json_object_object_get(jo, "password")));
+                    json_object_object_get(jo, "password")));
         }
     }
     if ((buf = json_object_object_get(jo, "user_id")))
@@ -36,7 +36,7 @@ static void fill_personal_data(t_json_data *json, struct json_object *jo) {
                json_object_get_string(buf));
         strcpy(json->pers_info.last_name,
                json_object_get_string(json_object_object_get(
-               jo, "last_name")));
+                       jo, "last_name")));
     }
 }
 
@@ -49,7 +49,7 @@ t_json_data *mx_json_parse(char *s) {
         return NULL;
     json->type = atoi(json_object_get_string(buf));
     json->status = (buf = json_object_object_get(jo, "status")) ? atoi(
-        json_object_get_string(buf)) : -1;
+            json_object_get_string(buf)) : -1;
     if ((buf = json_object_object_get(jo, "token")))
         strcpy(json->token, json_object_get_string(buf));
     if ((buf = json_object_object_get(jo, "message_id"))
@@ -57,6 +57,6 @@ t_json_data *mx_json_parse(char *s) {
         fill_message_data(json, jo, buf);
     else
         fill_personal_data(json, jo);
-	json_object_put(jo);
+    json_object_put(jo);
     return json;
 }
