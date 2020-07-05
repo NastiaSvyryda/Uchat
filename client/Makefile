@@ -1,74 +1,54 @@
-APP_NAME = uchat
+NAME = uchat
 
-LIBMXF = libmx
+CCFLG = clang -std=c11 $(addprefix -W, all extra error pedantic) -g
 
-LIB_NAME = libmx.a
-
-INC = \
-inc/ \
-libmx/inc/
-
+SRC_DIRS = src src/json
 SRC_DIR = src
 
+INC_DIR = inc
 OBJ_DIR = obj
 
-SRC = $(addprefix $(SRC_DIR)/,\
-	json/mx_json_log_in.c \
-	json/mx_json_log_out.c \
-	json/mx_json_make_json.c \
-	json/mx_json_message_delete_in.c \
-	json/mx_json_message_delete_out.c \
-	json/mx_json_message_edit_in.c \
-	json/mx_json_message_edit_out.c \
-	json/mx_json_message_in.c \
-	json/mx_json_message_out.c \
-	json/mx_json_parse.c \
-	json/mx_json_register.c \
-	json/mx_str_to_file.c \
-	main.c)
+SRCS := $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c)) 
+INC = $(INC_DIR)/uchat_client.h
+OBJS := $(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:%.c=%.o)))
 
-OBJ = \
-	mx_json_log_in.o \
-	mx_json_log_out.o \
-	mx_json_make_json.o \
-	mx_json_message_delete_in.o \
-	mx_json_message_delete_out.o \
-	mx_json_message_edit_in.o \
-	mx_json_message_edit_out.o \
-	mx_json_message_in.o \
-	mx_json_message_out.o \
-	mx_json_parse.o \
-	mx_json_register.o \
-	mx_str_to_file.o \
-	main.o
-
-CC = clang
-
-CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
+LIBMX_DIR = libmx
+LIBMX = $(LIBMX_DIR)/libmx.a
 
 GTK_FLAGS = `pkg-config --cflags  --libs gtk+-3.0` `pkg-config --libs json-c`
 GTK_SORT_FLAGS = `pkg-config --cflags gtk+-3.0` `pkg-config --cflags json-c`
 
-all : install
+EMPTY = 
+SPACE = $(EMPTY) $(EMPTY)
+VPATH := $(subst $(SPACE), :, $(SRC_DIRS))
 
-install : libmx/libmx.a uchat
+all: install
 
-libmx/libmx.a:
-	@make -C $(LIBMXF)
+install: $(LIBMX) $(NAME)
 
-uchat : $(SRC) inc/uchat_client.h libmx/libmx.a
-	@$(CC) $(CFLAGS) -c $(GTK_SORT_FLAGS) $(SRC) $(foreach d, $(INC), -I $d)
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBMXF)/$(LIB_NAME) $(GTK_FLAGS) -o $(APP_NAME) -ltermcap
-	@printf "\r\33[2Kucaht \033[32;1mcreated\033[0m\n"
-	@mkdir -p $(OBJ_DIR)
-	@mv $(OBJ) $(OBJ_DIR)
+$(NAME): $(OBJS)
+	@$(CCFLG) -lsqlite3 $(OBJS) $(GTK_FLAGS) -L$(LIBMX_DIR) -lmx -o $@
+	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
 
-uninstall : clean
-	@make uninstall -C $(LIBMXF)
-	@rm -rf $(APP_NAME)
+$(OBJS): obj/%.o: %.c $(INC) | $(OBJ_DIR)
+	@$(CCFLG) -I$(INC_DIR) -Ilibmx/inc -c $(GTK_SORT_FLAGS) -o $@ $<
+	@printf "\r\33[2K$(NAME) \033[33;1mcompile \033[0m$(<:$(SRC_DIR)/%.c=%) "
 
-clean :
-	@make clean -C $(LIBMXF)
+$(OBJ_DIR):
+	@mkdir -p $@
+	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
+
+$(LIBMX):
+	@make -sC $(LIBMX_DIR)
+
+clean:
+	@make -sC $(LIBMX_DIR) $@
 	@rm -rf $(OBJ_DIR)
+	@printf "$(OBJ_DIR)\t   \033[31;1mdeleted\033[0m\n"
 
-reinstall : uninstall install
+uninstall: clean
+	@make -sC $(LIBMX_DIR) $@
+	@rm -rf $(NAME)
+	@printf "$(NAME) \033[31;1muninstalled\033[0m\n"
+
+reinstall: uninstall install
