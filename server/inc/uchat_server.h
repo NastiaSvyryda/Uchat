@@ -2,7 +2,7 @@
 #define UCHAT_SERVER_H
 
 #include "libmx.h"
-#include <json-c/json.h>
+#include <json.h>
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

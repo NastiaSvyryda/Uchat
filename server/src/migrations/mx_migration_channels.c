@@ -32,7 +32,7 @@ static void delete_table_for_sqlite3(void) {
     sqlite3_close(db);
 }
 
-void mx_migration_users(bool status) {
+void mx_migration_channels(bool status) {
     if (strcmp(mx_model_channel_database(), "sqlite3") == 0 && status == true)
         create_table_for_sqlite3();
     else if (strcmp(mx_model_channel_database(), "sqlite3") == 0 && status == false)

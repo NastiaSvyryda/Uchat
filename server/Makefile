@@ -16,7 +16,6 @@ SRC = $(addprefix $(SRC_DIR)/,\
 	controllers/auth/mx_controller_log_out.c \
 	controllers/auth/mx_controller_login.c \
 	controllers/auth/mx_controller_register.c \
-	controllers/auth/mx_controller_register.c \
 	controllers/messages/mx_controller_message.c \
 	json/mx_json_make_json.c \
 	json/mx_json_parse.c \
@@ -59,7 +58,6 @@ OBJ = \
 	mx_controller_log_out.o \
 	mx_controller_login.o \
 	mx_controller_register.o \
-	mx_controller_register.o \
 	mx_controller_message.o \
 	mx_json_make_json.o \
 	mx_json_parse.o \
@@ -99,6 +97,9 @@ OBJ = \
 	main.o
 CC = clang
 
+GTK_FLAGS = `pkg-config --cflags  --libs gtk+-3.0` `pkg-config --libs json-c`
+GTK_SORT_FLAGS = `pkg-config --cflags gtk+-3.0` `pkg-config --cflags json-c`
+
 CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
 
 all : install
@@ -109,8 +110,8 @@ libmx/libmx.a:
 	@make -C $(LIBMXF)
 
 uchat_server : $(SRC) inc/uchat_server.h libmx/libmx.a
-	@$(CC) $(CFLAGS) -c $(SRC) $(foreach d, $(INC), -I $d)
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBMXF)/$(LIB_NAME) -o $(APP_NAME) -ltermcap
+	@$(CC) $(CFLAGS) -c $(GTK_SORT_FLAGS) $(SRC) $(foreach d, $(INC), -I $d)
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBMXF)/$(LIB_NAME) $(GTK_FLAGS) -lsqlite3 -o $(APP_NAME) -ltermcap
 	@printf "\r\33[2Kuchat_server \033[32;1mcreated\033[0m\n"
 	@mkdir -p $(OBJ_DIR)
 	@mv $(OBJ) $(OBJ_DIR)
