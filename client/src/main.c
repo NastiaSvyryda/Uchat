@@ -15,8 +15,8 @@ void *input(void *sock) {
     json->message.text = mx_strdup("hallo");
 //        while(1) {
     json_str = mx_json_make_json(type, json);
-    mx_printint(mx_strlen(json_str));
-    write(*sockfd, json_str, mx_strlen(json_str));
+    mx_printint(strlen(json_str + 4) + 4);
+    write(*sockfd, json_str, strlen(json_str + 4) + 4);
     memset(recvBuff, '\0', 1024);
     memset(name, '\0', 100);
 //    }
@@ -30,9 +30,6 @@ int main(int argc, char **argv) {
     char buf[1024];
     pthread_t thread = NULL;
     char name[100];
-    if(tls_init() == -1) {
-        mx_printerr("tls_init error");
-    }
 //    t_json_data *json = NULL;
 
     if (argc != 3) {
