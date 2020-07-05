@@ -5,12 +5,13 @@ void *input(void *sock) {
     char recvBuff[1024];
     char name[100];
     char *json_str = NULL;
-    t_json_data *json = malloc(sizeof(t_json_data));
+    t_json_data *json = calloc(1, sizeof(t_json_data));
     enum e_json_types type;
 
     type = JS_MES_OUT;
     json->message.client1_id = 1;
     json->message.client2_id = 2;
+    json->type = JS_MES_OUT;
     json->message.text = mx_strdup("hallo");
 //        while(1) {
     json_str = mx_json_make_json(type, json);
@@ -29,6 +30,9 @@ int main(int argc, char **argv) {
     char buf[1024];
     pthread_t thread = NULL;
     char name[100];
+    if(tls_init() == -1) {
+        mx_printerr("tls_init error");
+    }
 //    t_json_data *json = NULL;
 
     if (argc != 3) {

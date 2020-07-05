@@ -14,7 +14,7 @@
 #include "libmx.h"
 #include <pthread.h>
 #include <json.h>
-
+#include <tls.h>
 typedef enum e_json_types {
     JS_REG,  // JSON Type - register
     JS_LOG_IN,  // JSON Type - log in
