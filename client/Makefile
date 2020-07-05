@@ -1,4 +1,5 @@
 NAME = uchat
+NAME_ROOT = ../$(NAME)
 
 CCFLG = clang -std=c11 $(addprefix -W, all extra error pedantic) -g
 
@@ -24,9 +25,9 @@ VPATH := $(subst $(SPACE), :, $(SRC_DIRS))
 
 all: install
 
-install: $(LIBMX) $(NAME)
+install: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(LIBMX)
 	@$(CCFLG) -lsqlite3 $(OBJS) $(GTK_FLAGS) -L$(LIBMX_DIR) -lmx -o $@
 	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
 
@@ -40,6 +41,12 @@ $(OBJ_DIR):
 
 $(LIBMX):
 	@make -sC $(LIBMX_DIR)
+
+out: $(NAME_ROOT)
+
+$(NAME_ROOT): $(NAME)
+	@cp $(NAME) ..
+	@printf "\r\33[2K$@ \033[32;1mcopied\033[0m\n"
 
 clean:
 	@make -sC $(LIBMX_DIR) $@

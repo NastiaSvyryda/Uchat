@@ -6,15 +6,18 @@ SV_DIR = server
 
 all: install
 
-install: $(CL_NAME) $(SV_NAME)
+install: dep
 
-$(CL_NAME):
-	@make -C $(CL_DIR)
-	@cp $(CL_DIR)/$(CL_NAME) .
+dep:
+	@make out -C $(CL_DIR)
+	@make out -C $(SV_DIR)
 
-$(SV_NAME):
-	@make -C $(SV_DIR)
-	@cp $(SV_DIR)/$(SV_NAME) .
+
+# $(CL_NAME):
+# 	# @cp $(CL_DIR)/$(CL_NAME) .
+
+# $(SV_NAME):
+# 	# @cp $(SV_DIR)/$(SV_NAME) .
 
 clean:
 	@make clean -C $(CL_DIR)
