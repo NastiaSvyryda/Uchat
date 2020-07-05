@@ -13,6 +13,11 @@ SRC_DIR = src
 OBJ_DIR = obj
 
 SRC = $(addprefix $(SRC_DIR)/,\
+	controllers/auth/mx_controller_log_out.c \
+	controllers/auth/mx_controller_login.c \
+	controllers/auth/mx_controller_register.c \
+	controllers/auth/mx_controller_register.c \
+	controllers/messages/mx_controller_message.c \
 	json/mx_json_make_json.c \
 	json/mx_json_parse.c \
 	json/mx_str_to_file.c \
@@ -36,6 +41,9 @@ SRC = $(addprefix $(SRC_DIR)/,\
 	models/mx_model_message.c \
 	models/mx_model_user.c \
 	models/mx_model_user_channel.c \
+	system/basic/mx_accept_connections.c \
+	system/basic/mx_conn_list_sock.c \
+	system/basic/mx_thread_create.c \
 	system/database_crud/mx_create_database.c \
 	system/database_crud/mx_delete_database.c \
 	system/database_crud/mx_read_database.c \
@@ -48,6 +56,11 @@ SRC = $(addprefix $(SRC_DIR)/,\
 	main.c)
 
 OBJ = \
+	mx_controller_log_out.o \
+	mx_controller_login.o \
+	mx_controller_register.o \
+	mx_controller_register.o \
+	mx_controller_message.o \
 	mx_json_make_json.o \
 	mx_json_parse.o \
 	mx_str_to_file.o \
@@ -71,6 +84,9 @@ OBJ = \
 	mx_model_message.o \
 	mx_model_user.o \
 	mx_model_user_channel.o \
+	mx_accept_connections.o \
+	mx_conn_list_sock.o \
+	mx_thread_create.o \
 	mx_create_database.o \
 	mx_delete_database.o \
 	mx_read_database.o \

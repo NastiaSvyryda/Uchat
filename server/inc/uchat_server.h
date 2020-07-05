@@ -2,7 +2,7 @@
 #define UCHAT_SERVER_H
 
 #include "libmx.h"
-#include <json.h>
+#include <json-c/json.h>
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -93,14 +93,17 @@ typedef struct s_json_data {
     int user_id;
 }              t_json_data;
 
-struct s_clients {
+typedef struct s_clients {
     struct s_clients *next;
     int fd;
-    char *name_to;
-    char *name_from;
+    int name_to;
+    int name_from;
+    int index;
     struct s_clients *first;
-}      t_clients;
+}               t_clients;
 
+int main(int argc, char **argv);
+void mx_routes(t_json_data *json, t_clients *client, t_clients *cur_client);
 ///Config
 char *mx_config_sqlite3_db_name(void);
 ///end config
@@ -128,6 +131,15 @@ char *mx_json_message_edit_out_response(t_json_data *data);
 char *mx_json_message_delete_in_request(t_json_data *data);
 char *mx_json_message_delete_out_response(t_json_data *data);
 ///end JSON
+
+///Controllers
+//Auth
+void mx_controller_login(void);
+void mx_controller_register(void);
+void mx_controller_log_out(void);
+//Messages
+void mx_controller_message(t_clients *client, t_clients *cur_client, t_json_data *json);
+///end controllers
 
 ///Models
 //model_channel
@@ -161,10 +173,16 @@ void mx_migration_user_channel(bool status);
 void mx_migration_delivery_user(bool status);
 ///end migrations
 
+///System
+//Basic
+void mx_conn_list_sock(int *fd, char **argv);
+struct sockaddr_in mx_accept_connections(t_clients *client, int listenfd);
+void mx_thread_create(t_clients *client, struct sockaddr_in cli);
 //CRUD
 void mx_create_databases(char *database, char *table, char *fill_table, char *value_table);
 void mx_read_database(char *database, char *table, char *set, char *where);
 void mx_update_database(char *database, char *table, char *set, char *where);
 void mx_delete_database(char *database, char *table, char *fill_table, char *where);
-//end crud
+//end systeam
+
 #endif
