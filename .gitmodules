@@ -1,6 +1,6 @@
-[submodule "server/libmx"]
-	path = server/libmx
-	url = https://github.com/viacheslavpleshkov/unit-factory-ucode-libmx
 [submodule "client/libmx"]
 	path = client/libmx
+	url = https://github.com/viacheslavpleshkov/unit-factory-ucode-libmx
+[submodule "server/libmx"]
+	path = server/libmx
 	url = https://github.com/viacheslavpleshkov/unit-factory-ucode-libmx
