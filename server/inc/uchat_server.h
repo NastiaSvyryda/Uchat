@@ -14,7 +14,6 @@
 #include <time.h>
 #include <pthread.h>
 #include <sqlite3.h>
-#include <tls.h>
 
 #define MX_JS_TYPE "{ \"type\": %d, "
 #define MX_JS_TOKEN "\"token\": \"%s\" }"

@@ -244,6 +244,9 @@ void on_butRegistreIn_clicked(GtkWidget *button, gpointer data) {
 }
 
 void on_butRegistre_clicked(GtkWidget *button, gpointer data) {
+    char *json_str = NULL;
+    t_json_data *json = calloc(1, sizeof(t_json_data));
+
     if (button != NULL) {
         t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
 
@@ -252,24 +255,22 @@ void on_butRegistre_clicked(GtkWidget *button, gpointer data) {
         registre.type = strdup("register");
         registre.login = (char *) gtk_entry_get_text(
                 GTK_ENTRY(mwo->entryLogin_r));
-        if (strcmp((char *) gtk_entry_get_text(GTK_ENTRY(mwo->entryPass_r)),
-                   (char *) gtk_entry_get_text(
-                           GTK_ENTRY(mwo->entryPass_r2))) == 0)
-            registre.password = (char *) gtk_entry_get_text(
-                    GTK_ENTRY(mwo->entryPass_r));
+        if (strcmp((char *) gtk_entry_get_text(GTK_ENTRY(mwo->entryPass_r)), (char *) gtk_entry_get_text(GTK_ENTRY(mwo->entryPass_r2))) == 0)
+            registre.password = (char *) gtk_entry_get_text(GTK_ENTRY(mwo->entryPass_r));
         else
             printf("different passwords\n");
-        registre.name = (char *) gtk_entry_get_text(
-                GTK_ENTRY(mwo->entryName_r));
-        registre.surname = (char *) gtk_entry_get_text(
-                GTK_ENTRY(mwo->entrySurname_r));
+        registre.name = (char *) gtk_entry_get_text(GTK_ENTRY(mwo->entryName_r));
+        registre.surname = (char *) gtk_entry_get_text(GTK_ENTRY(mwo->entrySurname_r));
+        strcpy(json->pers_info.login, registre.login);
+        strcpy(json->pers_info.password, registre.password);
+        strcpy(json->pers_info.first_name, registre.name);
+        strcpy(json->pers_info.last_name, registre.surname);
+        json_str = mx_json_make_json(JS_REG, json);
+        write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
         printf("login = %s\npassword = %s\nname = %s\nsurname = %s\n",
                registre.login, registre.password, registre.name,
                registre.surname);
-
-        //
         gtk_window_close(mwo->registreWindow);
-        //
         create_main_window(mwo);
     }
 }
