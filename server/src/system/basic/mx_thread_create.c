@@ -11,18 +11,19 @@ void *main_cycle(void *newfd) {
     char *json_str = NULL;
 
     while(true) {
-        if (client->first->index > 1) { // количество пользователей
+//        if (client->first->index > 1) { // количество пользователей
             client = client->first;
             read(curr_fd, lin, 4);
             len = lin[0];
             json_str = mx_strnew(len);
             read(curr_fd, json_str, len);
+            mx_printstr(json_str);
             json = mx_json_parse(json_str);
             mx_routes(json, client, cur_client);
             mx_strdel(&json->message.text);
             free(json);
         }
-    }
+//    }
     return NULL;
 }
 
