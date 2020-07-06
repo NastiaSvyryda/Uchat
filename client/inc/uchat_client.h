@@ -14,8 +14,6 @@
 #include "libmx.h"
 #include <pthread.h>
 #include <json.h>
-#include <tls.h>
-
 //gtk
 
 #include <gtk/gtk.h>
