@@ -1,21 +1,18 @@
 #include "uchat_client.h"
 
-void *input(void *sock) {
-    int *sockfd = (int *) sock;
+void create_main_window(struct s_MainWindowObjects *mwo);
+
+void *input(void *data) {
+    t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
     char buf[1024];
-
     while (1) {
-        recv(*sockfd, buf, 1024, 0);
-//        json = mx_json_parse(buf);
-
-        mx_printstr("Message recived: ");
-        mx_printstr(buf);
-//        mx_printstr(json->data.message.text);
-        mx_printstr("\n from: ");
-//        mx_printint(json->data.message.client1_id);
         memset(buf, '\0', 1024);
-//        mx_strdel(&json->data.message.text);
-//        free(json);
+        read(mwo->fd, buf, 1024);
+        if (strcmp(buf, "success") == 0) {
+            gtk_window_close(mwo->loginWindow);
+
+            create_main_window(mwo);
+        }
     }
 
 //    char recvBuff[1024];
@@ -50,7 +47,6 @@ void create_login_window(char **argv) {
     GError     *error = NULL;
     int sockfd = 0;
     struct sockaddr_in serv;
-    pthread_t thread = NULL;
     t_mainWindowObjects mainObjects;
 
     /* Create new GtkBuilder object */
@@ -80,10 +76,6 @@ void create_login_window(char **argv) {
         mx_printerr("uchat: connection failed\n");
         exit(1);
     }
-    if (pthread_create(&thread, NULL, input, &sockfd) != 0) {
-        mx_printerr("uchat_server: thread creating error");
-        exit(1);
-    }
 
 
 //END CONNECT
@@ -108,6 +100,13 @@ void create_login_window(char **argv) {
     /* Show window. All other widgets are automatically shown by GtkBuilder */
     gtk_widget_show_all ( GTK_WIDGET (mainObjects.loginWindow) );
 
+//    /* CREATING THREAD FOR RECIEVEING RESPONSES */
+//
+//    if (pthread_create(&thread, NULL, input, &mainObjects) != 0) {
+//        mx_printerr("uchat_server: thread creating error");
+//        exit(1);
+//    }
+
     /* Start main loop */
     gtk_main();
 }
@@ -115,6 +114,7 @@ void create_login_window(char **argv) {
 void create_main_window(struct s_MainWindowObjects *mwo) {
     GtkBuilder *builder;
     GError     *error = NULL;
+    pthread_t thread = NULL;
 
     /* Init GTK+ */
     //gtk_init( &argc, &argv );
@@ -147,6 +147,12 @@ void create_main_window(struct s_MainWindowObjects *mwo) {
     /* Show window. All other widgets are automatically shown by GtkBuilder */
     gtk_widget_show_all ( GTK_WIDGET (mwo->mainWindow) );
 //
+    /* CREATING THREAD FOR RECIEVEING RESPONSES */
+
+    if (pthread_create(&thread, NULL, input, mwo) != 0) {
+        mx_printerr("uchat_server: thread creating error");
+        exit(1);
+    }
     /* Start main loop */
     gtk_main();
 
@@ -169,6 +175,13 @@ void on_butLogin_clicked(GtkWidget *button, gpointer data) {
         strcpy(json->pers_info.password, login.password);
         json_str = mx_json_make_json(JS_LOG_IN, json);
         write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
+        char buf[1024];
+        read(mwo->fd, buf, 1024);
+        if (strcmp(buf, "success") == 0) {
+            gtk_window_close(mwo->loginWindow);
+
+            create_main_window(mwo);
+        }
         //
 //        gtk_window_close(mwo->loginWindow);
 //        //

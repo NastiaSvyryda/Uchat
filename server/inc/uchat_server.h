@@ -135,7 +135,7 @@ char *mx_json_message_delete_out_response(t_json_data *data);
 
 ///Controllers
 //Auth
-void mx_controller_login(void);
+void mx_controller_login(t_json_data *json, t_clients *client);
 void mx_controller_register(void);
 void mx_controller_log_out(void);
 //Messages
