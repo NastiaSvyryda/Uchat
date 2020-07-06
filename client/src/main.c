@@ -14,32 +14,6 @@ void *input(void *data) {
             create_main_window(mwo);
         }
     }
-
-//    char recvBuff[1024];
-//    char name[100];
-//    char *json_str = NULL;
-//    t_json_data *json = calloc(1, sizeof(t_json_data));
-//    enum e_json_types type;
-//
-//    type = JS_LOG_IN;
-//    json->type = JS_LOG_IN;
-//    strcpy(json->pers_info.login, "arni");
-//    strcpy(json->pers_info.password, "qwerty");
-////    send messages
-////    type = JS_MES_OUT;
-////    json->message.client1_id = 1;
-////    json->message.client2_id = 2;
-////    json->type = JS_MES_OUT;
-////    json->message.text = mx_strdup("hallo");
-////        while(1) {
-//    json_str = mx_json_make_json(type, json);
-//    mx_printint(strlen(json_str + 4) + 4);
-//    write(*sockfd, json_str, strlen(json_str + 4) + 4);
-//    memset(recvBuff, '\0', 1024);
-//    memset(name, '\0', 100);
-////    }
-//
-//    return NULL;
 }
 
 void create_login_window(char **argv) {
@@ -182,10 +156,6 @@ void on_butLogin_clicked(GtkWidget *button, gpointer data) {
 
             create_main_window(mwo);
         }
-        //
-//        gtk_window_close(mwo->loginWindow);
-//        //
-//        create_main_window(mwo);
     }
 }
 

@@ -20,10 +20,10 @@ void *main_cycle(void *newfd) {
             mx_printstr(json_str);
             json = mx_json_parse(json_str);
             mx_routes(json, client, cur_client);
-//            if (json != NULL) {
+            if (json != NULL) {
 //                mx_strdel(&json->message.text);
-//                free(json);
-//            }
+                free(json);
+            }
 //        }
     }
     return NULL;
