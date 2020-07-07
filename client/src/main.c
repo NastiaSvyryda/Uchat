@@ -1,6 +1,6 @@
 #include "uchat_client.h"
 
-void *input(void *data);
+gboolean input(gpointer data);
 
 
 
@@ -93,7 +93,6 @@ create_view_and_model (void)
 void create_main_window(struct s_MainWindowObjects *mwo) {
     GtkBuilder *builder;
     GError     *error = NULL;
-    pthread_t thread = NULL;
     GtkWidget *view;
 
     /* Init GTK+ */
@@ -129,18 +128,15 @@ void create_main_window(struct s_MainWindowObjects *mwo) {
 
     /* CREATING THREAD FOR RECIEVEING RESPONSES */
 
-    if (pthread_create(&thread, NULL, input, mwo) != 0) {
-        mx_printerr("uchat_server: thread creating error");
-        exit(1);
-    }
     /* Start main loop */
     gtk_main();
 
 }
 
-void *input(void *data) {
+gboolean input(gpointer data) {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
     char buf[1024];
+//    for(int i = 0; i < 10; i++) {
     while (1) {
         memset(buf, '\0', 1024);
         read(mwo->fd, buf, 1024);
@@ -148,8 +144,16 @@ void *input(void *data) {
         if (strcmp(buf, "success") == 0) {
             gtk_window_close(mwo->loginWindow);
             create_main_window(mwo);
+            break;
         }
+        if (strcmp(buf, "well") == 0) {
+            gtk_window_close(mwo->registreWindow);
+            create_main_window(mwo);
+            break;
+        }
+
     }
+    return FALSE;
 }
 
 void create_login_window(char **argv) {
@@ -212,6 +216,8 @@ void create_login_window(char **argv) {
 
     /* Start main loop */
     gtk_main();
+
+    mx_printstr("after gtk_main\n");
 }
 
 void create_registre_window(struct s_MainWindowObjects* mwo) {
@@ -255,26 +261,27 @@ void create_registre_window(struct s_MainWindowObjects* mwo) {
 void on_butLogin_clicked(GtkWidget *button, gpointer data) {
     char *json_str = NULL;
     t_json_data *json = calloc(1, sizeof(t_json_data));
+//    pthread_t thread = NULL;
+    //char buf[1024];
+    t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
+    t_login login;
 
     if (button != NULL) {
-
-        t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
-        t_login login;
+//        g_timeout_add(1000, (GSourceFunc) input, (gpointer) mwo);
+        gdk_threads_add_idle (input, mwo);
+//        if (pthread_create(&thread, NULL, input, mwo) != 0) {
+//            mx_printerr("uchat_server: thread creating error");
+//            exit(1);
+//        }
         login.type = strdup("login");
         login.login = (char *) gtk_entry_get_text(GTK_ENTRY(mwo->entryLogin_l));
         login.password = (char *) gtk_entry_get_text(GTK_ENTRY(mwo->entryPass_l));
         printf("login = %s\npassword = %s\n", login.login, login.password);
         strcpy(json->pers_info.login, login.login);
         strcpy(json->pers_info.password, login.password);
+        json->type = JS_LOG_IN;
         json_str = mx_json_make_json(JS_LOG_IN, json);
         write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
-        char buf[1024];
-        read(mwo->fd, buf, 1024);
-        if (strcmp(buf, "success") == 0) {
-            gtk_window_close(mwo->loginWindow);
-
-            create_main_window(mwo);
-        }
     }
 }
 
@@ -289,12 +296,17 @@ void on_butRegistreIn_clicked(GtkWidget *button, gpointer data) {
 void on_butRegistre_clicked(GtkWidget *button, gpointer data) {
     char *json_str = NULL;
     t_json_data *json = calloc(1, sizeof(t_json_data));
+//    pthread_t thread = NULL;
+    t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
+    t_registre registre;
 
     if (button != NULL) {
-        t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
-
-        t_registre registre;
-        puts("kjjhbjhbvhj");
+        gdk_threads_add_idle (input, mwo);
+//        if (pthread_create(&thread, NULL, input, mwo) != 0) {
+//            mx_printerr("uchat_server: thread creating error");
+//            exit(1);
+//        }
+        puts("registre_button");
         registre.type = strdup("register");
         registre.login = (char *) gtk_entry_get_text(GTK_ENTRY(mwo->entryLogin_r));
         if (strcmp((char *) gtk_entry_get_text(GTK_ENTRY(mwo->entryPass_r)), (char *) gtk_entry_get_text(GTK_ENTRY(mwo->entryPass_r2))) == 0)
@@ -303,6 +315,7 @@ void on_butRegistre_clicked(GtkWidget *button, gpointer data) {
             printf("different passwords\n");
         registre.name = (char *) gtk_entry_get_text(GTK_ENTRY(mwo->entryName_r));
         registre.surname = (char *) gtk_entry_get_text(GTK_ENTRY(mwo->entrySurname_r));
+        json->type = JS_REG;
         strcpy(json->pers_info.login, registre.login);
         strcpy(json->pers_info.password, registre.password);
         strcpy(json->pers_info.first_name, registre.name);
@@ -312,8 +325,6 @@ void on_butRegistre_clicked(GtkWidget *button, gpointer data) {
         printf("login = %s\npassword = %s\nname = %s\nsurname = %s\n",
                registre.login, registre.password, registre.name,
                registre.surname);
-        gtk_window_close(mwo->registreWindow);
-        create_main_window(mwo);
     }
 }
 
