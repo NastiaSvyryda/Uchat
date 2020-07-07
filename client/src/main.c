@@ -2,10 +2,99 @@
 
 void *input(void *data);
 
+
+
+
+enum
+{
+    COL_NAME = 0,
+    COL_AGE,
+    NUM_COLS
+} ;
+
+
+static GtkTreeModel *
+create_and_fill_model (void)
+{
+    GtkListStore  *store;
+    GtkTreeIter    iter;
+
+    store = gtk_list_store_new (NUM_COLS, G_TYPE_STRING, G_TYPE_UINT);
+
+    /* Append a row and fill in some data */
+    gtk_list_store_append (store, &iter);
+    gtk_list_store_set (store, &iter,
+                        COL_NAME, "channel_1",
+                        COL_AGE, 76458,
+                        -1);
+
+    /* append another row and fill in some data */
+    gtk_list_store_append (store, &iter);
+    gtk_list_store_set (store, &iter,
+                        COL_NAME, "channel_2",
+                        COL_AGE, 23,
+                        -1);
+
+    /* ... and a third row */
+    gtk_list_store_append (store, &iter);
+    gtk_list_store_set (store, &iter,
+                        COL_NAME, "channel_3",
+                        COL_AGE, time(NULL),
+                        -1);
+
+    return GTK_TREE_MODEL (store);
+}
+
+static GtkWidget *
+create_view_and_model (void)
+{
+    GtkCellRenderer     *renderer;
+    GtkTreeModel        *model;
+    GtkWidget           *view;
+
+    view = gtk_tree_view_new ();
+
+    /* --- Column #1 --- */
+
+    renderer = gtk_cell_renderer_text_new ();
+    gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
+                                                 -1,
+                                                 "channel",
+                                                 renderer,
+                                                 "text", COL_NAME,
+                                                 NULL);
+
+    /* --- Column #2 --- */
+
+    renderer = gtk_cell_renderer_text_new ();
+    gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
+                                                 -1,
+                                                 "time",
+                                                 renderer,
+                                                 "text", COL_AGE,
+                                                 NULL);
+
+    model = create_and_fill_model ();
+
+    gtk_tree_view_set_model (GTK_TREE_VIEW (view), model);
+
+    /* The tree view has acquired its own reference to the
+     *  model, so we can drop ours. That way the model will
+     *  be freed automatically when the tree view is destroyed */
+
+    g_object_unref (model);
+
+    return view;
+}
+
+
+
+
 void create_main_window(struct s_MainWindowObjects *mwo) {
     GtkBuilder *builder;
     GError     *error = NULL;
     pthread_t thread = NULL;
+    GtkWidget *view;
 
     /* Init GTK+ */
     //gtk_init( &argc, &argv );
@@ -26,6 +115,8 @@ void create_main_window(struct s_MainWindowObjects *mwo) {
         fprintf(stderr, "Unable to file object with id \"window1\" \n");
         /* Your error handling code goes here */
     }
+    view = create_view_and_model ();
+    gtk_container_add (GTK_CONTAINER (gtk_builder_get_object(builder, "messages_tree")), view);
 
     /* Connect signals */
     gtk_builder_connect_signals(builder, mwo);
@@ -53,6 +144,7 @@ void *input(void *data) {
     while (1) {
         memset(buf, '\0', 1024);
         read(mwo->fd, buf, 1024);
+        mx_printstr("Response recieved");
         if (strcmp(buf, "success") == 0) {
             gtk_window_close(mwo->loginWindow);
             create_main_window(mwo);
@@ -84,6 +176,7 @@ void create_login_window(char **argv) {
 
     serv.sin_family = AF_INET;
     serv.sin_port = htons(atoi(argv[2]));
+
 
     if ((inet_pton(AF_INET, argv[1], &serv.sin_addr)) <= 0) {
         mx_printerr("uchat: network adress isn't valid");
@@ -159,21 +252,6 @@ void create_registre_window(struct s_MainWindowObjects* mwo) {
     gtk_main();
 }
 
-int main(int argc, char **argv) {
-    /* Init GTK+ */
-    gtk_init(&argc, &argv);
-
-    if (argc != 3) {
-        mx_printerr("uchat_server: error args\n");
-        mx_printerr("example: ./uchat ip port\n");
-        exit(1);
-    }
-
-    create_login_window(argv);
-}
-
-
-
 void on_butLogin_clicked(GtkWidget *button, gpointer data) {
     char *json_str = NULL;
     t_json_data *json = calloc(1, sizeof(t_json_data));
@@ -237,4 +315,17 @@ void on_butRegistre_clicked(GtkWidget *button, gpointer data) {
         gtk_window_close(mwo->registreWindow);
         create_main_window(mwo);
     }
+}
+
+int main(int argc, char **argv) {
+    /* Init GTK+ */
+    gtk_init(&argc, &argv);
+
+    if (argc != 3) {
+        mx_printerr("uchat_server: error args\n");
+        mx_printerr("example: ./uchat ip port\n");
+        exit(1);
+    }
+
+    create_login_window(argv);
 }
