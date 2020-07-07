@@ -16,6 +16,7 @@ enum
 static GtkTreeModel *
 create_and_fill_model (void)
 {
+
     GtkListStore  *store;
     GtkTreeIter    iter;
 
@@ -127,7 +128,16 @@ void create_main_window(struct s_MainWindowObjects *mwo) {
     gtk_widget_show_all (GTK_WIDGET(mwo->mainWindow));
 
     /* CREATING THREAD FOR RECIEVEING RESPONSES */
+    char *json_str = NULL;
+    t_json_data *json = calloc(1, sizeof(t_json_data));
 
+    json->type = JS_MES_OUT;
+    json->message.text = strdup("hallo");
+    json->message.client1_id = 1;
+    json->message.client2_id = 2;
+    json_str = mx_json_make_json(JS_MES_OUT, json);
+    write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
+    mx_strdel(&json_str);
     /* Start main loop */
     gtk_main();
 
@@ -149,6 +159,7 @@ gboolean input(gpointer data) {
         if (strcmp(buf, "well") == 0) {
             gtk_window_close(mwo->registreWindow);
             create_main_window(mwo);
+
             break;
         }
 
