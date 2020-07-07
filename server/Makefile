@@ -3,15 +3,24 @@ NAME_ROOT = ../$(NAME)
 
 CCFLG = clang -std=c11 $(addprefix -W, all extra error pedantic) -g
 
-SRC_DIRS = src src/controllers src/controllers/auth src/controllers/messages \
-src/json src/json/auth src/json/message src/migrations src/models src/system src/system/basic \
-src/system/database_crud src/validations
+SRC_DIRS = src \
+			src/controllers \
+			src/controllers/auth \
+			src/controllers/messages \
+			src/json src/json/auth \
+			src/json/message \
+			src/migrations \
+			src/models \
+			src/system \
+			src/system/basic \
+			src/system/database_crud \
+			src/validations
 SRC_DIR = src
 
 INC_DIR = inc
 OBJ_DIR = obj
 
-SRCS := $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c)) 
+SRCS := $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c))
 INC = $(INC_DIR)/uchat_server.h
 OBJS := $(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:%.c=%.o)))
 
@@ -21,7 +30,7 @@ LIBMX = $(LIBMX_DIR)/libmx.a
 GTK_FLAGS = `pkg-config --cflags  --libs gtk+-3.0` `pkg-config --libs json-c`
 GTK_SORT_FLAGS = `pkg-config --cflags gtk+-3.0` `pkg-config --cflags json-c`
 
-EMPTY = 
+EMPTY =
 SPACE = $(EMPTY) $(EMPTY)
 VPATH := $(subst $(SPACE), :, $(SRC_DIRS))
 

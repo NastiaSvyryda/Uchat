@@ -14,7 +14,53 @@
 #include "libmx.h"
 #include <pthread.h>
 #include <json.h>
+//gtk
 
+#include <gtk/gtk.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define UI_FILE "login.glade"
+
+typedef struct s_login {
+    char *type;
+    char *login;
+    char *password;
+} t_login;
+
+typedef struct s_registre {
+    char *type;
+    char *login;
+    char *password;
+    char *name;
+    char *surname;
+} t_registre;
+
+typedef struct s_MainWindowObjects {
+    GtkWindow      *loginWindow;
+    GtkWindow      *registreWindow;
+    GtkWindow      *mainWindow;
+
+    GtkEntry       *entryLogin_l;
+    GtkEntry       *entryPass_l;
+
+    GtkEntry       *entryLogin_r;
+    GtkEntry       *entryPass_r;
+    GtkEntry       *entryPass_r2;
+    GtkEntry       *entryName_r;
+    GtkEntry       *entrySurname_r;
+
+    int fd;
+} t_mainWindowObjects;
+
+void on_butLogin_clicked(GtkWidget *window, gpointer data);
+void on_butRegistreIn_clicked(GtkWidget *button, gpointer data);
+void on_butRegistre_clicked (GtkWidget *window, gpointer data);
+
+
+//gtk
 typedef enum e_json_types {
     JS_REG,  // JSON Type - register
     JS_LOG_IN,  // JSON Type - log in

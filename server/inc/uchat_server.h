@@ -8,6 +8,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
@@ -134,8 +135,8 @@ char *mx_json_message_delete_out_response(t_json_data *data);
 
 ///Controllers
 //Auth
-void mx_controller_login(void);
-void mx_controller_register(void);
+void mx_controller_login(t_json_data *json, t_clients *client);
+void mx_controller_register(t_json_data *json, t_clients *client);
 void mx_controller_log_out(void);
 //Messages
 void mx_controller_message(t_clients *client, t_clients *cur_client, t_json_data *json);
@@ -180,7 +181,7 @@ struct sockaddr_in mx_accept_connections(t_clients *client, int listenfd);
 void mx_thread_create(t_clients *client, struct sockaddr_in cli);
 //CRUD
 void mx_create_databases(char *database, char *table, char *fill_table, char *value_table);
-void mx_read_database(char *database, char *table, char *set, char *where);
+void mx_read_database(char *database, char *table, char *fill_table, char *where);
 void mx_update_database(char *database, char *table, char *set, char *where);
 void mx_delete_database(char *database, char *table, char *fill_table, char *where);
 //end systeam

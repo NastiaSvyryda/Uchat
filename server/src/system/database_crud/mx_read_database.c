@@ -26,7 +26,7 @@ static void sqlite3_database_sql(char *table, char *fill_table, char *where) {
     sqlite3_close(db);
 }
 
-void mx_read_database(char *database, char *table, char *set, char *where) {
+void mx_read_database(char *database, char *table, char *fill_table, char *where) {
     if (strcmp(database, "sqlite3") == 0)
-        sqlite3_database_sql(table, set, where);
+        sqlite3_database_sql(table, fill_table, where);
 }
