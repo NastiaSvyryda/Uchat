@@ -87,12 +87,12 @@ typedef enum e_json_types {
 #define MX_JS_MSSGE_ID "\"message_id\": %d"
 #define MX_JS_FST_LST_NAMES "\"first_name\": \"%s\", \"last_name\": \"%s\""
 
+#define MX_REQ_REG MX_JS_TYPE "\"login\": \"%s\", \
+    \"password\": \"%s\", " MX_JS_FST_LST_NAMES " }"
 #define MX_REQ_LOG_IN MX_JS_TYPE "\"login\": \"%s\", \
     \"password\": \"%s\", " MX_JS_TOKEN
 #define MX_REQ_LOG_OUT MX_JS_TYPE "\"user_id\": %d, \
     " MX_JS_TOKEN
-#define MX_REQ_REG MX_JS_TYPE "\"login\": \"%s\", \
-    \"password\": \"%s\", " MX_JS_FST_LST_NAMES " }"
 #define MX_REQ_MES_DEL_OUT MX_JS_TYPE MX_JS_MSSGE_ID ", \
     \"client1_id\": %d, " MX_JS_TOKEN
 #define MX_REQ_MES_EDIT_OUT MX_JS_TYPE MX_JS_MSSGE_ID ", \

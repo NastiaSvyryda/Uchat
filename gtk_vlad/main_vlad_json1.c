@@ -1,4 +1,4 @@
-#include "uchat_server.h"
+#include "uchat_client.h"
 
 static void fn(int type) {
     t_json_data json_data = {
@@ -38,7 +38,7 @@ int main() {
     for (int i = 0; i < JS_NUM; i++) {
         fn(i);
     }
-    char *str = "{ \"type\": 346, \"status\": \"2006\", \"message_id\": 50, \"client2_id\": 2, \"token\": \"TOKEN!@#\" }";
+    char *str = "{ \"type\": 346, \"status\": \"2006 sdf\", \"message_id\": 50, \"client2_id\": 2, \"token\": \"TOKEN!@#\" }";
     printf("extreme str = \n%s\n", str);
     t_json_data *json_data = mx_json_parse(str);
     // if (!json_data) {
