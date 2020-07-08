@@ -180,7 +180,7 @@ struct sockaddr_in mx_accept_connections(t_clients *client, int listenfd);
 void mx_thread_create(t_clients *client, struct sockaddr_in cli);
 //CRUD
 void mx_create_databases(char *database, char *table, char *fill_table, char *value_table);
-void mx_read_database(char *database, char *table, char *set, char *where);
+t_list *mx_read_database(char *database, char *table, char *fill_table, char *where);
 void mx_update_database(char *database, char *table, char *set, char *where);
 void mx_delete_database(char *database, char *table, char *fill_table, char *where);
 //end systeam

@@ -19,7 +19,7 @@ void *main_cycle(void *newfd) {
             read(curr_fd, json_str, len);
             mx_printstr(json_str);
             json = mx_json_parse(json_str);
-            cur_client->name_from = json->pers_info.login;
+//            cur_client->name_from = json->pers_info.login;
             mx_routes(json, client, cur_client);
             if (json != NULL) {
 //                mx_strdel(&json->message.text);

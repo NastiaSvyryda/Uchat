@@ -11,16 +11,14 @@
 #include <unistd.h>
 #include <errno.h>
 #include <arpa/inet.h>
-#include "libmx.h"
 #include <pthread.h>
 #include <json.h>
-//gtk
-
 #include <gtk/gtk.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdbool.h>
-#include <string.h>
+#include "libmx.h"
+
+
+//GTK
 
 #define UI_FILE "login.glade"
 
@@ -55,12 +53,21 @@ typedef struct s_MainWindowObjects {
     int fd;
 } t_mainWindowObjects;
 
-void on_butLogin_clicked(GtkWidget *window, gpointer data);
-void on_butRegistreIn_clicked(GtkWidget *button, gpointer data);
-void on_butRegistre_clicked (GtkWidget *window, gpointer data);
+//Buttons
+void mx_on_butLogin_clicked(GtkWidget *window, gpointer data);
+void mx_on_butRegistreIn_clicked(GtkWidget *button, gpointer data);
+void mx_on_butRegistre_clicked (GtkWidget *window, gpointer data);
+gboolean mx_input(gpointer data);
+
+GtkWidget *mx_create_view_and_model(void);
+void mx_create_main_window(struct s_MainWindowObjects *mwo);
+void mx_create_login_window(char **argv);
+void mx_create_registre_window(struct s_MainWindowObjects* mwo);
 
 
 //gtk
+
+
 typedef enum e_json_types {
     JS_REG,  // JSON Type - register
     JS_LOG_IN,  // JSON Type - log in

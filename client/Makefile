@@ -3,7 +3,7 @@ NAME_ROOT = ../$(NAME)
 
 CCFLG = clang -std=c11 $(addprefix -W, all extra error pedantic) -g
 
-SRC_DIRS = src src/json
+SRC_DIRS = src src/json src/gtk
 SRC_DIR = src
 
 INC_DIR = inc

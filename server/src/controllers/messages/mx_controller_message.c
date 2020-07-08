@@ -24,6 +24,8 @@ void mx_controller_message(t_clients *client, t_clients *cur_client, t_json_data
     t_message *message = malloc(sizeof(t_message));
     char *json_str = NULL;
 
+    message->text = NULL;
+
     fill_database_message(json);
 
     while (client->next != NULL) {
