@@ -31,7 +31,6 @@ int main(int argc, char **argv) {
     mx_conn_list_sock(&listenfd, argv);
     while (true) {
         cli = mx_accept_connections(client, listenfd);
-        client->first->index++;
 //        get_client_name(client);
         mx_thread_create(client, cli);
         client->next = create_clients();

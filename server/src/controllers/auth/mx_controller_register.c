@@ -23,6 +23,8 @@ void mx_controller_register(t_json_data *json, t_clients *client) {
     char **fill = NULL;
     char *fill_table = NULL;
 
+    client->name_from = mx_atoi(json->pers_info.login);
+    client->first->index++;
     if (validation_register(json) == false) {
         write(client->fd, "fail", mx_strlen("fail"));
         return;
