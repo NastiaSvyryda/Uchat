@@ -67,7 +67,7 @@ union u_json_data {
 typedef struct s_json_data {
     int type;
     int status;
-    char token[MX_TOKEN_LEN];
+    char token[MX_TOKEN_LEN + 1];
     t_personal_data pers_info;
     t_message message;
 }              t_json_data;

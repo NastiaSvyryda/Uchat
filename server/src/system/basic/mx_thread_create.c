@@ -5,16 +5,13 @@ void *main_cycle(void *newfd) {
     t_clients *client = (t_clients *)newfd;
     int curr_fd = client->fd;
     t_clients *cur_client = client;
-    char len_str[4];
     int len = 0;
 //    char *json_str;
     char *json_str = NULL;
 
     while(true) {
             client = client->first;
-            read(curr_fd, len_str, 4);
-            for (int i = 0; i < 4; i++)
-                len += len_str[i];
+            read(curr_fd, &len, 4);
             json_str = mx_strnew(len);
             read(curr_fd, json_str, len);
             mx_printstr(json_str);
@@ -24,7 +21,6 @@ void *main_cycle(void *newfd) {
 //                mx_strdel(&json->message.text);
                 free(json);
                 mx_strdel(&json_str);
-                memset(len_str, '\0', 4);
             }
 //        }
     }

@@ -7,7 +7,6 @@ static void login_request(t_login *login, int fd) {
     strcpy(json->pers_info.login, login->login);
     strcpy(json->pers_info.password, login->password);
     json->type = JS_LOG_IN;
-    mx_strcpy(json->token, "hui");
     json_str = mx_json_make_json(JS_LOG_IN, json);
     write(fd, json_str, mx_strlen(json_str + 4) + 4);
 }

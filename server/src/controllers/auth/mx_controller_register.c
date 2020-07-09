@@ -26,7 +26,7 @@ static void register_incorrectly_filled_fields(t_clients *client) {
     t_json_data json = {.type = JS_REG, .status = 412};
     char *str = mx_json_make_json(JS_LOG_IN, &json);
 
-    write(client->fd, str + 4, mx_strlen(str + 4));
+    write(client->fd, str, mx_strlen(str + 4) + 4);
     mx_strdel(&str);
 }
 
@@ -34,7 +34,7 @@ static void login_incorrectly_filled_fields(t_clients *client) {
     t_json_data json = {.type = JS_LOG_IN, .status = 412};
     char *str = mx_json_make_json(JS_LOG_IN, &json);
 
-    write(client->fd, str + 4, mx_strlen(str + 4));
+    write(client->fd, str, mx_strlen(str + 4) + 4);
     mx_strdel(&str);
 }
 
@@ -64,7 +64,7 @@ void mx_controller_register(t_json_data *json, t_clients *client) {
              fill[3],
              fill[4],
              fill[6]);
-    data_check=  check_login(fill, json);
+    data_check = check_login(fill, json);
     if (data_check == NULL) {
         asprintf(&value_table, "\"%s\", \"%s\", \"%s\", \"%s\", %s",
                  json->pers_info.first_name,

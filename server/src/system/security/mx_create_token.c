@@ -2,7 +2,7 @@
 
 char *mx_create_token(int length) {
     int mySeed = 25011984;
-    char *string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-#?!";
+    char *string = mx_strdup("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-#?!");
     size_t stringLen = strlen(string);
     char *randomString = NULL;
 
@@ -10,12 +10,13 @@ char *mx_create_token(int length) {
     if (length < 1) {
         length = 1;
     }
-    randomString = malloc(sizeof(char) * (length +1));
+    randomString = malloc(sizeof(char) * (length + 1));
     short key = 0;
     for (int n = 0;n < length;n++) {
             key = rand() % stringLen;
             randomString[n] = string[key];
         }
     randomString[length] = '\0';
+    mx_strdel(&string);
     return randomString;
 }
