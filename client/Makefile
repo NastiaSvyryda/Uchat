@@ -27,7 +27,7 @@ all: install
 
 install: $(NAME)
 
-$(NAME): $(OBJS) $(LIBMX)
+$(NAME): $(OBJS) $(LIBMX) Makefile
 	@$(CCFLG)  -lsqlite3 $(OBJS) $(GTK_FLAGS) -L$(LIBMX_DIR) -lmx -o $@
 	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
 
@@ -46,7 +46,7 @@ out: $(NAME_ROOT)
 
 $(NAME_ROOT): $(NAME)
 	@cp $(NAME) ..
-	@printf "\r\33[2K$@ \033[32;1mcopied\033[0m\n"
+	@printf "\r\33[2K$< \033[32;1mcopied to the root\033[0m\n"
 
 clean:
 	@make -sC $(LIBMX_DIR) $@

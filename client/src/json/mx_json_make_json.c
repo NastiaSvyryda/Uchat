@@ -11,5 +11,6 @@ char *mx_json_make_json(enum e_json_types type, t_json_data *data) {
                                             mx_json_message_in_response,
                                             mx_json_message_out_request};
 
-    return fn_p[type](data);
+
+    return data ? fn_p[type](data) : NULL;
 }

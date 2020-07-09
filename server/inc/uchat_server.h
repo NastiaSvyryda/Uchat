@@ -14,6 +14,7 @@
 #include <time.h>
 #include <pthread.h>
 #include <sqlite3.h>
+#include <errno.h>
 
 #define MX_JS_TYPE "{ \"type\": %d, "
 #define MX_JS_TOKEN "\"token\": \"%s\" }"
@@ -23,20 +24,19 @@
 
 #define MX_REQ_MES_DEL_IN MX_JS_TYPE MX_JS_MSSGE_ID ", \"client1_id\": %d }"
 #define MX_REQ_MES_EDIT_IN MX_JS_TYPE MX_JS_MSSGE_ID ", \
-    \"new_message\": \"%s\", \"client1_id\": %d }"
+ \"new_message\": \"%s\", \"client1_id\": %d }"
 #define MX_REQ_MES_IN MX_JS_TYPE MX_JS_MSSGE_ID ", \"client1_id\": %d, \
-    \"client2_id\": %d, \"new_message\": \"%s\" }"
+ \"client2_id\": %d, \"new_message\": \"%s\" }"
 
 #define MX_RESP_LOG_IN MX_JS_TYPE MX_JS_STATUS "\
-    \"user_id\": %d, " MX_JS_FST_LST_NAMES ", " MX_JS_TOKEN
+ \"user_id\": %d, " MX_JS_FST_LST_NAMES ", " MX_JS_TOKEN
 #define MX_RESP_LOG_OUT MX_JS_TYPE "\"status\": %d }"
 #define MX_RESP_REG MX_JS_TYPE MX_JS_STATUS "\
-        \"user_id\": %d, " MX_JS_FST_LST_NAMES ", " MX_JS_TOKEN
-#define MX_RESP_MES_DEL_OUT MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID \
-        " }"
+ \"user_id\": %d, " MX_JS_FST_LST_NAMES ", " MX_JS_TOKEN
+#define MX_RESP_MES_DEL_OUT MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID " }"
 #define MX_RESP_MES_EDIT_OUT MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID " }"
 #define MX_RESP_MES_OUT MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID ", \
-        \"delivery_time\": %ld }"
+ \"delivery_time\": %ld }"
 
 #define MX_TOKEN_LEN 256
 #define MX_VARCHAR_LEN 256
