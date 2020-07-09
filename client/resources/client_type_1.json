@@ -1,6 +1,5 @@
 {
     "type": %d,
     "login": "%s",
-    "password": "%s",
-    "token": "%s"
+    "password": "%s"
 }
