@@ -50,7 +50,7 @@ t_json_data *mx_json_parse(char *s) {
     json->type = atoi(json_object_get_string(buf));
     json->status = (buf = json_object_object_get(jo, "status")) ? atoi(
             json_object_get_string(buf)) : -1;
-    if ((buf = json_object_object_get(jo, "token")))
+    if ((buf = json_object_object_get(jo, "security")))
         strcpy(json->token, json_object_get_string(buf));
     if ((buf = json_object_object_get(jo, "message_id"))
         || json->type == JS_MES_OUT)

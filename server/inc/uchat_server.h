@@ -17,7 +17,7 @@
 #include <sqlite3.h>
 
 #define MX_JS_TYPE "{ \"type\": %d, "
-#define MX_JS_TOKEN "\"token\": \"%s\" }"
+#define MX_JS_TOKEN "\"security\": \"%s\" }"
 #define MX_JS_STATUS "\"status\": %d, "
 #define MX_JS_MSSGE_ID "\"message_id\": %d"
 #define MX_JS_FST_LST_NAMES "\"first_name\": \"%s\", \"last_name\": \"%s\""
@@ -67,7 +67,8 @@ typedef struct s_personal_data {
     int user_id;
     char first_name[MX_MAX_NAME_LEN];
     char last_name[MX_MAX_NAME_LEN];
-    // char token[MX_TOKEN_LEN];
+    char token[MX_TOKEN_LEN];
+    int status;
 }              t_personal_data;
 
 typedef struct s_message {
@@ -77,7 +78,7 @@ typedef struct s_message {
     int channel_id;
     int message_id;
     time_t delivery_time;
-    // char token[MX_TOKEN_LEN];
+    char token[MX_TOKEN_LEN];
 }              t_message;
 
 union u_json_data {
@@ -111,6 +112,7 @@ char *mx_config_sqlite3_db_name(void);
 
 ///Validation
 void mx_valid_check_argc_error(int argc);
+int mx_valid_str_isalpha(char *str);
 void mx_valid_sqlite3_open_db(int rc, sqlite3 *db);
 void mx_valid_sqlite3_failed_data(int rc, sqlite3 *db, char *err_msg);
 ///end validation
@@ -180,10 +182,14 @@ void mx_conn_list_sock(int *fd, char **argv);
 struct sockaddr_in mx_accept_connections(t_clients *client, int listenfd);
 void mx_thread_create(t_clients *client, struct sockaddr_in cli);
 //CRUD
+t_list *mx_read_database(char *database, char *table, char *fill_table, char *where);
 void mx_create_databases(char *database, char *table, char *fill_table, char *value_table);
-void mx_read_database(char *database, char *table, char *fill_table, char *where);
 void mx_update_database(char *database, char *table, char *set, char *where);
 void mx_delete_database(char *database, char *table, char *fill_table, char *where);
 //end systeam
+
+///Security
+char *mx_create_token(int length);
+///end security
 
 #endif

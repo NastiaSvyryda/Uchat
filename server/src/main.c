@@ -11,16 +11,6 @@ static t_clients *create_clients() {
     return  client;
 }
 
-//static void get_client_name(t_clients *client) {
-//    char buff[100];
-//
-//    memset(buff, '\0', 100);
-//    read(client->fd, buff, 100);
-//    mx_printstr("name recived\n");
-//    client->name_from = mx_atoi(buff);
-//}
-
-
 int main(int argc, char **argv) {
     t_clients *client = create_clients();
     int listenfd = 0;
@@ -32,7 +22,6 @@ int main(int argc, char **argv) {
     while (true) {
         cli = mx_accept_connections(client, listenfd);
         client->first->index++;
-//        get_client_name(client);
         mx_thread_create(client, cli);
         client->next = create_clients();
         client->next->first = client->first;

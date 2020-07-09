@@ -1,7 +1,7 @@
 NAME = uchat_server
 NAME_ROOT = ../$(NAME)
 
-CCFLG = clang -std=c11 $(addprefix -W, all extra error pedantic) -g
+CCFLG = clang -std=c11 $(addprefix -W, all extra error pedantic) -g3 -fsanitize=address,undefined
 
 SRC_DIRS = src \
 			src/controllers \
@@ -14,6 +14,7 @@ SRC_DIRS = src \
 			src/system \
 			src/system/basic \
 			src/system/database_crud \
+			src/system/security \
 			src/validations
 SRC_DIR = src
 

@@ -75,7 +75,7 @@ typedef enum e_json_types {
 }            t_json_types;
 
 #define MX_JS_TYPE "{ \"type\": %d, "
-#define MX_JS_TOKEN "\"token\": \"%s\" }"
+#define MX_JS_TOKEN "\"security\": \"%s\" }"
 #define MX_JS_STATUS "\"status\": %d, "
 #define MX_JS_MSSGE_ID "\"message_id\": %d"
 #define MX_JS_FST_LST_NAMES "\"first_name\": \"%s\", \"last_name\": \"%s\""
@@ -114,7 +114,7 @@ typedef struct s_personal_data {
     int user_id;
     char first_name[MX_MAX_NAME_LEN];
     char last_name[MX_MAX_NAME_LEN];
-    // char token[MX_TOKEN_LEN];
+    // char security[MX_TOKEN_LEN];
 }              t_personal_data;
 
 typedef struct s_message {
@@ -124,7 +124,7 @@ typedef struct s_message {
     int channel_id;
     int message_id;
     time_t delivery_time;
-    // char token[MX_TOKEN_LEN];
+    // char security[MX_TOKEN_LEN];
 }              t_message;
 
 union u_json_data {
