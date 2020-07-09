@@ -2,23 +2,36 @@
 
 gboolean mx_input(gpointer data) {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
-    char buf[1024];
-
+    char *json_str = NULL;
+    char len[4];
+    int length;
+    t_json_data *json = NULL;
     while (1) {
-        memset(buf, '\0', 1024);
-        read(mwo->fd, buf, 1024);
+        length = 0;
+        memset(len, '\0', 4);
+        read(mwo->fd, len, 4);
+        for (int i = 0; i < 4; i++)
+            length += len[i];
+        mx_printint(length);
+        json_str = mx_strnew(length);
+        read(mwo->fd, json_str, length);
+        mx_printstr(json_str);
+        json = mx_json_parse(json_str);
         mx_printstr("Response recieved");
-        if (strcmp(buf, "success") == 0) {
-            gtk_window_close(mwo->loginWindow);
-            mx_create_main_window(mwo);
-            break;
+        if (json->type == JS_REG) {
+            if (json->status == 200) {
+                gtk_window_close(mwo->registreWindow);
+                mx_create_main_window(mwo);
+                break;
+            }
         }
-        if (strcmp(buf, "well") == 0) {
-            gtk_window_close(mwo->registreWindow);
-            mx_create_main_window(mwo);
-            break;
+        else if (json->type == JS_LOG_IN) {
+            if (json->status == 200) {
+                gtk_window_close(mwo->registreWindow);
+                mx_create_main_window(mwo);
+                break;
+            }
         }
-
     }
     return FALSE;
 }

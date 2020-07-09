@@ -32,24 +32,28 @@ static char *insert_token(char **fill, t_list *data) {
 }
 
 static void login_success(t_list *data, char *token, t_clients *client) {
+    char *json_str = NULL;
     t_json_data json = {.type = JS_LOG_IN,
             .status = 200,
             .pers_info.user_id = mx_atoi(data->data)};
+
     mx_strcpy(json.pers_info.first_name, data->next->data);
     mx_strcpy(json.pers_info.last_name, data->next->next->data);
     mx_strcpy(json.token, token);
-    char *str = mx_json_make_json(JS_LOG_IN, &json);
-    write(client->fd, str + 4, mx_strlen(str + 4));
+    json_str = mx_json_make_json(JS_LOG_IN, &json);
+    mx_printchar('\n');
+    mx_printint(mx_strlen(json_str + 4));
+    mx_printchar('\n');
+    write(client->fd, json_str , mx_strlen(json_str + 4) + 4);
 }
 
 static void login_unauthorized(t_clients *client) {
     t_json_data json = {.type = JS_LOG_IN, .status = 401};
     char *str = mx_json_make_json(JS_LOG_IN, &json);
 
-    write(client->fd, str + 4, mx_strlen(str + 4));
+    write(client->fd, str, mx_strlen(str + 4) + 4);
     mx_strdel(&str);
 }
-
 static void login_incorrectly_filled_fields(t_clients *client) {
     t_json_data json = {.type = JS_LOG_IN, .status = 412};
     char *str = mx_json_make_json(JS_LOG_IN, &json);
