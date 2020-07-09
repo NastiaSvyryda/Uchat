@@ -18,6 +18,7 @@ static void create_table_for_sqlite3(void) {
                          mx_model_message_name_table());
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
+    mx_strdel(&sql);
     sqlite3_close(db);
 }
 
@@ -31,6 +32,7 @@ static void delete_table_for_sqlite3(void) {
     asprintf(&sql, "DROP TABLE %s ;", mx_model_delivery_user_name_table());
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
+    mx_strdel(&sql);
     sqlite3_close(db);
 }
 

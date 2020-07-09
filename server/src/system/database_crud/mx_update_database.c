@@ -7,10 +7,13 @@ static void sqlite3_database_sql(char *table, char *set, char *where) {
     char *sql;
 
     mx_valid_sqlite3_open_db(rc, db);
-    asprintf(&sql, "UPDATE %s SET %s  WHERE %s;",
-             table, set, where);
+    asprintf(&sql, "UPDATE %s SET %s WHERE %s;", table, set, where);
+    mx_printstr(sql);
+    mx_printstr("\n");
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
+    mx_printstr(err_msg);
+    mx_strdel(&sql);
     sqlite3_close(db);
 }
 
