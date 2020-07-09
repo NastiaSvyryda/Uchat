@@ -81,30 +81,7 @@ typedef enum e_json_types {
     JS_NUM  // JSON types number
 }            t_json_types;
 
-#define MX_JS_TYPE "{ \"type\": %d, "
-#define MX_JS_TOKEN "\"token\": \"%s\" }"
-#define MX_JS_STATUS "\"status\": %d, "
-#define MX_JS_MSSGE_ID "\"message_id\": %d"
-#define MX_JS_FST_LST_NAMES "\"first_name\": \"%s\", \"last_name\": \"%s\""
-
-#define MX_REQ_REG MX_JS_TYPE "\"login\": \"%s\", \
-    \"password\": \"%s\", " MX_JS_FST_LST_NAMES " }"
-#define MX_REQ_LOG_IN MX_JS_TYPE "\"login\": \"%s\", \
-    \"password\": \"%s\", " MX_JS_TOKEN
-#define MX_REQ_LOG_OUT MX_JS_TYPE "\"user_id\": %d, \
-    " MX_JS_TOKEN
-#define MX_REQ_MES_DEL_OUT MX_JS_TYPE MX_JS_MSSGE_ID ", \
-    \"client1_id\": %d, " MX_JS_TOKEN
-#define MX_REQ_MES_EDIT_OUT MX_JS_TYPE MX_JS_MSSGE_ID ", \
-    \"new_message\": \"%s\", \"client1_id\": %d, " MX_JS_TOKEN
-#define MX_REQ_MES_OUT MX_JS_TYPE "\"client1_id\": %d, \
-    \"client2_id\": %d, \"new_message\": \"%s\" }"
-
-#define MX_RESP_MES_DEL_IN MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID \
-        ", \"client2_id\": %d, " MX_JS_TOKEN
-#define MX_RESP_MES_EDIT_IN MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID \
-        ", \"client2_id\": %d, " MX_JS_TOKEN
-#define MX_RESP_MES_IN MX_JS_TYPE MX_JS_STATUS MX_JS_MSSGE_ID " }"
+#define MX_JSON_TEMPLATE "./client/resources/client_type_%d.json"
 
 #define MX_TOKEN_LEN 256
 #define MX_VARCHAR_LEN 256
@@ -158,6 +135,7 @@ char *mx_json_message_edit_out_request(t_json_data *data);
 char *mx_json_message_in_response(t_json_data *data);
 char *mx_json_message_out_request(t_json_data *data);
 char *mx_json_register_request(t_json_data *data);
+char *mx_get_json_format_template(enum e_json_types type);
 char *mx_json_make_json(enum e_json_types type, t_json_data *data);
 t_json_data *mx_json_parse(char *s);
 

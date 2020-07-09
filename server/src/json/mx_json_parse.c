@@ -5,7 +5,7 @@ static bool is_valid_json_data(t_json_data *data) {
             && *data->pers_info.password && *data->pers_info.first_name
             && *data->pers_info.last_name)
         || (data->type == JS_LOG_IN && *data->pers_info.login
-            && *data->pers_info.password && *data->token)
+            && *data->pers_info.password)
         || (data->type == JS_LOG_OUT && data->pers_info.user_id && *data->token)
         || (data->type == JS_MES_DEL_IN && data->message.client2_id
             && data->status && data->message.message_id && *data->token)
@@ -23,11 +23,9 @@ static bool is_valid_json_data(t_json_data *data) {
     return false;
 }
 
-static void *parse_failed(struct json_object *jo, t_json_data *data) {
-    fprintf(stderr, "json parse failed\n");
-    printf("DATA:\n" MX_RESP_LOG_IN "\n", data->type, data->status, data->pers_info.user_id,
-            data->pers_info.first_name, data->pers_info.last_name,
-            data->token);
+static void *parse_failed(struct json_object *jo, t_json_data *data,
+                          char *message) {
+    fprintf(stderr, "json parse error: invalid %s\n", message);
     json_object_put(jo);
     if (data && data->message.text)
         free(data->message.text);
@@ -82,24 +80,24 @@ t_json_data *mx_json_parse(char *s) {
     struct json_object *buf = json_object_object_get(jo, "type");
 
     if (!jo || !buf)
-        return parse_failed(jo, json);
+        return parse_failed(jo, json, "wrong json");
     if ((json->type = json_object_get_int(buf)) == 0 && errno == EINVAL)
-        return parse_failed(jo, json);
+        return parse_failed(jo, json, "incorrect format of TYPE field");
     if ((json->status = (buf = json_object_object_get(jo, "status")) ?
         json_object_get_int(buf) : -1) == 0 && errno == EINVAL)
-        return parse_failed(jo, json);
+        return parse_failed(jo, json, "incorrect format of STATUS field");
     if ((buf = json_object_object_get(jo, "token")))
         strcpy(json->token, json_object_get_string(buf));
     if ((buf = json_object_object_get(jo, "message_id"))
         || json->type == JS_MES_OUT) {
         if (fill_message_data(json, jo, buf))
-            return parse_failed(jo, json);
+            return parse_failed(jo, json, "fill_message_data fail");
     }
     else if (fill_personal_data(json, jo))
-        return parse_failed(jo, json);
+        return parse_failed(jo, json, "fill_personal_data fail");
     // printf("BEFORE IS_VALID\n");
     if (!is_valid_json_data(json))
-        return parse_failed(jo, json);
+        return parse_failed(jo, json, "missing fields in json");
     json_object_put(jo);
     return json;
 }
