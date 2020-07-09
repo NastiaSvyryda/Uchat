@@ -1,35 +1,38 @@
 #include "uchat_server.h"
 
 static bool is_valid_json_data(t_json_data *data) {
-    if ((data->type = JS_REG && *data->pers_info.login
+    if ((data->type == JS_REG && *data->pers_info.login
             && *data->pers_info.password && *data->pers_info.first_name
             && *data->pers_info.last_name)
-        || (data->type = JS_LOG_IN && *data->pers_info.login
+        || (data->type == JS_LOG_IN && *data->pers_info.login
             && *data->pers_info.password && *data->token)
-        || (data->type = JS_LOG_OUT && data->user_id && *data->token)
-        || (data->type = JS_MES_DEL_IN && data->message.client2_id
+        || (data->type == JS_LOG_OUT && data->pers_info.user_id && *data->token)
+        || (data->type == JS_MES_DEL_IN && data->message.client2_id
             && data->status && data->message.message_id && *data->token)
-        || (data->type = JS_MES_DEL_OUT && data->message.message_id
+        || (data->type == JS_MES_DEL_OUT && data->message.message_id
             && data->message.client1_id && *data->token)
-        || (data->type = JS_MES_EDIT_IN && data->status
+        || (data->type == JS_MES_EDIT_IN && data->status
             && data->message.message_id && data->message.client2_id
             && *data->token)
-        || (data->type = JS_MES_EDIT_OUT && data->message.message_id
+        || (data->type == JS_MES_EDIT_OUT && data->message.message_id
             && *data->message.text && data->message.client1_id && *data->token)
-        || (data->type = JS_MES_IN && data->status && data->message.message_id)
-        || (data->type = JS_MES_OUT && data->message.client1_id
+        || (data->type == JS_MES_IN && data->status && data->message.message_id)
+        || (data->type == JS_MES_OUT && data->message.client1_id
             && data->message.client2_id && *data->message.text))
         return true;
     return false;
 }
 
-static void *parse_failed(struct json_object *jo, t_json_data *json) {
-    json_object_put(jo);
-    if (json && json->message.text)
-        free(json->message.text);
-    free(json);
-    errno = 0;
+static void *parse_failed(struct json_object *jo, t_json_data *data) {
     fprintf(stderr, "json parse failed\n");
+    printf("DATA:\n" MX_RESP_LOG_IN "\n", data->type, data->status, data->pers_info.user_id,
+            data->pers_info.first_name, data->pers_info.last_name,
+            data->token);
+    json_object_put(jo);
+    if (data && data->message.text)
+        free(data->message.text);
+    free(data);
+    errno = 0;
     return NULL;
 }
 
@@ -82,12 +85,13 @@ t_json_data *mx_json_parse(char *s) {
     if ((buf = json_object_object_get(jo, "token")))
         strcpy(json->token, json_object_get_string(buf));
     if ((buf = json_object_object_get(jo, "message_id"))
-        || json->status == JS_MES_OUT) {
+        || json->type == JS_MES_OUT) {
         if (fill_message_data(json, jo, buf))
             return parse_failed(jo, json);
     }
     else if (fill_personal_data(json, jo))
         return parse_failed(jo, json);
+    // printf("BEFORE IS_VALID\n");
     if (!is_valid_json_data(json))
         return parse_failed(jo, json);
     json_object_put(jo);

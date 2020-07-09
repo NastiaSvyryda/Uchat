@@ -134,10 +134,10 @@ typedef struct s_message {
     // char token[MX_TOKEN_LEN];
 }              t_message;
 
-union u_json_data {
-    t_personal_data pers_info;
-    t_message message;
-};
+// union u_json_data {
+//     t_personal_data pers_info;
+//     t_message message;
+// };
 
 typedef struct s_json_data {
     int type;
@@ -145,7 +145,6 @@ typedef struct s_json_data {
     char token[MX_TOKEN_LEN];
     t_personal_data pers_info;
     t_message message;
-    int user_id;
 }              t_json_data;
 
 void mx_str_to_file(const char *filepath, const char *data);

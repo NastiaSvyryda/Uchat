@@ -27,11 +27,11 @@ all: install
 
 install: $(NAME)
 
-$(NAME): $(OBJS) $(LIBMX) Makefile
+$(NAME): $(OBJS) $(LIBMX)
 	@$(CCFLG)  -lsqlite3 $(OBJS) $(GTK_FLAGS) -L$(LIBMX_DIR) -lmx -o $@
 	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
 
-$(OBJS): obj/%.o: %.c $(INC) | $(OBJ_DIR)
+$(OBJS): obj/%.o: %.c $(INC) Makefile | $(OBJ_DIR)
 	@$(CCFLG) -I$(INC_DIR) -Ilibmx/inc -c $(GTK_SORT_FLAGS) -o $@ $<
 	@printf "\r\33[2K$(NAME) \033[33;1mcompile \033[0m$(<:$(SRC_DIR)/%.c=%) "
 

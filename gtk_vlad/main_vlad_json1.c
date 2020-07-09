@@ -1,6 +1,5 @@
 #include "uchat_client.h"
 
-static void fn(int type) {
     t_json_data json_data = {
         .type = type,
         .status = 200,
@@ -21,11 +20,17 @@ static void fn(int type) {
             .delivery_time = 12345,
         }
     };
-    char *str = mx_json_make_json(type, &json_data);
-    printf("made str = \n%s\n", str + 4);
-    t_json_data *recieved_data = mx_json_parse(str + 4);
-    char *str1 = mx_json_make_json(type, recieved_data);
-    printf("str form received data = \n%s\n----------\n\n", str1 + 4);
+    char name[100] = "";
+    sprintf(name, "client_type_%d.js", type);
+    char *str = mx_json_make_json(type, json_data);
+    mx_str_to_file(name, str + 4);
+    char name_server[100] = "";
+    sprintf(name_server, "server_type_%d.js", type);
+    char *str1 = mx_file_to_str(name_server);
+    printf("server file str = \n%s\n", str1);
+    t_json_data *recieved_data = mx_json_parse(str1);
+    recieved_data ? printf("OK\n") : printf("NOT OK\n");
+    // printf("str form received data = \n%s\n----------\n\n", str1 + 4);
 
     if (recieved_data && recieved_data->message.text)
     free(recieved_data->message.text);

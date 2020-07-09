@@ -32,7 +32,7 @@ void mx_controller_message(t_clients *client, t_clients *cur_client, t_json_data
             client->name_from == client->name_to) {
                 json->type = JS_MES_IN;
                 json_str = mx_json_make_json(JS_MES_IN, json);
-                write(client->fd, json_str,mx_strlen(json_str + 4) + 4);
+                write(client->fd, json_str, mx_strlen(json_str + 4) + 4);
                 mx_printstr("message delivered to ");
                 mx_printint(client->name_to);
                 mx_printchar('\n');

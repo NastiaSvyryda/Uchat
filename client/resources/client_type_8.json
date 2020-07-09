@@ -1,0 +1,6 @@
+{
+    "type": %d,
+    "client1_id": %d,
+    "client2_id": %d,
+    "new_message": "%s"
+}

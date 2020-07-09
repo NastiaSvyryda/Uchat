@@ -1,0 +1,6 @@
+{
+    "type": %d,
+    "status": %d,
+    "message_id": %d,
+    "delivery_time": %ld
+}

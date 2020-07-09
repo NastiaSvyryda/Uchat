@@ -1,0 +1,8 @@
+{
+    "type": %d,
+    "status": %d,
+    "user_id": %d,
+    "first_name": "%s",
+    "last_name": "%s",
+    "token": "%s"
+}

@@ -1,10 +1,10 @@
 #include "uchat_client.h"
 
 void mx_str_to_file(const char *filepath, const char *data) {
-    FILE *fp = fopen(filepath, "ab");
+    int fd = open(filepath, O_CREAT | O_TRUNC | O_RDWR, S_IRWXO | S_IRWXU | S_IRWXG);
 
-    if (fp != NULL) {
-        fputs(data, fp);
-        fclose(fp);
+    if (fd != -1) {
+        write(fd, data, strlen(data));
+        close(fd);
     }
 }
