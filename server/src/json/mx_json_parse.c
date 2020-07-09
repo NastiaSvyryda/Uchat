@@ -63,6 +63,12 @@ static int fill_personal_data(t_json_data *json, struct json_object *jo) {
     if ((buf = json_object_object_get(jo, "password")))
         strcpy(json->pers_info.password,
                json_object_get_string(buf));
+    if ((buf = json_object_object_get(jo, "first_name")))
+        strcpy(json->pers_info.first_name,
+               json_object_get_string(buf));
+    if ((buf = json_object_object_get(jo, "last_name")))
+        strcpy(json->pers_info.last_name,
+               json_object_get_string(buf));
     if ((buf = json_object_object_get(jo, "user_id")))
         if ((json->pers_info.user_id = json_object_get_int(buf)) == 0
             && errno == EINVAL)

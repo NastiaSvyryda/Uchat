@@ -1,4 +1,4 @@
-#include "uchat_server.h"
+#include "uchat_client.h"
 
 static void fn(int type) {
     t_json_data json_data = {
@@ -21,21 +21,23 @@ static void fn(int type) {
             .delivery_time = 12345,
         },
     };
-    char name_server[100] = "";
-    sprintf(name_server, "./server/resources/server_type_%d.json", type);
-    char *str1 = mx_json_make_json(type, &json_data);
-    struct json_object *jo = json_tokener_parse(str1 + 4);
-    str1 = (char *)json_object_to_json_string_ext(jo, JSON_C_TO_STRING_PRETTY
-        | JSON_C_TO_STRING_SPACED);
-    mx_str_to_file(name_server, str1);
     char name[100] = "";
-    sprintf(name, "./client/resources/client_type_%d.json", type);
-    char *str = mx_file_to_str(name);
-        if (!str)
+    sprintf(name, "client_type_%d.json", type);
+    char *str = mx_json_make_json(type, &json_data);
+    struct json_object *jo = json_tokener_parse(str + 4);
+    // printf("---------\n----------\n%s\n---------\n---------\n",
+    // json_object_to_json_string_ext(jo, JSON_C_TO_STRING_PRETTY
+    //     | JSON_C_TO_STRING_SPACED));
+    str = (char *)json_object_to_json_string_ext(jo, JSON_C_TO_STRING_PRETTY
+        | JSON_C_TO_STRING_SPACED);
+    mx_str_to_file(name, str);
+    char name_server[100] = "";
+    sprintf(name_server, "server_type_%d.json", type);
+    char *str1 = mx_file_to_str(name_server);
+    if (!str1)
         return;
-
-    printf("client file str = \n%s\n", str);
-    t_json_data *recieved_data = mx_json_parse(str);
+    printf("server file str = \n%s\n", str1);
+    t_json_data *recieved_data = mx_json_parse(str1);
     recieved_data ? printf("\033[32;1mOK\033[0m\n")
                   : printf("\033[31;1mNOT OK\033[0m\n\n");
     // printf("str form received data = \n%s\n----------\n\n", str1 + 4);
@@ -43,19 +45,16 @@ static void fn(int type) {
     if (recieved_data && recieved_data->message.text)
     free(recieved_data->message.text);
     free(recieved_data);
+    // free(str);
+    // free(str1);
 }
 
 int main() {
-    system("rm -rf server/resources/server_type* server_type* test.jsonon");
+    system("rm -rf client_type*");
     for (int i = 0; i < JS_NUM; i++) {
         fn(i);
     }
-    // char *str = mx_file_to_str("./.vscode/settings.jsonon");
-    // struct json_object *jo = json_tokener_parse(str);
-    // str = (char *)json_object_to_json_string_ext(jo, JSON_C_TO_STRING_PRETTY
-    //      );
-    // mx_str_to_file("test.jsonon", str);
-    // char *str = "{ \"type\": 346, \"status\": \"2006\", \"message_id\": 50, \"client2_id\": 2, \"token\": \"TOKEN!@#\" }";
+    // char *str = "{ \"type\": 346, \"status\": \"2006 sdf\", \"message_id\": 50, \"client2_id\": 2, \"token\": \"TOKEN!@#\" }";
     // printf("extreme str = \n%s\n", str);
     // t_json_data *json_data = mx_json_parse(str);
     // if (!json_data) {
