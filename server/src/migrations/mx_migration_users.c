@@ -13,11 +13,12 @@ static void create_table_for_sqlite3(void) {
                        "last_name VARCHAR(255) NOT NULL,\n"
                        "login VARCHAR(255) NOT NULL,\n"
                        "password VARCHAR(255) NOT NULL,\n"
-                       "token VARCHAR(255) NULL,\n"
+                       "security VARCHAR(255) NULL,\n"
                        "create_at DATETIME NOT NULL );",
                        mx_model_user_name_table());
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
+    mx_strdel(&sql);
     sqlite3_close(db);
 }
 
@@ -31,6 +32,7 @@ static void delete_table_for_sqlite3(void) {
     asprintf(&sql, "DROP TABLE %s ;", mx_model_user_name_table());
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
+    mx_strdel(&sql);
     sqlite3_close(db);
 }
 

@@ -9,8 +9,11 @@ static void sqlite3_database_sql(char *table, char *fill_table, char *value_tabl
     mx_valid_sqlite3_open_db(rc, db);
     asprintf(&sql, "INSERT INTO %s ( %s ) VALUES ( %s );",
              table, fill_table, value_table);
+    mx_printstr(sql);
+    mx_printstr("\n");
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
+    mx_strdel(&sql);
     sqlite3_close(db);
 }
 

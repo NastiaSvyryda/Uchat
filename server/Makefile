@@ -5,7 +5,7 @@ CCFLG = clang -std=c11 $(addprefix -W, all extra error pedantic) -g
 
 SRC_DIRS = src src/controllers src/controllers/auth src/controllers/messages \
 src/json src/json/auth src/json/message src/migrations src/models src/system src/system/basic \
-src/system/database_crud src/validations
+src/system/database_crud src/validations src/system/security
 SRC_DIR = src
 
 INC_DIR = inc

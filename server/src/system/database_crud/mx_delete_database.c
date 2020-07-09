@@ -9,8 +9,11 @@ void sqlite3_database_sql(char *table, char *fill_table, char *where) {
     mx_valid_sqlite3_open_db(rc, db);
     asprintf(&sql, "DELETE FROM %s ( %s ) WHERE %s;",
              table, fill_table, where);
+    mx_printstr(sql);
+    mx_printstr("\n");
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
+    mx_strdel(&sql);
     sqlite3_close(db);
 }
 
