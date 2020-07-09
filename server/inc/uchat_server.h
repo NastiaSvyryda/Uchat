@@ -111,6 +111,7 @@ char *mx_config_sqlite3_db_name(void);
 void mx_valid_check_argc_error(int argc);
 void mx_valid_sqlite3_open_db(int rc, sqlite3 *db);
 void mx_valid_sqlite3_failed_data(int rc, sqlite3 *db, char *err_msg);
+int mx_valid_str_isalpha(char *str);
 ///end validation
 
 ///JSON
@@ -178,6 +179,7 @@ void mx_conn_list_sock(int *fd, char **argv);
 struct sockaddr_in mx_accept_connections(t_clients *client, int listenfd);
 void mx_thread_create(t_clients *client, struct sockaddr_in cli);
 //CRUD
+char *mx_create_token(int length);
 void mx_create_databases(char *database, char *table, char *fill_table, char *value_table);
 t_list *mx_read_database(char *database, char *table, char *fill_table, char *where);
 void mx_update_database(char *database, char *table, char *set, char *where);

@@ -34,7 +34,7 @@ static char *insert_token(char **fill, t_list *data) {
 static void login_success(t_list *data, char *token, t_clients *client) {
     t_json_data json = {.type = JS_LOG_IN,
             .status = 200,
-            .user_id = mx_atoi(data->data)};
+            .pers_info.user_id = mx_atoi(data->data)};
     mx_strcpy(json.pers_info.first_name, data->next->data);
     mx_strcpy(json.pers_info.last_name, data->next->next->data);
     mx_strcpy(json.token, token);

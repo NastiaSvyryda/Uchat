@@ -1,7 +1,7 @@
 #include "uchat_server.h"
 
 char *mx_create_token(int length) {
-    static int mySeed = 25011984;
+    int mySeed = 25011984;
     char *string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-#?!";
     size_t stringLen = strlen(string);
     char *randomString = NULL;
