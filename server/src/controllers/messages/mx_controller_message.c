@@ -21,32 +21,24 @@
 
 void mx_controller_message(t_clients *client, t_json_data *json) {
     char *json_str = NULL;
-<<<<<<< HEAD
-    cur_client->channel_id = 2;
-=======
 //    cur_client->name_to = 3;
->>>>>>> 6446e11fea687c3294d9d6f3d32b2632776f596b
 
     client = client->first;
 
     //fill_database_message(json);
     while (client->next != NULL) {
         if (client->first->index > 1) { // количество пользователей
-<<<<<<< HEAD
-            if (cur_client->channel_id != 3 &&
-            client->user_id == client->channel_id) {
-=======
             if (client->name_from == json->message.client2_id) {
->>>>>>> 6446e11fea687c3294d9d6f3d32b2632776f596b
                 json->type = JS_MES_IN;
                 json_str = mx_json_make_json(JS_MES_IN, json);
                 write(client->fd, json_str, mx_strlen(json_str + 4) + 4);
                 mx_printstr("message delivered to ");
-                mx_printint(client->channel_id);
+                mx_printint(client->name_to);
                 mx_printchar('\n');
                 break;
             }
         }
+
         client = client->next;
     }
 }
