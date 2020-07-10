@@ -92,6 +92,7 @@ void mx_valid_check_argc_error(int argc);
 void mx_valid_sqlite3_open_db(int rc, sqlite3 *db);
 void mx_valid_sqlite3_failed_data(int rc, sqlite3 *db, char *err_msg);
 int mx_valid_str_isalpha(char *str);
+int mx_valid_register(t_json_data *json);
 ///end validation
 
 ///JSON
