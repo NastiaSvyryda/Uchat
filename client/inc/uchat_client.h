@@ -17,18 +17,19 @@
 #include <stdbool.h>
 #include "libmx.h"
 
-
 //GTK
 
 #define UI_FILE "login.glade"
 
-typedef struct s_login {
+typedef struct s_login
+{
     char *type;
     char *login;
     char *password;
 } t_login;
 
-typedef struct s_registre {
+typedef struct s_registre
+{
     char *type;
     char *login;
     char *password;
@@ -36,19 +37,20 @@ typedef struct s_registre {
     char *surname;
 } t_registre;
 
-typedef struct s_MainWindowObjects {
-    GtkWindow      *loginWindow;
-    GtkWindow      *registreWindow;
-    GtkWindow      *mainWindow;
+typedef struct s_MainWindowObjects
+{
+    GtkWindow *loginWindow;
+    GtkWindow *registreWindow;
+    GtkWindow *mainWindow;
 
-    GtkEntry       *entryLogin_l;
-    GtkEntry       *entryPass_l;
+    GtkEntry *entryLogin_l;
+    GtkEntry *entryPass_l;
 
-    GtkEntry       *entryLogin_r;
-    GtkEntry       *entryPass_r;
-    GtkEntry       *entryPass_r2;
-    GtkEntry       *entryName_r;
-    GtkEntry       *entrySurname_r;
+    GtkEntry *entryLogin_r;
+    GtkEntry *entryPass_r;
+    GtkEntry *entryPass_r2;
+    GtkEntry *entryName_r;
+    GtkEntry *entrySurname_r;
 
     int fd;
 } t_mainWindowObjects;
@@ -56,30 +58,29 @@ typedef struct s_MainWindowObjects {
 //Buttons
 void mx_on_butLogin_clicked(GtkWidget *window, gpointer data);
 void mx_on_butRegistreIn_clicked(GtkWidget *button, gpointer data);
-void mx_on_butRegistre_clicked (GtkWidget *window, gpointer data);
-gboolean mx_input(gpointer data);
+void mx_on_butRegistre_clicked(GtkWidget *window, gpointer data);
+gboolean mx_input(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
 
 GtkWidget *mx_create_view_and_model(void);
 void mx_create_main_window(struct s_MainWindowObjects *mwo);
 void mx_create_login_window(char **argv);
-void mx_create_registre_window(struct s_MainWindowObjects* mwo);
-
+void mx_create_registre_window(struct s_MainWindowObjects *mwo);
 
 //gtk
 
-
-typedef enum e_json_types {
-    JS_REG,  // JSON Type - register
-    JS_LOG_IN,  // JSON Type - log in
-    JS_LOG_OUT,  // JSON Type - log out
-    JS_MES_DEL_IN,  // JSON Type - delete message
+typedef enum e_json_types
+{
+    JS_REG,          // JSON Type - register
+    JS_LOG_IN,       // JSON Type - log in
+    JS_LOG_OUT,      // JSON Type - log out
+    JS_MES_DEL_IN,   // JSON Type - delete message
     JS_MES_DEL_OUT,  // JSON Type - delete message
     JS_MES_EDIT_IN,  // JSON Type - edit message
-    JS_MES_EDIT_OUT,  // JSON Type - edit message
-    JS_MES_IN,  // JSON Type - input message
-    JS_MES_OUT,  // JSON Type - output message
-    JS_NUM  // JSON types number
-}            t_json_types;
+    JS_MES_EDIT_OUT, // JSON Type - edit message
+    JS_MES_IN,       // JSON Type - input message
+    JS_MES_OUT,      // JSON Type - output message
+    JS_NUM           // JSON types number
+} t_json_types;
 
 #define MX_JSON_TEMPLATE "./client/resources/client_type_%d.json"
 
@@ -92,16 +93,18 @@ typedef enum e_json_types {
 #define MX_MAX_NAME_LEN 100
 // #define MX_MAX_MESSAGE_LEN 65000
 
-typedef struct s_personal_data {
+typedef struct s_personal_data
+{
     char login[MX_VARCHAR_LEN];
     char password[MX_VARCHAR_LEN];
     int user_id;
     char first_name[MX_MAX_NAME_LEN];
     char last_name[MX_MAX_NAME_LEN];
     // char token[MX_TOKEN_LEN];
-}              t_personal_data;
+} t_personal_data;
 
-typedef struct s_message {
+typedef struct s_message
+{
     char *text;
     int client1_id;
     int client2_id;
@@ -109,20 +112,21 @@ typedef struct s_message {
     int message_id;
     time_t delivery_time;
     // char token[MX_TOKEN_LEN];
-}              t_message;
+} t_message;
 
 // union u_json_data {
 //     t_personal_data pers_info;
 //     t_message message;
 // };
 
-typedef struct s_json_data {
+typedef struct s_json_data
+{
     int type;
     int status;
     char token[MX_TOKEN_LEN + 1];
     t_personal_data pers_info;
     t_message message;
-}              t_json_data;
+} t_json_data;
 
 void mx_str_to_file(const char *filepath, const char *data);
 
