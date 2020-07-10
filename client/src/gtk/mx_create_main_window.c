@@ -61,7 +61,7 @@ void mx_create_main_window(struct s_MainWindowObjects *mwo) {
 //    json->type = JS_MES_OUT;
 //    json->message.text = strdup("hallo");
 //    json->message.client1_id = 1;
-//    json->message.client2_id = 2;
+//    json->message.channel_id = 2;
 //    json_str = mx_json_make_json(JS_MES_OUT, json);
 //    write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
 //    mx_strdel(&json_str);

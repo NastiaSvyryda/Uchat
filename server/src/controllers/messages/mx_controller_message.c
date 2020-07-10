@@ -14,7 +14,7 @@
 //             json->message.client1_id,
 //             json->message.text,
 //             "datetime('now')",
-//             json->message.client2_id);
+//             json->message.channel_id);
 //    mx_create_databases(mx_model_message_database(), mx_model_message_name_table(), fill_str, value_str);
 //}
 

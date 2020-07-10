@@ -52,7 +52,7 @@ typedef struct s_personal_data {
 typedef struct s_message {
     char *text;
     int client1_id;
-    int client2_id;
+    int channel_id;
     int channel_id;
     int message_id;
     time_t delivery_time;

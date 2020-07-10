@@ -14,7 +14,7 @@
         .message = {
             .text = "This is the text",
             .client1_id = 1,
-            .client2_id = 2,
+            .channel_id = 2,
             .channel_id = 30,
             .message_id = 50,
             .delivery_time = 12345,
@@ -43,7 +43,7 @@ int main() {
     for (int i = 0; i < JS_NUM; i++) {
         fn(i);
     }
-    char *str = "{ \"type\": 346, \"status\": \"2006 sdf\", \"message_id\": 50, \"client2_id\": 2, \"token\": \"TOKEN!@#\" }";
+    char *str = "{ \"type\": 346, \"status\": \"2006 sdf\", \"message_id\": 50, \"channel_id\": 2, \"token\": \"TOKEN!@#\" }";
     printf("extreme str = \n%s\n", str);
     t_json_data *json_data = mx_json_parse(str);
     // if (!json_data) {
