@@ -53,7 +53,6 @@ typedef struct s_message {
     char *text;
     int client1_id;
     int channel_id;
-    int channel_id;
     int message_id;
     time_t delivery_time;
     // char token[MX_TOKEN_LEN];
