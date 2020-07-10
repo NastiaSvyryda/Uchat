@@ -15,6 +15,7 @@
 #include <pthread.h>
 #include <sqlite3.h>
 #include <errno.h>
+#include <limits.h>
 
 #define MX_JSON_TEMPLATE "./server/resources/server_type_%d.json"
 
@@ -73,11 +74,12 @@ typedef struct s_json_data {
 }              t_json_data;
 
 typedef struct s_clients {
-    struct s_clients *next;
     int fd;
-    int name_to;
-    int name_from;
+    int user_id;
+    char *token;
+    int channel_id;
     int index;
+    struct s_clients *next;
     struct s_clients *first;
 }               t_clients;
 
@@ -93,6 +95,7 @@ void mx_valid_sqlite3_open_db(int rc, sqlite3 *db);
 void mx_valid_sqlite3_failed_data(int rc, sqlite3 *db, char *err_msg);
 int mx_valid_str_isalpha(char *str);
 int mx_valid_register(t_json_data *json);
+bool mx_valid_login(t_json_data *json);
 ///end validation
 
 ///JSON
@@ -161,11 +164,12 @@ void mx_conn_list_sock(int *fd, char **argv);
 struct sockaddr_in mx_accept_connections(t_clients *client, int listenfd);
 void mx_thread_create(t_clients *client, struct sockaddr_in cli);
 //CRUD
-char *mx_create_token(int length);
-void mx_create_databases(char *database, char *table, char *fill_table, char *value_table);
+int mx_create_databases(char *database, char *table, char *fill_table, char *value_table);
 t_list *mx_read_database(char *database, char *table, char *fill_table, char *where);
 void mx_update_database(char *database, char *table, char *set, char *where);
 void mx_delete_database(char *database, char *table, char *fill_table, char *where);
+//Security
+char *mx_create_token(int length);
 //end systeam
 
 #endif
