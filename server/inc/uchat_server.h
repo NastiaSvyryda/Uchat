@@ -120,7 +120,7 @@ void mx_controller_login(t_json_data *json, t_clients *client);
 void mx_controller_register(t_json_data *json, t_clients *client);
 void mx_controller_log_out(void);
 //Messages
-void mx_controller_message(t_clients *client, t_clients *cur_client, t_json_data *json);
+void mx_controller_message(t_clients *client, t_json_data *json);
 ///end controllers
 
 ///Models
