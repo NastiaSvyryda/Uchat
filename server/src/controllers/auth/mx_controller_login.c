@@ -25,11 +25,17 @@ static void json_login_success(t_list *data, t_clients *client) {
     mx_strcpy(json.pers_info.first_name, data->next->data);
     mx_strcpy(json.pers_info.last_name, data->next->next->data);
 
+<<<<<<< HEAD
     mx_strcpy(json.token, client->token);
+=======
+    client->first->index++;
+    mx_strcpy(json.token, token);
+>>>>>>> 6446e11fea687c3294d9d6f3d32b2632776f596b
     json_str = mx_json_make_json(JS_LOG_IN, &json);
     mx_printchar('\n');
     mx_printstr(json_str + 4);
     mx_printchar('\n');
+    mx_printint(client->name_from);
     write(client->fd, json_str , strlen(json_str + 4) + 4);
     mx_strdel(&json_str);
 }
