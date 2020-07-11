@@ -3,9 +3,20 @@ NAME_ROOT = ../$(NAME)
 
 CCFLG = clang -std=c11 $(addprefix -W, all extra error pedantic) -g
 
-SRC_DIRS = src src/controllers src/controllers/auth src/controllers/messages \
-src/json src/json/auth src/json/message src/migrations src/models src/system src/system/basic \
-src/system/database_crud src/validations src/system/security
+SRC_DIRS = src \
+			src/controllers \
+			src/controllers/auth \
+			src/controllers/messages \
+			src/json \
+			src/json/auth \
+			src/json/message \
+			src/migrations \
+			src/models \
+			src/system \
+			src/system/basic \
+			src/system/database_crud \
+			src/validations \
+			src/system/security
 SRC_DIR = src
 
 INC_DIR = inc
@@ -30,11 +41,11 @@ all: install
 install: $(NAME)
 
 $(NAME): $(OBJS) $(LIBMX)
-	@$(CCFLG) -lsqlite3 $(OBJS) $(GTK_FLAGS) -L$(LIBMX_DIR) -lmx -o $@ --debug
+	@$(CCFLG) -lssl -lcrypto -lsqlite3 $(OBJS) $(GTK_FLAGS) -L$(LIBMX_DIR) -L/usr/local/opt/openssl/lib/ -lssl -lcrypto -lmx -o $@ --debug
 	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
 
 $(OBJS): obj/%.o: %.c $(INC) Makefile | $(OBJ_DIR)
-	@$(CCFLG) -I$(INC_DIR) -Ilibmx/inc -c $(GTK_SORT_FLAGS) -o $@ $< --debug
+	@$(CCFLG) $(CPPFLAGS) -I$(INC_DIR) -Ilibmx/inc -c $(GTK_SORT_FLAGS) -I/usr/local/opt/openssl/include/ -o $@ $< --debug
 	@printf "\r\33[2K$(NAME) \033[33;1mcompile \033[0m$(<:$(SRC_DIR)/%.c=%) "
 
 $(OBJ_DIR):
@@ -62,5 +73,5 @@ uninstall: clean
 
 reinstall: uninstall install
 
-db-up: install ./uchat_server  migration-up
+db-up: install ./uchat_server migration-up
 db-ds: install ./uchat_server migration-ds
