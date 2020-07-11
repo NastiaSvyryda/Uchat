@@ -8,7 +8,7 @@ static void create_table_for_sqlite3(void) {
     char **fill = mx_model_delivery_user_fill_table();
 
     mx_valid_sqlite3_open_db(rc, db);
-    asprintf(&sql, "CREATE TABLE %s ("
+    asprintf(&sql, "CREATE TABLE IF NOT EXISTS %s ("
                          "%s INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                          "%s INTEGER NOT NULL,"
                          "%s INTEGER NOT NULL,"
