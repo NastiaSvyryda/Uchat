@@ -1,22 +1,24 @@
 #include "uchat_server.h"
 
 static void json_register_incorrectly_filled_fields(t_clients *client) {
-    t_json_data json = {.type = JS_REG, .status = 412, .pers_info.user_id = 0, .pers_info.first_name = "", .pers_info.last_name = ""};
-    char *str = mx_json_make_json(JS_LOG_IN, &json);
+    t_json_data json = {.type = JS_REG, .status = 412};
+    char *new_json = mx_json_make_json(JS_REG, &json);
 
-    write(client->fd, str, mx_strlen(str + 4) + 4);
-    mx_strdel(&str);
+    write(client->fd, new_json, mx_strlen(new_json + 4) + 4);
+    mx_strdel(&new_json);
 }
 
 static void json_register_success(t_clients *client, t_json_data *json_data) {
-    t_json_data json = {.type = JS_REG, .status = 200, .pers_info.user_id = 1};
+    char *new_json = NULL;
+
+    t_json_data json = {.type = JS_REG, .status = 200, .pers_info.user_id = client->user_id};
     strcpy(json.pers_info.first_name, json_data->pers_info.first_name);
     strcpy(json.pers_info.last_name, json_data->pers_info.last_name);
-    strcpy(json.token, "hui");
-    char *str = mx_json_make_json(JS_REG, &json);
-     mx_printstr(str + 4);
-    write(client->fd, str, mx_strlen(str + 4) + 4);
-    mx_strdel(&str);
+    strcpy(json.token, client->token);
+    new_json = mx_json_make_json(JS_REG, &json);
+    mx_printstr(new_json + 4);
+    write(client->fd, new_json, mx_strlen(new_json + 4) + 4);
+    mx_strdel(&new_json);
 }
 
 static t_list *check_login (char **fill, t_json_data *json) {
@@ -37,7 +39,6 @@ void mx_controller_register(t_json_data *json, t_clients *client) {
         json_register_incorrectly_filled_fields(client);
         return;
     }
-
     fill = mx_model_user_fill_table();
     asprintf(&fill_table, "%s, %s, %s, %s, %s",
              fill[1],
@@ -53,10 +54,12 @@ void mx_controller_register(t_json_data *json, t_clients *client) {
                  json->pers_info.login,
                  json->pers_info.password,
                  "datetime('now')");
-        mx_create_databases(mx_model_user_database(), mx_model_user_name_table(), fill_table, value_table);
+        client->user_id = mx_create_databases(mx_model_user_database(), mx_model_user_name_table(), fill_table, value_table);
+        client->token = mx_insert_token(fill, client->user_id);
         json_register_success(client, json);
-    } else
+    } else {
         json_register_incorrectly_filled_fields(client);
+    }
     mx_strdel(&fill_table);
     mx_del_strarr(&fill);
     mx_strdel(&value_table);
