@@ -7,18 +7,18 @@ static bool is_valid_json_data(t_json_data *data) {
         || (data->type == JS_LOG_IN && *data->pers_info.login
             && *data->pers_info.password)
         || (data->type == JS_LOG_OUT && data->pers_info.user_id && *data->token)
-        || (data->type == JS_MES_DEL_IN && data->message.client2_id
+        || (data->type == JS_MES_DEL_IN && data->message.channel_id
             && data->status && data->message.message_id && *data->token)
         || (data->type == JS_MES_DEL_OUT && data->message.message_id
             && data->message.client1_id && *data->token)
         || (data->type == JS_MES_EDIT_IN && data->status
-            && data->message.message_id && data->message.client2_id
+            && data->message.message_id && data->message.channel_id
             && *data->token)
         || (data->type == JS_MES_EDIT_OUT && data->message.message_id
             && *data->message.text && data->message.client1_id && *data->token)
         || (data->type == JS_MES_IN && data->status && data->message.message_id)
         || (data->type == JS_MES_OUT && data->message.client1_id
-            && data->message.client2_id && *data->message.text))
+            && data->message.channel_id && *data->message.text))
         return true;
     return false;
 }
@@ -43,8 +43,8 @@ static int fill_message_data(t_json_data *json, struct json_object *jo,
         if ((json->message.client1_id = json_object_get_int(buf)) == 0
             && errno == EINVAL)
             return 1;
-    if ((buf = json_object_object_get(jo, "client2_id")))
-        if ((json->message.client2_id = json_object_get_int(buf)) == 0
+    if ((buf = json_object_object_get(jo, "channel_id")))
+        if ((json->message.channel_id = json_object_get_int(buf)) == 0
             && errno == EINVAL)
             return 1;
     if ((buf = json_object_object_get(jo, "new_message")))

@@ -55,7 +55,7 @@ typedef struct s_MainWindowObjects {//changed
 
     GtkWidget *row;
     GtkWidget *list;
-
+    GtkWidget *messageList;
     int fd;
 } t_mainWindowObjects;
 
@@ -65,6 +65,8 @@ void mx_on_butRegistreIn_clicked(GtkWidget *button, gpointer data);
 void mx_on_butRegistre_clicked(GtkWidget *window, gpointer data);
 gboolean mx_input(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
 
+GtkWidget *mx_create_row(const gchar *text, struct s_MainWindowObjects *mwo);
+void mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data);
 void mx_on_chat_clicked(GtkWidget *button, gpointer data);
 GtkWidget *mx_create_view_and_model(void);
 void mx_create_main_window(struct s_MainWindowObjects *mwo);
@@ -112,7 +114,6 @@ typedef struct s_message
 {
     char *text;
     int client1_id;
-    int client2_id;
     int channel_id;
     int message_id;
     time_t delivery_time;

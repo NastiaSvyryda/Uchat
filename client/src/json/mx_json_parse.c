@@ -11,7 +11,7 @@ static void *parse_failed(struct json_object *jo, t_json_data *json) {
 }
 
 static int fill_message_data(t_json_data *json, struct json_object *jo,
-                              struct json_object *buf) {
+                             struct json_object *buf) {
     if (buf && ((json->message.message_id = json_object_get_int(buf)) == 0
             && errno == EINVAL))
         return 1;
@@ -21,8 +21,8 @@ static int fill_message_data(t_json_data *json, struct json_object *jo,
             return 1;
         if ((buf = json_object_object_get(jo, "new_message")))
             json->message.text = strdup(json_object_get_string(buf));
-        if ((buf = json_object_object_get(jo, "client2_id")))
-            if ((json->message.client2_id = json_object_get_int(buf)) == 0
+        if ((buf = json_object_object_get(jo, "channel_id")))
+            if ((json->message.channel_id = json_object_get_int(buf)) == 0
                 && errno == EINVAL)
                 return 1;
     }

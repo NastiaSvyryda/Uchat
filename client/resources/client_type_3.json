@@ -2,6 +2,6 @@
     "type": %d,
     "status": %d,
     "message_id": %d,
-    "client2_id": %d,
+    "channel_id": %d,
     "token": "%s"
 }

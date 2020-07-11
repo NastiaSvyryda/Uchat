@@ -1,5 +1,16 @@
 #include "uchat_client.h"
 
+
+void mx_add_out_message(t_mainWindowObjects *mwo, char *text_char) {
+    GtkWidget *row;
+    gchar *text;
+//    if (button == NULL)
+//        puts("NULL\n");
+    text = g_strdup_printf("%s", text_char);
+    row = mx_create_row(text, mwo);//change signal connectors
+    gtk_list_box_insert(GTK_LIST_BOX(mwo->messageList), row, -1);
+    gtk_widget_show_all(GTK_WIDGET(mwo->chatWindow));
+}
 gboolean mx_input(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data) {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
     char *json_str = NULL;
@@ -25,7 +36,7 @@ gboolean mx_input(__attribute__((unused)) GIOChannel *chan, __attribute__((unuse
             }
         }
         else if (json->type == JS_MES_IN) {
-            mx_printstr(json->message.text);
+            mx_add_out_message(mwo, (gchar *) json->message.text);
         }
     return TRUE;
 }

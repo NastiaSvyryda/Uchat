@@ -31,7 +31,6 @@ remove_this_row(GtkButton *button, GtkWidget *child) {
     gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), FALSE);
 }
 
-static GtkWidget *create_row(const gchar *label, struct s_MainWindowObjects *mwo);
 
 void
 row_revealed(GObject *revealer, GParamSpec *pspec, gpointer data) {
@@ -55,7 +54,7 @@ mx_add_chat(__attribute__((unused))GtkWidget *button, gpointer data) {
 
     //list = gtk_widget_get_parent(gtk_widget_get_parent(mwo->row));
     text = g_strdup_printf("message 2");
-    row = create_row(text, mwo);//change signal connectors
+    row = mx_create_row(text, mwo);//change signal connectors
     gtk_list_box_insert(GTK_LIST_BOX(mwo->list), row, -1);
     gtk_widget_show_all(GTK_WIDGET(mwo->mainWindow));
 }
@@ -65,12 +64,13 @@ mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data) {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
     GtkWidget *revealer, *row, *list;
     gint index;
+    char *message = (char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryMessage));
 //    if (button == NULL)
 //        puts("NULL\n");
     row = gtk_widget_get_parent(mwo->row);
     index = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
     list = gtk_widget_get_parent(row);
-    row = create_row(gtk_entry_get_text(GTK_ENTRY(mwo->entryMessage)), mwo);
+    row = mx_create_row(message, mwo);
     revealer = gtk_revealer_new();
     gtk_container_add(GTK_CONTAINER(revealer), row);
     gtk_widget_show_all(revealer);
@@ -78,6 +78,18 @@ mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data) {
                      G_CALLBACK(row_revealed), NULL);
     gtk_list_box_insert(GTK_LIST_BOX(list), revealer, index + 1);
     gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), TRUE);
+    char *json_str = NULL;
+    t_json_data *json = calloc(1, sizeof(t_json_data));
+
+    json->type = JS_MES_OUT;
+    json->message.text = strdup(message);
+    json->message.client1_id = 1;
+    json->message.channel_id= 3;
+    json_str = mx_json_make_json(JS_MES_OUT, json);
+    write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
+    mx_strdel(&json_str);
+    mx_strdel(&json->message.text);
+    free(json);
 }
 
 static void
@@ -115,13 +127,14 @@ void mx_create_chat_window(struct s_MainWindowObjects *mwo) {
     }
     mwo->entryMessage = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
     ///
+    list = (mwo->messageList = gtk_list_box_new());
     list = gtk_list_box_new();
     gtk_list_box_set_selection_mode(GTK_LIST_BOX(list), GTK_SELECTION_NONE);
     //gtk_list_box_set_header_func (GTK_LIST_BOX (list), add_separator, NULL, NULL);
     gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(builder, "scrolled_chat")), list);
     for (i = 0; i < 5; i++) {
         text = g_strdup_printf("message %d", i);
-        row = create_row(text, mwo);//change signal connectors
+        row = mx_create_row(text, mwo);//change signal connectors
         gtk_list_box_insert(GTK_LIST_BOX(list), row, -1);
     }
     ///
@@ -146,9 +159,7 @@ void mx_on_chat_clicked(GtkWidget *button, gpointer data) {
     gtk_window_close(mwo->mainWindow);
     mx_create_chat_window(mwo);
 }
-
-static GtkWidget *
-create_row(const gchar *text, struct s_MainWindowObjects *mwo) {
+GtkWidget *mx_create_row(const gchar *text, struct s_MainWindowObjects *mwo) {
     GtkWidget *button;
 
     mwo->row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
@@ -198,11 +209,11 @@ void mx_create_main_window(struct s_MainWindowObjects *mwo) {
     gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(builder, "scrolled_window_chats")), list);
     for (i = 0; i < 5; i++) {
         text = g_strdup_printf("chat %d", i);
-        row = create_row(text, mwo);
+        row = mx_create_row(text, mwo);
         gtk_list_box_insert(GTK_LIST_BOX(list), row, -1);
     }
     text = g_strdup_printf("message 2");
-    row = create_row(text, mwo);//change signal connectors
+    row = mx_create_row(text, mwo);//change signal connectors
     gtk_list_box_insert(GTK_LIST_BOX(mwo->list), row, -1);
     ///
     //view = mx_create_view_and_model();
@@ -214,17 +225,5 @@ void mx_create_main_window(struct s_MainWindowObjects *mwo) {
     /* Show window. All other widgets are automatically shown by GtkBuilder */
     gtk_widget_show_all(GTK_WIDGET(mwo->mainWindow));
 
-    char *json_str = NULL;
-    t_json_data *json = calloc(1, sizeof(t_json_data));
-
-    json->type = JS_MES_OUT;
-    json->message.text = strdup("hallo");
-    json->message.client1_id = 1;
-    json->message.client2_id = 3;
-    json_str = mx_json_make_json(JS_MES_OUT, json);
-    write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
-    mx_strdel(&json_str);
-    mx_strdel(&json->message.text);
-    free(json);
     gtk_main();
 }
