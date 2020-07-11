@@ -31,9 +31,8 @@ static void get_from_database(t_json_data *json) {
             fill[2],
             json->message.text);
     data = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), "id", where);
-    if (data != NULL) {
+    if (data != NULL)
         json->message.message_id = mx_atoi(data->data);
-    }
     mx_strdel(&user_id);
     mx_strdel(&where);
     mx_del_strarr(&fill);

@@ -35,19 +35,17 @@ void mx_controller_login(t_json_data *json, t_clients *client) {
     char *where = NULL;
     char **fill = NULL;
     t_list *data = NULL;
-    char *password = NULL;
 
     if (mx_valid_login(json) == false) {
         json_login_incorrectly_filled_fields(client);
         return;
     }
     fill = mx_model_user_fill_table();
-    password = mx_hmac_sha_256(json->pers_info.login, json->pers_info.password);
     asprintf(&where, "%s='%s' AND %s='%s'",
              fill[3],
              json->pers_info.login,
              fill[4],
-             password);
+             mx_hmac_sha_256(json->pers_info.login, json->pers_info.password));
     data = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), "*", where);
     if (data != NULL) {
         client->user_id = mx_atoi(data->data);
@@ -57,6 +55,5 @@ void mx_controller_login(t_json_data *json, t_clients *client) {
         json_login_unauthorized(client);
     mx_del_list(data, mx_list_size(data));
     mx_strdel(&where);
-    mx_strdel(&password);
     mx_del_strarr(&fill);
 }
