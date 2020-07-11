@@ -37,20 +37,24 @@ typedef struct s_registre
     char *surname;
 } t_registre;
 
-typedef struct s_MainWindowObjects
-{
+typedef struct s_MainWindowObjects {//changed
     GtkWindow *loginWindow;
     GtkWindow *registreWindow;
     GtkWindow *mainWindow;
+    GtkWindow *chatWindow;
 
-    GtkEntry *entryLogin_l;
-    GtkEntry *entryPass_l;
+    GtkEntry  *entryLogin_l;
+    GtkEntry  *entryPass_l;
 
-    GtkEntry *entryLogin_r;
-    GtkEntry *entryPass_r;
-    GtkEntry *entryPass_r2;
-    GtkEntry *entryName_r;
-    GtkEntry *entrySurname_r;
+    GtkEntry  *entryLogin_r;
+    GtkEntry  *entryPass_r;
+    GtkEntry  *entryPass_r2;
+    GtkEntry  *entryName_r;
+    GtkEntry  *entrySurname_r;
+    GtkEntry  *entryMessage;
+
+    GtkWidget *row;
+    GtkWidget *list;
 
     int fd;
 } t_mainWindowObjects;
