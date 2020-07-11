@@ -3,7 +3,9 @@ NAME_ROOT = ../$(NAME)
 
 CCFLG = clang -std=c11 $(addprefix -W, all extra error pedantic) -g
 
-SRC_DIRS = src src/json src/gtk
+SRC_DIRS = src \
+			src/json \
+			src/gtk
 SRC_DIR = src
 
 INC_DIR = inc
@@ -28,11 +30,11 @@ all: install
 install: $(NAME)
 
 $(NAME): $(OBJS) $(LIBMX)
-	@$(CCFLG)  -lsqlite3 $(OBJS) $(GTK_FLAGS) -L$(LIBMX_DIR) -lmx -o $@
+	@$(CCFLG)  -lsqlite3 $(OBJS) $(GTK_FLAGS) -L$(LIBMX_DIR) -L/usr/local/opt/openssl/lib/ -lssl -lcrypto -lmx -o $@
 	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
 
 $(OBJS): obj/%.o: %.c $(INC) Makefile | $(OBJ_DIR)
-	@$(CCFLG) -I$(INC_DIR) -Ilibmx/inc -c $(GTK_SORT_FLAGS) -o $@ $<
+	@$(CCFLG) -I$(INC_DIR) -Ilibmx/inc -c $(GTK_SORT_FLAGS) -I/usr/local/opt/openssl/include/ -o $@ $<
 	@printf "\r\33[2K$(NAME) \033[33;1mcompile \033[0m$(<:$(SRC_DIR)/%.c=%) "
 
 $(OBJ_DIR):

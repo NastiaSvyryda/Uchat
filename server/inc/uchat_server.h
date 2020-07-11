@@ -16,6 +16,10 @@
 #include <sqlite3.h>
 #include <errno.h>
 #include <limits.h>
+#include <openssl/ssl.h>
+#include <openssl/rsa.h>
+#include <openssl/x509.h>
+#include <openssl/evp.h>
 
 #define MX_JSON_TEMPLATE "./server/resources/server_type_%d.json"
 
@@ -169,6 +173,7 @@ t_list *mx_read_database(char *database, char *table, char *fill_table, char *wh
 void mx_update_database(char *database, char *table, char *set, char *where);
 void mx_delete_database(char *database, char *table, char *fill_table, char *where);
 //Security
+char *mx_hmac_sha_256(char *key, char *data);
 char *mx_create_token(int length);
 char *mx_insert_token(char **fill, int id);
 //end systeam
