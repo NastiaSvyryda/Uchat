@@ -14,7 +14,7 @@ static void fill_database_message(t_json_data *json) {
              json->message.client1_id,
              json->message.text,
              "datetime('now')",
-             json->message.client2_id);
+             json->message.channel_id);
     mx_create_databases(mx_model_message_database(), mx_model_message_name_table(), fill_str, value_str);
 }
 
@@ -50,7 +50,7 @@ void mx_controller_message(t_clients *client, t_json_data *json) {
     get_from_database(json);
     while (client->next != NULL) {
         if (client->first->index > 1) { // количество пользователей
-            if (client->user_id == json->message.client2_id) {
+            if (client->user_id == json->message.channel_id) {
                 json->type = JS_MES_IN;
                 json_str = mx_json_make_json(JS_MES_IN, json);
                 write(client->fd, json_str, mx_strlen(json_str + 4) + 4);
