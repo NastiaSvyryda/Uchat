@@ -4,23 +4,34 @@ static void create_table_for_sqlite3(void) {
     sqlite3 *db;
     char *err_msg = 0;
     int rc = sqlite3_open(mx_config_sqlite3_db_name(), &db);
-    char *sql;
+    char *sql = NULL;
+    char **fill = mx_model_message_fill_table();
 
     mx_valid_sqlite3_open_db(rc, db);
-    asprintf(&sql, "CREATE TABLE IF NOT EXISTS %s (\n"
-                         "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n"
-                         "user_id INTEGER NOT NULL,\n"
-                         "message TEXT NOT NULL, \n"
-                         "create_at DATATIME NOT NULL,\n"
-                         "channel_id INTEGER NOT NULL,\n"
-                         "FOREIGN KEY(user_id) REFERENCES %s(id), \n"
-                         "FOREIGN KEY(channel_id) REFERENCES %s(id) );",
+    asprintf(&sql, "CREATE TABLE IF NOT EXISTS %s ("
+                         "%s INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+                         "%s INTEGER NOT NULL,"
+                         "%s TEXT NOT NULL,"
+                         "%s DATATIME NOT NULL,"
+                         "%s INTEGER NOT NULL,"
+                         "FOREIGN KEY(%s) REFERENCES %s(id),"
+                         "FOREIGN KEY(%s) REFERENCES %s(id) );",
                          mx_model_message_name_table(),
+                         fill[0],
+                         fill[1],
+                         fill[2],
+                         fill[3],
+                         fill[4],
+                         fill[1],
                          mx_model_user_name_table(),
+                         fill[4],
                          mx_model_channel_name_table());
+    mx_printstr(sql);
+    mx_printstr("\n");
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
     mx_strdel(&sql);
+    mx_del_strarr(&fill);
     sqlite3_close(db);
 }
 
@@ -31,7 +42,9 @@ static void delete_table_for_sqlite3(void) {
     char *sql;
 
     mx_valid_sqlite3_open_db(rc, db);
-    asprintf(&sql, "DROP TABLE %s ;", mx_model_message_name_table());
+    asprintf(&sql, "DROP TABLE IF EXISTS %s;", mx_model_message_name_table());
+    mx_printstr(sql);
+    mx_printstr("\n");
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
     mx_strdel(&sql);
@@ -39,8 +52,8 @@ static void delete_table_for_sqlite3(void) {
 }
 
 void mx_migration_messages(bool status) {
-    if (mx_strcmp(mx_model_message_database(), "sqlite3") == 0 && status == true)
+    if ((mx_strcmp(mx_model_message_database(), "sqlite3") == 0) && (status == true))
         create_table_for_sqlite3();
-    else if (mx_strcmp(mx_model_channel_name_table(), "sqlite3") == 0 && status == false)
+    else if ((mx_strcmp(mx_model_message_database(), "sqlite3") == 0) && (status == false))
         delete_table_for_sqlite3();
 }

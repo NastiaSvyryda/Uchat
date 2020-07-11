@@ -32,3 +32,6 @@ uninstall: clean
 	@printf "$(SV_NAME) \033[31;1muninstalled\033[0m\n"
 
 reinstall: uninstall install
+
+db-up: install ./uchat_server  migration-up
+db-ds: install ./uchat_server migration-ds

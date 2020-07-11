@@ -46,7 +46,7 @@ static void fn(int type) {
 }
 
 int main() {
-    system("rm -rf server_type* test.jsonon");
+    system("rm -rf server_type* file.jsonon");
     for (int i = 0; i < JS_NUM; i++) {
         fn(i);
     }
@@ -54,7 +54,7 @@ int main() {
     // struct json_object *jo = json_tokener_parse(str);
     // str = (char *)json_object_to_json_string_ext(jo, JSON_C_TO_STRING_PRETTY
     //      );
-    // mx_str_to_file("test.jsonon", str);
+    // mx_str_to_file("file.jsonon", str);
     // char *str = "{ \"type\": 346, \"status\": \"2006\", \"message_id\": 50, \"client2_id\": 2, \"token\": \"TOKEN!@#\" }";
     // printf("extreme str = \n%s\n", str);
     // t_json_data *json_data = mx_json_parse(str);
