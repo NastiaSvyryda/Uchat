@@ -128,7 +128,6 @@ void mx_create_chat_window(struct s_MainWindowObjects *mwo) {
     mwo->entryMessage = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
     ///
     list = (mwo->messageList = gtk_list_box_new());
-    list = gtk_list_box_new();
     gtk_list_box_set_selection_mode(GTK_LIST_BOX(list), GTK_SELECTION_NONE);
     //gtk_list_box_set_header_func (GTK_LIST_BOX (list), add_separator, NULL, NULL);
     gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(builder, "scrolled_chat")), list);
