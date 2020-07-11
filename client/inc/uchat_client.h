@@ -65,6 +65,7 @@ void mx_on_butRegistreIn_clicked(GtkWidget *button, gpointer data);
 void mx_on_butRegistre_clicked(GtkWidget *window, gpointer data);
 gboolean mx_input(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
 
+void mx_on_chat_clicked(GtkWidget *button, gpointer data);
 GtkWidget *mx_create_view_and_model(void);
 void mx_create_main_window(struct s_MainWindowObjects *mwo);
 void mx_create_login_window(char **argv);

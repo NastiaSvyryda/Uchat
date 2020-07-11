@@ -213,6 +213,7 @@ void mx_create_main_window(struct s_MainWindowObjects *mwo) {
     g_object_unref(G_OBJECT(builder));
     /* Show window. All other widgets are automatically shown by GtkBuilder */
     gtk_widget_show_all(GTK_WIDGET(mwo->mainWindow));
+
     char *json_str = NULL;
     t_json_data *json = calloc(1, sizeof(t_json_data));
 
