@@ -10,7 +10,7 @@ static void fill_database_message(t_json_data *json) {
              fill_table[2],
              fill_table[3],
              fill_table[4]);
-    asprintf(&value_str, "\"%d\", \"%s\", \"%s\", \"%d\"",
+    asprintf(&value_str, "\"%d\", \"%s\", %s, \"%d\"",
              json->message.client1_id,
              json->message.text,
              "datetime('now')",
