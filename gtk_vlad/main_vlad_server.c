@@ -15,7 +15,7 @@ static void fn(int type) {
         .message = {
             .text = "This is the text",
             .client1_id = 10,
-            .client2_id = 20,
+            .channel_id = 20,
             .channel_id = 30,
             .message_id = 50,
             .delivery_time = 12345,
@@ -55,7 +55,7 @@ int main() {
     // str = (char *)json_object_to_json_string_ext(jo, JSON_C_TO_STRING_PRETTY
     //      );
     // mx_str_to_file("test.jsonon", str);
-    // char *str = "{ \"type\": 346, \"status\": \"2006\", \"message_id\": 50, \"client2_id\": 2, \"token\": \"TOKEN!@#\" }";
+    // char *str = "{ \"type\": 346, \"status\": \"2006\", \"message_id\": 50, \"channel_id\": 2, \"token\": \"TOKEN!@#\" }";
     // printf("extreme str = \n%s\n", str);
     // t_json_data *json_data = mx_json_parse(str);
     // if (!json_data) {

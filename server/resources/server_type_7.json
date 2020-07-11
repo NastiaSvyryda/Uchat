@@ -2,6 +2,6 @@
     "type": %d,
     "message_id": %d,
     "client1_id": %d,
-    "client2_id": %d,
+    "channel_id": %d,
     "new_message": "%s"
 }
