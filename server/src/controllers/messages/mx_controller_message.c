@@ -28,12 +28,12 @@ void mx_controller_message(t_clients *client, t_json_data *json) {
     //fill_database_message(json);
     while (client->next != NULL) {
         if (client->first->index > 1) { // количество пользователей
-            if (client->name_from == json->message.client2_id) {
+            if (client->user_id == json->message.client2_id) {
                 json->type = JS_MES_IN;
                 json_str = mx_json_make_json(JS_MES_IN, json);
                 write(client->fd, json_str, mx_strlen(json_str + 4) + 4);
                 mx_printstr("message delivered to ");
-                mx_printint(client->name_to);
+                mx_printint(client->channel_id);
                 mx_printchar('\n');
                 break;
             }

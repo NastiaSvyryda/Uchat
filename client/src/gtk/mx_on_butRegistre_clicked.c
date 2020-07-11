@@ -11,13 +11,15 @@ gboolean mx_input(gpointer data) {
         json_str = mx_strnew(length);
         read(mwo->fd, json_str, length);
         json = mx_json_parse(json_str);
-        mx_printstr("Response recieved");
+        mx_printstr("Response recieved: \n");
         if (json->type == JS_REG) {
             if (json->status == 200) {
                 gtk_window_close(mwo->registreWindow);
                 mx_create_main_window(mwo);
                 break;
             }
+            if (json->status == 412)
+                mx_printstr("fail fills");
         }
         else if (json->type == JS_LOG_IN) {
             if (json->status == 200) {
