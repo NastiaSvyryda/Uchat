@@ -13,7 +13,7 @@ char **mx_model_message_fill_table(void) {
 
     fill_table[0] = mx_strdup("id");
     fill_table[1] = mx_strdup("user_id");
-    fill_table[2] = mx_strdup("massage");
+    fill_table[2] = mx_strdup("message");
     fill_table[3] = mx_strdup("create_at");
     fill_table[4] = mx_strdup("channel_id");
     fill_table[5] = NULL;
