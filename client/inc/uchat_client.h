@@ -55,6 +55,7 @@ typedef struct s_MainWindowObjects {//changed
 
     GtkWidget *row;
     GtkWidget *list;
+    GtkWidget *messageList;
     int fd;
 } t_mainWindowObjects;
 
