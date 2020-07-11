@@ -5,7 +5,6 @@ gboolean mx_input(__attribute__((unused)) GIOChannel *chan, __attribute__((unuse
     char *json_str = NULL;
     int length = 0;
     t_json_data *json = NULL;
-
         read(mwo->fd, &length, 4);
         json_str = mx_strnew(length);
         read(mwo->fd, json_str, length);
