@@ -62,22 +62,13 @@ mx_add_chat(__attribute__((unused))GtkWidget *button, gpointer data) {
 void
 mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data) {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
-    GtkWidget *revealer, *row, *list;
-    gint index;
+    GtkWidget *row;
     char *message = (char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryMessage));
 //    if (button == NULL)
 //        puts("NULL\n");
-    row = gtk_widget_get_parent(mwo->row);
-    index = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
-    list = gtk_widget_get_parent(row);
-    row = mx_create_row(message, mwo);
-    revealer = gtk_revealer_new();
-    gtk_container_add(GTK_CONTAINER(revealer), row);
-    gtk_widget_show_all(revealer);
-    g_signal_connect(revealer, "notify::child-revealed",
-                     G_CALLBACK(row_revealed), NULL);
-    gtk_list_box_insert(GTK_LIST_BOX(list), revealer, index + 1);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), TRUE);
+    row = mx_create_row(message, mwo);//change signal connectors
+    gtk_list_box_insert(GTK_LIST_BOX(mwo->messageList), row, -1);
+    gtk_widget_show_all(GTK_WIDGET(mwo->chatWindow));
     char *json_str = NULL;
     t_json_data *json = calloc(1, sizeof(t_json_data));
 
