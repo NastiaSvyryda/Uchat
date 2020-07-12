@@ -6,9 +6,10 @@ void mx_add_out_message(t_mainWindowObjects *mwo, char *text_char) {
     if (text_char == NULL)
         puts("NULL\n");
     text = g_strdup_printf("%s", text_char);
-    row = mx_create_row(text, mwo);//change signal connectors
+    row = mx_create_message(text, mwo);//change signal connectors
     gtk_list_box_insert(GTK_LIST_BOX(mwo->messageList), row, -1);
     gtk_widget_show_all(GTK_WIDGET(mwo->chatWindow));
+    free(text);
 }
 
 gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data) {

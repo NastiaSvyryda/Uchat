@@ -65,10 +65,9 @@ void mx_on_butLogin_clicked(GtkWidget *window, gpointer data);
 void mx_on_butRegistreIn_clicked(GtkWidget *button, gpointer data);
 void mx_on_butRegistre_clicked(GtkWidget *window, gpointer data);
 
-GtkWidget *mx_create_row(const gchar *text, struct s_MainWindowObjects *mwo);
-void mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data);
+GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo);
+GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo);
 void mx_on_chat_clicked(GtkWidget *button, gpointer data);
-GtkWidget *mx_create_view_and_model(void);
 void mx_create_main_window(struct s_MainWindowObjects *mwo);
 void mx_create_login_window(char **argv);
 void mx_create_registre_window(struct s_MainWindowObjects *mwo);
