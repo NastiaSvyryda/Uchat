@@ -71,8 +71,8 @@ void mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data) {
     ///
     json->type = JS_MES_OUT;
     json->message.text = strdup(message);
-    json->message.client1_id = 1;
-    json->message.channel_id= 3;
+    json->message.client1_id = mwo->user_id;
+    json->message.channel_id= 1;
     json_str = mx_json_make_json(JS_MES_OUT, json);
     write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
     mx_strdel(&json_str);
@@ -132,7 +132,7 @@ void mx_create_chat_window(struct s_MainWindowObjects *mwo) {
     gtk_widget_show_all(GTK_WIDGET(mwo->chatWindow));
     /* Start main loop */
     gtk_main();
-    system("leaks -q uchat");
+    //system("leaks -q uchat");
 
 }
 
@@ -173,14 +173,14 @@ GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo) {
 GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo) {
     GtkWidget *button;
 
-    mwo->row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+    mwo->mess_row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
     button = gtk_button_new_with_label(text);
     gtk_widget_set_hexpand(button, TRUE);
     gtk_widget_set_halign(button, GTK_ALIGN_CENTER);
     gtk_widget_set_valign(button, GTK_ALIGN_CENTER);
-    gtk_container_add(GTK_CONTAINER(mwo->row), button);
+    gtk_container_add(GTK_CONTAINER(mwo->mess_row), button);
     g_signal_connect(button, "button-press-event", G_CALLBACK(mx_on_message_clicked), mwo);
-    return mwo->row;
+    return mwo->mess_row;
 }
 
 void mx_create_main_window(struct s_MainWindowObjects *mwo) {

@@ -54,9 +54,11 @@ typedef struct s_MainWindowObjects {//changed
     GtkEntry  *entryMessage;
 
     GtkWidget *row;
+    GtkWidget *mess_row;
     GtkWidget *list;
     GtkWidget *messageList;
     int fd;
+    int user_id;
 } t_mainWindowObjects;
 
 //Buttons

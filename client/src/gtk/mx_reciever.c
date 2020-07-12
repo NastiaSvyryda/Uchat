@@ -26,18 +26,19 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     mx_printchar('\n');
     if (json->type == JS_REG) {
         if (json->status == 200) {
+            mwo->user_id = json->pers_info.user_id;
             gtk_window_close(mwo->registreWindow);
             mx_create_main_window(mwo);
         }
     }
     else if (json->type == JS_LOG_IN) {
         if (json->status == 200) {
+            mwo->user_id = json->pers_info.user_id;
             gtk_window_close(mwo->loginWindow);
             mx_create_main_window(mwo);
         }
     }
     else if (json->type == JS_MES_IN) {
-        puts(json->message.text);
         mx_add_out_message(mwo, (gchar *) json->message.text);
     }
     return TRUE;
