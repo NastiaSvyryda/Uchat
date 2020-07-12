@@ -60,10 +60,10 @@ typedef struct s_MainWindowObjects {//changed
 } t_mainWindowObjects;
 
 //Buttons
+gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
 void mx_on_butLogin_clicked(GtkWidget *window, gpointer data);
 void mx_on_butRegistreIn_clicked(GtkWidget *button, gpointer data);
 void mx_on_butRegistre_clicked(GtkWidget *window, gpointer data);
-gboolean mx_input(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
 
 GtkWidget *mx_create_row(const gchar *text, struct s_MainWindowObjects *mwo);
 void mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data);

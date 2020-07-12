@@ -37,7 +37,7 @@ void mx_create_login_window(char **argv)
         exit(1);
     }
 
-    g_io_add_watch(g_io_channel_unix_new((gint)sockfd), G_IO_IN, (GIOFunc)mx_input, &mainObjects);
+    g_io_add_watch(g_io_channel_unix_new((gint)sockfd), G_IO_IN, (GIOFunc)mx_reciever, &mainObjects);
 
     //END CONNECT
 
