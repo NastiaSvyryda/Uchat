@@ -56,4 +56,5 @@ void mx_controller_login(t_json_data *json, t_clients *client) {
     mx_del_list(data, mx_list_size(data));
     mx_strdel(&where);
     mx_del_strarr(&fill);
+    system("leaks -q uchat_server");
 }

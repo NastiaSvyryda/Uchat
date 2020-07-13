@@ -20,7 +20,16 @@
 //GTK
 
 #define UI_FILE "login.glade"
+#define MX_JSON_TEMPLATE "./client/resources/client_type_%d.json"
 
+#define MX_TOKEN_LEN 256
+#define MX_VARCHAR_LEN 256
+#define MX_LOGIN_LEN 256
+#define MX_FIRST_NAME_LEN 256
+#define MX_LAST_NAME_LEN 256
+#define MX_LAST_NAME_LEN 256
+#define MX_MAX_NAME_LEN 100
+// #define MX_MAX_MESSAGE_LEN 65000
 typedef struct s_login
 {
     char *type;
@@ -59,6 +68,7 @@ typedef struct s_MainWindowObjects {//changed
     GtkWidget *messageList;
     int fd;
     int user_id;
+    char token[MX_TOKEN_LEN + 1];
 } t_mainWindowObjects;
 
 //Buttons
@@ -90,16 +100,7 @@ typedef enum e_json_types
     JS_NUM           // JSON types number
 } t_json_types;
 
-#define MX_JSON_TEMPLATE "./client/resources/client_type_%d.json"
 
-#define MX_TOKEN_LEN 256
-#define MX_VARCHAR_LEN 256
-#define MX_LOGIN_LEN 256
-#define MX_FIRST_NAME_LEN 256
-#define MX_LAST_NAME_LEN 256
-#define MX_LAST_NAME_LEN 256
-#define MX_MAX_NAME_LEN 100
-// #define MX_MAX_MESSAGE_LEN 65000
 
 typedef struct s_personal_data
 {

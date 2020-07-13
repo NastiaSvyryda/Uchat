@@ -10,11 +10,15 @@ void *main_cycle(void *newfd) {
     char *json_str = NULL;
 
     while(true) {
+            len = 0;
             client = client->first;
             read(curr_fd, &len, 4);
+            len -= 4;
             json_str = mx_strnew(len);
             read(curr_fd, json_str, len);
             mx_printstr(json_str);
+            mx_printchar('\n');
+            mx_printint(len);
             json = mx_json_parse(json_str);
             mx_routes(json, client, cur_client);
             if (json != NULL) {

@@ -73,11 +73,15 @@ void mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data) {
     json->message.text = strdup(message);
     json->message.client1_id = mwo->user_id;
     json->message.channel_id= 1;
+
+
     json_str = mx_json_make_json(JS_MES_OUT, json);
     write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
     mx_strdel(&json_str);
     mx_strdel(&json->message.text);
     free(json);
+
+
 }
 
 static void add_separator(GtkListBoxRow *row, GtkListBoxRow *before, gpointer data) {
@@ -146,14 +150,27 @@ void mx_on_chat_clicked(GtkWidget *button, gpointer data) {
 }
 
 void mx_on_message_clicked(GtkWidget *button, GdkEventButton *event, gpointer data) {
+    t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
+    char *json_str = NULL;
+    t_json_data *json = calloc(1, sizeof(t_json_data));
+
     if (button == NULL && data == NULL)
         puts("NULL");
 
-    if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3)
-    {//3 is right mouse btn
-        //do stuff
-        puts("right mouse clicked");
+    if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3) {
+        json->type = JS_MES_EDIT_OUT;
+        json->message.text = strdup("bye");
+        json->message.message_id = 73;
+        json->message.client1_id = mwo->user_id;
+        strcpy(json->token, mwo->token);
+        json_str = mx_json_make_json(JS_MES_EDIT_OUT, json);
+
+        mx_printint(*(int*)json_str);
+        write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
+        mx_strdel(&json_str);
+        mx_strdel(&json->message.text);
     }
+    free(json);
 
 }
 

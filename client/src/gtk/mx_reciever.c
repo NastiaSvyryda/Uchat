@@ -18,6 +18,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     int length = 0;
     t_json_data *json = NULL;
     read(mwo->fd, &length, 4);
+    length -= 4;
     json_str = mx_strnew(length);
     read(mwo->fd, json_str, length);
     json = mx_json_parse(json_str);
@@ -27,6 +28,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     if (json->type == JS_REG) {
         if (json->status == 200) {
             mwo->user_id = json->pers_info.user_id;
+            strcpy(mwo->token, json->token);
             gtk_window_close(mwo->registreWindow);
             mx_create_main_window(mwo);
         }
@@ -34,6 +36,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     else if (json->type == JS_LOG_IN) {
         if (json->status == 200) {
             mwo->user_id = json->pers_info.user_id;
+            strcpy(mwo->token, json->token);
             gtk_window_close(mwo->loginWindow);
             mx_create_main_window(mwo);
         }

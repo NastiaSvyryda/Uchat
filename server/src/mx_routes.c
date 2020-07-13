@@ -9,4 +9,6 @@ void mx_routes(t_json_data *json, t_clients *client, t_clients *cur_client) {
         mx_controller_log_out();
     if (json->type == JS_MES_OUT)
         mx_controller_message(client, json);
+    if (json->type == JS_MES_EDIT_OUT)
+        mx_controller_edit_message(json, client);
 }

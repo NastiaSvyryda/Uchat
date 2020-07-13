@@ -6,6 +6,5 @@ char *mx_json_message_edit_in_request(t_json_data *data) {
         JS_MES_EDIT_IN, data->message.message_id,
         data->message.text, data->message.channel_id);
     *(int *)s = len;
-
     return s;
 }
