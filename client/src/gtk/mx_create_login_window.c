@@ -7,7 +7,6 @@ void mx_create_login_window(char **argv)
     int sockfd = 0;
     struct sockaddr_in serv;
     t_mainWindowObjects mainObjects;
-
     /* Create new GtkBuilder object */
     builder = gtk_builder_new();
     /* Load UI from file. If error occurs, report it and quit application.
@@ -36,7 +35,6 @@ void mx_create_login_window(char **argv)
         mx_printerr("uchat: connection failed\n");
         exit(1);
     }
-
     g_io_add_watch(g_io_channel_unix_new((gint)sockfd), G_IO_IN, (GIOFunc)mx_input, &mainObjects);
 
     //END CONNECT

@@ -9,6 +9,5 @@ int main(int argc, char **argv) {
         mx_printerr("example: ./uchat ip port\n");
         exit(1);
     }
-
     mx_create_login_window(argv);
 }

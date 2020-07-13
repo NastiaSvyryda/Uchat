@@ -20,6 +20,7 @@
 #include <openssl/rsa.h>
 #include <openssl/x509.h>
 #include <openssl/evp.h>
+#include <openssl/err.h>
 
 #define MX_JSON_TEMPLATE "./server/resources/server_type_%d.json"
 
@@ -78,6 +79,7 @@ typedef struct s_json_data {
 
 typedef struct s_clients {
     int fd;
+    SSL *ssl;
     int user_id;
     char *token;
     int channel_id;
@@ -90,6 +92,7 @@ int main(int argc, char **argv);
 void mx_routes(t_json_data *json, t_clients *client, t_clients *cur_client);
 ///Config
 char *mx_config_sqlite3_db_name(void);
+char *mx_ssl_file_name(void);
 ///end config
 
 ///Validation
@@ -172,6 +175,8 @@ t_list *mx_read_database(char *database, char *table, char *fill_table, char *wh
 void mx_update_database(char *database, char *table, char *set, char *where);
 void mx_delete_database(char *database, char *table, char *fill_table, char *where);
 //Security
+SSL_CTX* mx_init_server_ctx(void);
+void mx_load_certificates(SSL_CTX* ctx, char* CertFile, char* KeyFile);
 char *mx_hmac_sha_256(char *key, char *data);
 char *mx_create_token(int length);
 char *mx_insert_token(char **fill, int id);

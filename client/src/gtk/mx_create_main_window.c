@@ -13,8 +13,7 @@ row_unrevealed(GObject *revealer, GParamSpec *pspec, gpointer data) {
     gtk_container_remove(GTK_CONTAINER(list), row);
 }
 
-void
-remove_this_row(GtkButton *button, GtkWidget *child) {
+void remove_this_row(GtkButton *button, GtkWidget *child) {
     GtkWidget *row, *revealer;
     if (button == NULL)
         puts("NULL\n");

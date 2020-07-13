@@ -16,6 +16,8 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 #include "libmx.h"
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 //GTK
 
