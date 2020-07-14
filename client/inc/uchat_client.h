@@ -23,15 +23,13 @@
 
 #define UI_FILE "login.glade"
 
-typedef struct s_login
-{
+typedef struct s_login {
     char *type;
     char *login;
     char *password;
-} t_login;
+}               t_login;
 
-typedef struct s_registre
-{
+typedef struct s_registre {
     char *type;
     char *login;
     char *password;
@@ -59,7 +57,14 @@ typedef struct s_MainWindowObjects {//changed
     GtkWidget *list;
     GtkWidget *messageList;
     int fd;
+    SSL *ssl;
 } t_mainWindowObjects;
+
+///TLS
+int mx_open_connection(const char *hostname, int port);
+SSL_CTX* mx_init_ctx(void);
+void mx_show_certs(SSL* ssl);
+///end TLS
 
 //Buttons
 void mx_on_butLogin_clicked(GtkWidget *window, gpointer data);
@@ -77,8 +82,7 @@ void mx_create_registre_window(struct s_MainWindowObjects *mwo);
 
 //gtk
 
-typedef enum e_json_types
-{
+typedef enum e_json_types {
     JS_REG,          // JSON Type - register
     JS_LOG_IN,       // JSON Type - log in
     JS_LOG_OUT,      // JSON Type - log out

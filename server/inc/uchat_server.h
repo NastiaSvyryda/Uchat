@@ -175,6 +175,7 @@ t_list *mx_read_database(char *database, char *table, char *fill_table, char *wh
 void mx_update_database(char *database, char *table, char *set, char *where);
 void mx_delete_database(char *database, char *table, char *fill_table, char *where);
 //Security
+int mx_open_listener(int port);
 SSL_CTX* mx_init_server_ctx(void);
 void mx_load_certificates(SSL_CTX* ctx, char* CertFile, char* KeyFile);
 char *mx_hmac_sha_256(char *key, char *data);

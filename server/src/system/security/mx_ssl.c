@@ -1,5 +1,27 @@
 #include "uchat_server.h"
 
+int mx_open_listener(int port)
+{
+    int sd;
+    struct sockaddr_in addr;
+    sd = socket(PF_INET, SOCK_STREAM, 0);
+    bzero(&addr, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = INADDR_ANY;
+    if (bind(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0 )
+    {
+        perror("can't bind port");
+        abort();
+    }
+    if ( listen(sd, 10) != 0 )
+    {
+        perror("Can't configure listening port");
+        abort();
+    }
+    return sd;
+}
+
 SSL_CTX* mx_init_server_ctx(void) {
     const struct ssl_method_st *method;
     SSL_CTX *ctx;

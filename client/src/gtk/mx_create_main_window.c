@@ -45,8 +45,7 @@ row_revealed(GObject *revealer, GParamSpec *pspec, gpointer data) {
     g_object_unref(child);
 }
 
-void
-mx_add_chat(__attribute__((unused))GtkWidget *button, gpointer data) {
+void mx_add_chat(__attribute__((unused))GtkWidget *button, gpointer data) {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
     GtkWidget *row;
     gchar *text;
@@ -85,7 +84,7 @@ mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data) {
     json->message.client1_id = 1;
     json->message.channel_id= 3;
     json_str = mx_json_make_json(JS_MES_OUT, json);
-    write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
+    SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
     mx_strdel(&json_str);
     mx_strdel(&json->message.text);
     free(json);

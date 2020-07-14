@@ -1,40 +1,25 @@
 #include "uchat_client.h"
 
-void mx_create_login_window(char **argv)
-{
+void mx_create_login_window(char **argv) {
     GtkBuilder *builder;
     GError *error = NULL;
     int sockfd = 0;
-    struct sockaddr_in serv;
+    SSL_CTX *ctx;
     t_mainWindowObjects mainObjects;
     /* Create new GtkBuilder object */
     builder = gtk_builder_new();
     /* Load UI from file. If error occurs, report it and quit application.
      * Replace "tut.glade" with your saved project. */
-    if (!gtk_builder_add_from_file(builder, "login.glade", &error))
-    {
+    if (!gtk_builder_add_from_file(builder, "login.glade", &error)) {
         g_warning("%s", error->message);
         g_free(error);
     }
-    //CONNECT TO SERVER
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-        mx_printerr("uchat: couldn't create socket");
-        exit(1);
-    }
-    serv.sin_family = AF_INET;
-    serv.sin_addr.s_addr = inet_addr(argv[1]);
-    serv.sin_port = htons(atoi(argv[2]));
-    if ((inet_pton(AF_INET, argv[1], &serv.sin_addr)) <= 0)
-    {
-        mx_printerr("uchat: network adress isn't valid");
-        exit(1);
-    }
-    if ((connect(sockfd, (struct sockaddr *)&serv, sizeof(serv))) < 0)
-    {
-        mx_printerr("uchat: connection failed\n");
-        exit(1);
-    }
+    SSL_library_init();
+    ctx = mx_init_ctx();
+    sockfd = mx_open_connection(argv[1], atoi(argv[2]));
+    mainObjects.ssl = SSL_new(ctx);
+    mx_show_certs(mainObjects.ssl);
+    SSL_set_fd(mainObjects.ssl, sockfd);
     g_io_add_watch(g_io_channel_unix_new((gint)sockfd), G_IO_IN, (GIOFunc)mx_input, &mainObjects);
 
     //END CONNECT

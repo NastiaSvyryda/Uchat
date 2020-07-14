@@ -16,9 +16,9 @@ gboolean mx_input(__attribute__((unused)) GIOChannel *chan, __attribute__((unuse
     char *json_str = NULL;
     int length = 0;
     t_json_data *json = NULL;
-        read(mwo->fd, &length, 4);
+        SSL_read(mwo->ssl, &length, 4);
         json_str = mx_strnew(length);
-        read(mwo->fd, json_str, length);
+        SSL_read(mwo->ssl, json_str, length);
         json = mx_json_parse(json_str);
         mx_printstr("Response recieved:\n");
         mx_printstr(json_str + 4);
@@ -42,7 +42,7 @@ gboolean mx_input(__attribute__((unused)) GIOChannel *chan, __attribute__((unuse
     return TRUE;
 }
 
-static void registre_request(t_registre *registre, int fd) {
+static void registre_request(t_registre *registre,  SSL *ssl) {
     char *json_str = NULL;
     t_json_data *json = calloc(1, sizeof(t_json_data));
 
@@ -52,7 +52,7 @@ static void registre_request(t_registre *registre, int fd) {
     strcpy(json->pers_info.first_name, registre->name);
     strcpy(json->pers_info.last_name, registre->surname);
     json_str = mx_json_make_json(JS_REG, json);
-    write(fd, json_str, mx_strlen(json_str + 4) + 4);
+    SSL_write(ssl, json_str, mx_strlen(json_str + 4) + 4);
 }
 
 void mx_on_butRegistre_clicked(GtkWidget *button, gpointer data) {
@@ -70,7 +70,7 @@ void mx_on_butRegistre_clicked(GtkWidget *button, gpointer data) {
             printf("different passwords\n");
         registre.name = (char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryName_r));
         registre.surname = (char *)gtk_entry_get_text(GTK_ENTRY(mwo->entrySurname_r));
-        registre_request(&registre, mwo->fd);
+        registre_request(&registre, mwo->ssl);
         printf("login = %s\npassword = %s\nname = %s\nsurname = %s\n",
                registre.login, registre.password, registre.name,
                registre.surname);
