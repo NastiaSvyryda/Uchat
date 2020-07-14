@@ -13,10 +13,10 @@ void *main_cycle(void *newfd) {
         while(true) {
             len = 0;
             client = client->first;
-            SSL_read(client->ssl, &len, 4);
-            len -= 4;
+            SSL_read(cur_client->ssl, &len, 4);
+//            len -= 4; //влада джсон надо перепроверить, поведение с длиной строки
             json_str = mx_strnew(len);
-            SSL_read(client->ssl, json_str, len);
+            SSL_read(cur_client->ssl, json_str, len);
             mx_printstr(json_str);
             mx_printchar('\n');
             mx_printint(len);

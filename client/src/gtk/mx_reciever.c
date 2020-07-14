@@ -18,7 +18,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     int length = 0;
     t_json_data *json = NULL;
     SSL_read(mwo->ssl, &length, 4);
-    length -= 4;
+//    length -= 4; //влада джсон надо перепроверить, поведение с длиной строки
     json_str = mx_strnew(length);
     SSL_read(mwo->ssl, json_str, length);
     json = mx_json_parse(json_str);

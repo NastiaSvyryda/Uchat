@@ -52,7 +52,7 @@ void mx_controller_edit_message(t_json_data *json, t_clients *client) {
     client = client->first;
     change_message_database(json);
     get_channel_id_from_database(json, &json_response);
-    data = get_user_id_from_database_channels(&json_response);
+    data = mx_get_user_id_from_database_channels(json_response.message.channel_id);
     mx_send_message_to_channel(data, client, &json_response, JS_MES_EDIT_IN);
     mx_strdel(&json_response.message.text);
 

@@ -71,6 +71,8 @@ void mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data) {
     ///
     json->type = JS_MES_OUT;
     json->message.text = strdup(message);
+    json->user_id = mwo->user_id;
+    strcpy(json->token, mwo->token);
     json->message.client1_id = mwo->user_id;
     json->message.channel_id= 1;
 

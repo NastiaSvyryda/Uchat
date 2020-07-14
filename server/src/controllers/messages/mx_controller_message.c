@@ -40,7 +40,7 @@ static void get_message_id_from_database(t_json_data *json) {
     mx_del_list(data, mx_list_size(data));
 }
 
-t_list *get_user_id_from_database_channels(t_json_data *json) {
+t_list *mx_get_user_id_from_database_channels(int channel_id) {
     char *where = NULL;
     char **fill = NULL;
     t_list *data = NULL;
@@ -48,7 +48,7 @@ t_list *get_user_id_from_database_channels(t_json_data *json) {
     fill = mx_model_user_channel_fill_table();
     asprintf(&where ,"%s=%d",
             fill[2],
-            json->message.channel_id);
+            channel_id);
     data = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), "user_id", where);
     mx_strdel(&where);
     mx_del_strarr(&fill);
@@ -82,7 +82,7 @@ void mx_controller_message(t_clients *client, t_json_data *json) {
     client = client->first;
 
     fill_database_message(json);
-    data = get_user_id_from_database_channels(json);
+    data = mx_get_user_id_from_database_channels(json->message.channel_id);
     get_message_id_from_database(json);
     if (client->first->index > 1) { // количество пользователей
         mx_send_message_to_channel(data, client, json, JS_MES_IN);

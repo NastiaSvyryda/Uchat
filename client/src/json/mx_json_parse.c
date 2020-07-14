@@ -37,6 +37,10 @@ t_json_data *mx_json_parse(char *s) {
         if ((json->user_id = json_object_get_int(buf)) == 0
             && errno == EINVAL)
             return parse_failed(jo, json);
+    if ((buf = json_object_object_get(jo, "channels_arr_size")))
+        if ((json->channels_arr_size = json_object_get_int(buf)) == 0
+            && errno == EINVAL)
+            return parse_failed(jo, json);
     if ((buf = json_object_object_get(jo, "first_name"))) {
         strcpy(json->pers_info.first_name,
                json_object_get_string(buf));
