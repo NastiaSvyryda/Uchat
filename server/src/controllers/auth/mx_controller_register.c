@@ -4,7 +4,7 @@ static void json_register_incorrectly_filled_fields(t_clients *client) {
     t_json_data json = {.type = JS_REG, .status = 412};
     char *new_json = mx_json_make_json(JS_REG, &json);
 
-    write(client->fd, new_json, mx_strlen(new_json + 4) + 4);
+    SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
     mx_strdel(&new_json);
 }
 
@@ -17,7 +17,7 @@ static void json_register_success(t_clients *client, t_json_data *json_data) {
     strcpy(json.token, client->token);
     new_json = mx_json_make_json(JS_REG, &json);
     mx_printstr(new_json + 4);
-    write(client->fd, new_json, mx_strlen(new_json + 4) + 4);
+    SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
     mx_strdel(&new_json);
 }
 
@@ -57,6 +57,7 @@ void mx_controller_register(t_json_data *json, t_clients *client) {
         client->user_id = mx_create_databases(mx_model_user_database(), mx_model_user_name_table(), fill_table, value_table);
         client->token = mx_insert_token(fill, client->user_id);
         json_register_success(client, json);
+        mx_strdel(&client->token);
     } else {
         json_register_incorrectly_filled_fields(client);
     }

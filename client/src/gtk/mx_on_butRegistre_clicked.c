@@ -1,6 +1,6 @@
 #include "uchat_client.h"
 
-static void registre_request(t_registre *registre, int fd) {
+static void registre_request(t_registre *registre, SSL *ssl) {
     char *json_str = NULL;
     t_json_data *json = calloc(1, sizeof(t_json_data));
 
@@ -10,8 +10,11 @@ static void registre_request(t_registre *registre, int fd) {
     strcpy(json->pers_info.first_name, registre->name);
     strcpy(json->pers_info.last_name, registre->surname);
     json_str = mx_json_make_json(JS_REG, json);
-    write(fd, json_str, mx_strlen(json_str + 4) + 4);
-}
+    if ( SSL_connect(ssl) == -1 )   /* perform the connection */
+        ERR_print_errors_fp(stderr);
+    else
+        SSL_write(ssl, json_str, mx_strlen(json_str + 4) + 4);
+    }
 
 void mx_on_butRegistre_clicked(GtkWidget *button, gpointer data) {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
@@ -28,7 +31,7 @@ void mx_on_butRegistre_clicked(GtkWidget *button, gpointer data) {
             printf("different passwords\n");
         registre.name = (char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryName_r));
         registre.surname = (char *)gtk_entry_get_text(GTK_ENTRY(mwo->entrySurname_r));
-        registre_request(&registre, mwo->fd);
+        registre_request(&registre, mwo->ssl);
         printf("login = %s\npassword = %s\nname = %s\nsurname = %s\n",
                registre.login, registre.password, registre.name,
                registre.surname);

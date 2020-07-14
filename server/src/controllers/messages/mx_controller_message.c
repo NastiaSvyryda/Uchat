@@ -65,7 +65,7 @@ void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *js
                 && client->user_id == mx_atoi(data->data)) {
                 json->type = type;
                 json_str = mx_json_make_json(type, json);
-                write(client->fd, json_str, mx_strlen(json_str + 4) + 4);
+                SSL_write(client->ssl, json_str, mx_strlen(json_str + 4) + 4);
                 mx_printstr("message delivered to ");
                 mx_printint(client->user_id);
                 mx_printchar('\n');

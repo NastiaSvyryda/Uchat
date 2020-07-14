@@ -3,30 +3,30 @@
 void *main_cycle(void *newfd) {
     t_json_data *json = NULL;
     t_clients *client = (t_clients *)newfd;
-    int curr_fd = client->fd;
     t_clients *cur_client = client;
     int len = 0;
-//    char *json_str;
     char *json_str = NULL;
 
-    while(true) {
+    if (SSL_accept(client->ssl) == -1)     /* do SSL-protocol accept */
+        mx_printstr("The connection is not secure");
+    else {
+        while(true) {
             len = 0;
             client = client->first;
-            read(curr_fd, &len, 4);
+            SSL_read(client->ssl, &len, 4);
             len -= 4;
             json_str = mx_strnew(len);
-            read(curr_fd, json_str, len);
+            SSL_read(client->ssl, json_str, len);
             mx_printstr(json_str);
             mx_printchar('\n');
             mx_printint(len);
             json = mx_json_parse(json_str);
             mx_routes(json, client, cur_client);
             if (json != NULL) {
-//                mx_strdel(&json->message.text);
                 free(json);
                 mx_strdel(&json_str);
             }
-//        }
+        }
     }
     return NULL;
 }

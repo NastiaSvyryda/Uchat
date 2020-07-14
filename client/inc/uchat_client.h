@@ -16,6 +16,8 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 #include "libmx.h"
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 //GTK
 
@@ -30,21 +32,20 @@
 #define MX_LAST_NAME_LEN 256
 #define MX_MAX_NAME_LEN 100
 // #define MX_MAX_MESSAGE_LEN 65000
-typedef struct s_login
-{
+
+typedef struct s_login {
     char *type;
     char *login;
     char *password;
-} t_login;
+}               t_login;
 
-typedef struct s_registre
-{
+typedef struct s_registre {
     char *type;
     char *login;
     char *password;
     char *name;
     char *surname;
-} t_registre;
+}               t_registre;
 
 typedef struct s_MainWindowObjects {//changed
     GtkWindow *loginWindow;
@@ -69,7 +70,14 @@ typedef struct s_MainWindowObjects {//changed
     int fd;
     int user_id;
     char token[MX_TOKEN_LEN + 1];
+    SSL *ssl;
 } t_mainWindowObjects;
+
+///TLS
+int mx_open_connection(const char *hostname, int port);
+SSL_CTX* mx_init_ctx(void);
+void mx_show_certs(SSL* ssl);
+///end TLS
 
 //Buttons
 gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
@@ -81,13 +89,12 @@ GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo);
 GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo);
 void mx_on_chat_clicked(GtkWidget *button, gpointer data);
 void mx_create_main_window(struct s_MainWindowObjects *mwo);
-void mx_create_login_window(char **argv);
+void mx_create_login_window(t_mainWindowObjects main, int fg);
 void mx_create_registre_window(struct s_MainWindowObjects *mwo);
 
 //gtk
 
-typedef enum e_json_types
-{
+typedef enum e_json_types {
     JS_REG,          // JSON Type - register
     JS_LOG_IN,       // JSON Type - log in
     JS_LOG_OUT,      // JSON Type - log out

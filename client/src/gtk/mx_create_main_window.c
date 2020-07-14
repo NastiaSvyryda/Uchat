@@ -76,7 +76,10 @@ void mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data) {
 
 
     json_str = mx_json_make_json(JS_MES_OUT, json);
-    write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
+    if ( SSL_connect(mwo->ssl) == -1 )   /* perform the connection */
+        ERR_print_errors_fp(stderr);
+    else
+        SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
     mx_strdel(&json_str);
     mx_strdel(&json->message.text);
     free(json);
@@ -166,7 +169,10 @@ void mx_on_message_clicked(GtkWidget *button, GdkEventButton *event, gpointer da
         json_str = mx_json_make_json(JS_MES_EDIT_OUT, json);
 
         mx_printint(*(int*)json_str);
-        write(mwo->fd, json_str, mx_strlen(json_str + 4) + 4);
+        if ( SSL_connect(mwo->ssl) == -1 )   /* perform the connection */
+            ERR_print_errors_fp(stderr);
+        else
+            SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
         mx_strdel(&json_str);
         mx_strdel(&json->message.text);
     }

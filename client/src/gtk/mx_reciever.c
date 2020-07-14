@@ -17,10 +17,10 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     char *json_str = NULL;
     int length = 0;
     t_json_data *json = NULL;
-    read(mwo->fd, &length, 4);
+    SSL_read(mwo->ssl, &length, 4);
     length -= 4;
     json_str = mx_strnew(length);
-    read(mwo->fd, json_str, length);
+    SSL_read(mwo->ssl, json_str, length);
     json = mx_json_parse(json_str);
     mx_printstr("Response recieved:\n");
     mx_printstr(json_str + 4);

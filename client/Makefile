@@ -5,6 +5,7 @@ CCFLG = clang -std=c11 $(addprefix -W, all extra error pedantic) -g
 
 SRC_DIRS = src \
 			src/json \
+			src/system \
 			src/gtk
 SRC_DIR = src
 

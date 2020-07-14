@@ -33,4 +33,3 @@ void mx_create_registre_window(struct s_MainWindowObjects* mwo) {
     /* Start main loop */
     gtk_main();
 }
-

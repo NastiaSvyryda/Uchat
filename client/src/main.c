@@ -1,6 +1,9 @@
 #include "uchat_client.h"
 
 int main(int argc, char **argv) {
+    t_mainWindowObjects mainObjects;
+    SSL_CTX *ctx;
+
     /* Init GTK+ */
     gtk_init(&argc, &argv);
 
@@ -9,6 +12,11 @@ int main(int argc, char **argv) {
         mx_printerr("example: ./uchat ip port\n");
         exit(1);
     }
-
-    mx_create_login_window(argv);
+    SSL_library_init();
+    ctx = mx_init_ctx();
+    mainObjects.fd = mx_open_connection(argv[1], atoi(argv[2]));
+    mainObjects.ssl = SSL_new(ctx);
+    mx_show_certs(mainObjects.ssl);
+    SSL_set_fd(mainObjects.ssl, mainObjects.fd);
+    mx_create_login_window(mainObjects, mainObjects.fd);
 }
