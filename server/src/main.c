@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
     mx_valid_check_argc_error(argc);
     SSL_library_init();
     ctx = mx_init_server_ctx();        /* initialize SSL */
-    mx_load_certificates(ctx, "mycert.pem", "mycert.pem"); /* load certs */
+    mx_load_certificates(ctx, mx_ssl_file_name(), mx_ssl_file_name()); /* load certs */
     listenfd = mx_open_listener(atoi(argv[1]));
     while (true) {
         cli = mx_accept_connections(client, listenfd);

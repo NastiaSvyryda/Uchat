@@ -57,6 +57,7 @@ void mx_controller_register(t_json_data *json, t_clients *client) {
         client->user_id = mx_create_databases(mx_model_user_database(), mx_model_user_name_table(), fill_table, value_table);
         client->token = mx_insert_token(fill, client->user_id);
         json_register_success(client, json);
+        mx_strdel(&client->token);
     } else {
         json_register_incorrectly_filled_fields(client);
     }

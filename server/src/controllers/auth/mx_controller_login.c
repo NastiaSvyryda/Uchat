@@ -51,6 +51,7 @@ void mx_controller_login(t_json_data *json, t_clients *client) {
         client->user_id = mx_atoi(data->data);
         client->token =  mx_insert_token(fill, client->user_id);
         json_login_success(data, client);
+        mx_strdel(&client->token);
     } else
         json_login_unauthorized(client);
     mx_del_list(data, mx_list_size(data));
