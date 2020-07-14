@@ -1,8 +1,6 @@
 {
     "type": %d,
     "status": %d,
-    "message_id": %d,
     "channel_id": %d,
-    "user_id": %d,
-    "token": "%s"
+    "messages": []
 }

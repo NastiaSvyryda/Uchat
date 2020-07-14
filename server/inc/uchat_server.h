@@ -1,5 +1,6 @@
 #ifndef UCHAT_SERVER_H
 #define UCHAT_SERVER_H
+#define _GNU_SOURCE
 
 #include "libmx.h"
 #include <json.h>
@@ -23,6 +24,10 @@
 #include <openssl/err.h>
 
 #define MX_JSON_TEMPLATE "./server/resources/server_type_%d.json"
+#define MX_JSON_TYPE_1_SUPPLY "./server/resources/server_type_1_channels_array_element.json"
+#define MX_JSON_TYPE_9_SUPPLY "./server/resources/server_type_9_user_ids_array_element.json"
+#define MX_JSON_TYPE_10_SUPPLY "./server/resources/server_type_10_messages_array_element.json"
+#define MX_JSON_TO_STR_FLAGS JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY
 
 #define MX_TOKEN_LEN 256
 #define MX_VARCHAR_LEN 256
@@ -34,47 +39,64 @@
 // #define MX_MAX_MESSAGE_LEN 65000
 
 typedef enum e_json_types {
-    JS_REG,  // JSON Type - register
-    JS_LOG_IN,  // JSON Type - log in
-    JS_LOG_OUT,  // JSON Type - log out
-    JS_MES_DEL_IN,  // JSON Type - delete message
+    JS_REG,          // JSON Type - register
+    JS_LOG_IN,       // JSON Type - log in
+    JS_LOG_OUT,      // JSON Type - log out
+    JS_MES_DEL_IN,   // JSON Type - delete message
     JS_MES_DEL_OUT,  // JSON Type - delete message
     JS_MES_EDIT_IN,  // JSON Type - edit message
-    JS_MES_EDIT_OUT,  // JSON Type - edit message
-    JS_MES_IN,  // JSON Type - input message
-    JS_MES_OUT,  // JSON Type - output message
-    JS_NUM  // JSON types number
+    JS_MES_EDIT_OUT, // JSON Type - edit message
+    JS_MES_IN,       // JSON Type - input message
+    JS_MES_OUT,      // JSON Type - output message
+    JS_GET_USERS,    // JSON Type - get all the users logins and ids
+    JS_MES_HIST,     // JSON Type - load channel messages history
+    JS_NUM           // JSON types number
 }            t_json_types;
 
 typedef struct s_personal_data {
-    char login[MX_VARCHAR_LEN];
-    char password[MX_VARCHAR_LEN];
-    int user_id;
-    char first_name[MX_MAX_NAME_LEN];
-    char last_name[MX_MAX_NAME_LEN];
-    // char token[MX_TOKEN_LEN];
+    char login[MX_VARCHAR_LEN + 1];
+    char password[MX_VARCHAR_LEN + 1];
+    char first_name[MX_MAX_NAME_LEN + 1];
+    char last_name[MX_MAX_NAME_LEN + 1];
 }              t_personal_data;
 
 typedef struct s_message {
-    char *text;
     int client1_id;
-    int channel_id;
     int message_id;
     time_t delivery_time;
-    // char token[MX_TOKEN_LEN];
+    char *text;
+    int channel_id;
+    int last_message_id;
 }              t_message;
 
-union u_json_data {
-    t_personal_data pers_info;
-    t_message message;
-};
+typedef struct s_channel {
+    int channel_id;
+    char channel_name[MX_VARCHAR_LEN + 1];
+    int *user_ids;
+    int user_ids_size;
+    time_t last_mes_time;
+}              t_channel;
+
+typedef struct s_id_login {
+    int user_id;
+    char login[MX_VARCHAR_LEN + 1];
+}              t_id_login;
 
 typedef struct s_json_data {
     int type;
     int status;
+    int user_id;
     char token[MX_TOKEN_LEN + 1];
     t_personal_data pers_info;
     t_message message;
+    bool new_channel;
+    t_channel new_channel_data;
+    t_channel *channels_arr;
+    int channels_arr_size;
+    t_id_login *ids_logins_arr;
+    int ids_logins_arr_size;
+    t_message *messages_arr;
+    int messages_arr_size;
 }              t_json_data;
 
 typedef struct s_clients {
@@ -107,8 +129,10 @@ bool mx_valid_login(t_json_data *json);
 ///JSON
 //Basic
 void mx_str_to_file(const char *filepath, const char *data);
+int mx_parse_new_channel(struct json_object *jo, t_json_data *json);
 t_json_data *mx_json_parse(char *s);
 char *mx_get_json_format_template(enum e_json_types type);
+char *mx_get_json_format_supply_template(enum e_json_types type);
 char *mx_json_make_json(enum e_json_types type, t_json_data *data);
 //Auth
 char *mx_json_log_in_response(t_json_data *data);
@@ -121,6 +145,8 @@ char *mx_json_message_edit_in_request(t_json_data *data);
 char *mx_json_message_edit_out_response(t_json_data *data);
 char *mx_json_message_delete_in_request(t_json_data *data);
 char *mx_json_message_delete_out_response(t_json_data *data);
+char *mx_json_get_users_response(t_json_data *data);
+char *mx_json_message_history_response(t_json_data *data);
 ///end JSON
 
 ///Controllers

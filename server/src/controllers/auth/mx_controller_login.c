@@ -5,7 +5,7 @@ static void json_login_success(t_list *data, t_clients *client) {
 
     t_json_data json = {.type = JS_LOG_IN,
             .status = 200,
-            .pers_info.user_id = mx_atoi(data->data)};
+            .user_id = mx_atoi(data->data)};
     mx_strcpy(json.pers_info.first_name, data->next->data);
     mx_strcpy(json.pers_info.last_name, data->next->next->data);
     mx_strcpy(json.token, client->token);

@@ -1,0 +1,6 @@
+{
+    "channel_id": %d,
+    "channel_name": "%s",
+    "user_ids": [],
+    "last_mes_time": %ld
+}

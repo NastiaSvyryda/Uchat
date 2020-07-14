@@ -2,5 +2,10 @@
     "type": %d,
     "client1_id": %d,
     "channel_id": %d,
-    "new_message": "%s"
+    "new_message": "%s",
+    "user_id": %d,
+    "token": "%s",
+    "new_channel": %s,
+    "channel_name": "%s",
+    "user_ids": []
 }

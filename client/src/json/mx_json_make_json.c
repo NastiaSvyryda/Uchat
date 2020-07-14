@@ -1,6 +1,6 @@
 #include "uchat_client.h"
 
-static char *file_to_str(const char *filename) {
+static char *file_to_str_prefix(const char *filename) {
     char buf[2100] = "    ";
     int fd = open(filename, O_RDONLY);
 
@@ -21,7 +21,7 @@ char *mx_get_json_format_template(enum e_json_types type) {
     if (!*templ_arr) {
         for (int i = 0; i < JS_NUM; i++) {
             sprintf(name_buf, MX_JSON_TEMPLATE, i);
-            templ_arr[i] = file_to_str(name_buf);
+            templ_arr[i] = file_to_str_prefix(name_buf);
         }
     }
     return templ_arr[type];
@@ -37,8 +37,9 @@ char *mx_json_make_json(enum e_json_types type, t_json_data *data) {
                                             mx_json_message_edit_in_response,
                                             mx_json_message_edit_out_request,
                                             mx_json_message_in_response,
-                                            mx_json_message_out_request};
-
+                                            mx_json_message_out_request, 
+                                            mx_json_get_users_request,
+                                            mx_json_message_history_request};
 
     return data ? fn_p[type](data) : NULL;
 }

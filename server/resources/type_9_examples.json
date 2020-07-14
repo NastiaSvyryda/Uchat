@@ -1,0 +1,13 @@
+{
+    "type": 9,
+    "users": [
+        {
+            "user_id": 1,
+            "login:": "xlogin"
+        },
+        {
+            "user_id": 2,
+            "login:": "xlogin2"
+        }
+    ]
+}

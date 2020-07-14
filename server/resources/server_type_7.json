@@ -3,5 +3,8 @@
     "message_id": %d,
     "client1_id": %d,
     "channel_id": %d,
-    "new_message": "%s"
+    "new_message": "%s",
+    "new_channel": %s,
+    "channel_name": "%s",
+    "user_ids": []
 }

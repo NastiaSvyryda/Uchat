@@ -1,0 +1,18 @@
+{
+    "type": 1,
+    "status": 200,
+    "user_id": 1,
+    "first_name": "John",
+    "last_name": "Doe",
+    "token": "TOKEN@1235",
+    "channels": [
+        {
+            "channel_id": 1,
+            "channel_name:": "Channel1"
+        },
+        {
+            "channel_id": 2,
+            "channel_name:": "Channel2"
+        }
+    ]
+}

@@ -8,6 +8,8 @@ static void login_request(t_login *login,  SSL *ssl)
     strcpy(json->pers_info.login, login->login);
     strcpy(json->pers_info.password, login->password);
     json->type = JS_LOG_IN;
+    json->user_id = 55555;
+    strcpy(json->token, " ");
     json_str = mx_json_make_json(JS_LOG_IN, json);
     if ( SSL_connect(ssl) == -1 )   /* perform the connection */
         ERR_print_errors_fp(stderr);
