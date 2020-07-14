@@ -52,7 +52,10 @@ static void registre_request(t_registre *registre,  SSL *ssl) {
     strcpy(json->pers_info.first_name, registre->name);
     strcpy(json->pers_info.last_name, registre->surname);
     json_str = mx_json_make_json(JS_REG, json);
-    SSL_write(ssl, json_str, mx_strlen(json_str + 4) + 4);
+    if ( SSL_connect(ssl) == -1 )   /* perform the connection */
+        ERR_print_errors_fp(stderr);
+    else
+        SSL_write(ssl, json_str, mx_strlen(json_str + 4) + 4);
 }
 
 void mx_on_butRegistre_clicked(GtkWidget *button, gpointer data) {

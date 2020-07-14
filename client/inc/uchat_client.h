@@ -77,7 +77,7 @@ void mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data);
 void mx_on_chat_clicked(GtkWidget *button, gpointer data);
 GtkWidget *mx_create_view_and_model(void);
 void mx_create_main_window(struct s_MainWindowObjects *mwo);
-void mx_create_login_window(char **argv);
+void mx_create_login_window(t_mainWindowObjects main, int fg);
 void mx_create_registre_window(struct s_MainWindowObjects *mwo);
 
 //gtk

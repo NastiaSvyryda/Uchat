@@ -8,7 +8,7 @@ void *main_cycle(void *newfd) {
     char *json_str = NULL;
 
     if (SSL_accept(client->ssl) == -1)     /* do SSL-protocol accept */
-        exit(0);
+        mx_printstr("The connection is not secure");
     else {
         while(true) {
             len = 0;
@@ -26,7 +26,6 @@ void *main_cycle(void *newfd) {
                 free(json);
                 mx_strdel(&json_str);
             }
-//        }
         }
     }
     return NULL;

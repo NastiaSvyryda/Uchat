@@ -1,11 +1,8 @@
 #include "uchat_client.h"
 
-void mx_create_login_window(char **argv) {
+void mx_create_login_window(t_mainWindowObjects mainObjects, int fg) {
     GtkBuilder *builder;
     GError *error = NULL;
-    int sockfd = 0;
-    SSL_CTX *ctx;
-    t_mainWindowObjects mainObjects;
     /* Create new GtkBuilder object */
     builder = gtk_builder_new();
     /* Load UI from file. If error occurs, report it and quit application.
@@ -14,15 +11,7 @@ void mx_create_login_window(char **argv) {
         g_warning("%s", error->message);
         g_free(error);
     }
-    SSL_library_init();
-    ctx = mx_init_ctx();
-    sockfd = mx_open_connection(argv[1], atoi(argv[2]));
-    mainObjects.ssl = SSL_new(ctx);
-    mx_show_certs(mainObjects.ssl);
-    SSL_set_fd(mainObjects.ssl, sockfd);
-    g_io_add_watch(g_io_channel_unix_new((gint)sockfd), G_IO_IN, (GIOFunc)mx_input, &mainObjects);
-
-    //END CONNECT
+    g_io_add_watch(g_io_channel_unix_new((gint)fg), G_IO_IN, (GIOFunc)mx_input, &mainObjects);
 
     /* Get main window pointer from UI */
     mainObjects.loginWindow = GTK_WINDOW(gtk_builder_get_object(builder, "main_window"));
@@ -34,7 +23,6 @@ void mx_create_login_window(char **argv) {
     }
     mainObjects.entryLogin_l = GTK_ENTRY(gtk_builder_get_object(builder, "login_entry_l"));
     mainObjects.entryPass_l = GTK_ENTRY(gtk_builder_get_object(builder, "password_entry_l"));
-    mainObjects.fd = sockfd;
     /* Connect signals */
     gtk_builder_connect_signals(builder, &mainObjects);
     /* Destroy builder, since we don't need it anymore */
