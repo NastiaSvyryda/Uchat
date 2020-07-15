@@ -1,25 +1,26 @@
 #include "uchat_server.h"
 
-int mx_open_listener(int port)
-{
-    int sd;
+int mx_open_listener(int port) {
+    int fd;
     struct sockaddr_in addr;
-    sd = socket(PF_INET, SOCK_STREAM, 0);
+
+    if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        mx_printerr("uchat: couldn't create socket");
+        exit(1);
+    }
     bzero(&addr, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = INADDR_ANY;
-    if (bind(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0 )
-    {
-        perror("can't bind port");
-        abort();
+    if (bind(fd, (struct sockaddr*)&addr, sizeof(addr)) != 0 ) {
+        mx_printerr("uchat_server: couldn't connect socket with ip or port");
+        exit(1);
     }
-    if ( listen(sd, 10) != 0 )
-    {
-        perror("Can't configure listening port");
-        abort();
+    if (listen(fd, 10) != 0) {
+        mx_printerr("uchat_server: couldn't listen for connections");
+        exit(1);
     }
-    return sd;
+    return fd;
 }
 
 SSL_CTX* mx_init_server_ctx(void) {
