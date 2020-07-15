@@ -2,17 +2,17 @@
 
 void mx_logger(const char* tag, const char* message) {
     char *log;
-    int fd;
+    FILE *pFile;
 
     time_t now;
     time(&now);
     asprintf(&log, "%s [%s]: %s\n", ctime(&now), tag, message);
-    fd = open("log.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (fd < 0) {
+    pFile = fopen("log.txt", "a");
+    if (pFile == NULL) {
         printf("Error logs\n");
         return;
     }
-    write(fd, log, strlen(log));
-    close(fd);
+    fprintf(pFile, log, sizeof(log));
+    fclose(pFile);
     mx_strdel(&log);
 }
