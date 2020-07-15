@@ -3,6 +3,7 @@
 #define _GNU_SOURCE
 
 #include "libmx.h"
+#include <sys/stat.h>
 #include <json.h>
 #include <stdio.h>
 #include <sys/socket.h>
@@ -195,6 +196,7 @@ void mx_migration_delivery_user(bool status);
 
 ///System
 //Basic
+void mx_daemon(void);
 void mx_logger(const char* tag, const char* message);
 void mx_conn_list_sock(int *fd, char **argv);
 struct sockaddr_in mx_accept_connections(t_clients *client, int listenfd);
