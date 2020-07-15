@@ -4,6 +4,7 @@ static void json_register_incorrectly_filled_fields(t_clients *client) {
     t_json_data json = {.type = JS_REG, .status = 412};
     char *new_json = mx_json_make_json(JS_REG, &json);
 
+    mx_logger("JSON write:",  new_json + 4);
     SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
     mx_strdel(&new_json);
 }
@@ -16,7 +17,7 @@ static void json_register_success(t_clients *client, t_json_data *json_data) {
     strcpy(json.pers_info.last_name, json_data->pers_info.last_name);
     strcpy(json.token, client->token);
     new_json = mx_json_make_json(JS_REG, &json);
-    mx_printstr(new_json + 4);
+    mx_logger("JSON write:",  new_json + 4);
     SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
     mx_strdel(&new_json);
 }

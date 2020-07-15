@@ -28,9 +28,6 @@ static void mx_fill_channels(t_json_data *json) {
              json->user_id);
     channel_id = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), "channel_id", where);
     json->channels_arr_size = mx_list_size(channel_id);
-    mx_printstr("size =====");
-    mx_printint(json->channels_arr_size);
-    mx_printchar('\n');
     json->channels_arr = malloc(sizeof(t_channel) * json->channels_arr_size);
     while (channel_id != NULL) {
          json->channels_arr[k].channel_id = mx_atoi(channel_id->data);
@@ -66,7 +63,7 @@ static void json_login_success(t_list *data, t_clients *client) {
     mx_fill_channels(&json);
     client->first->index++;
     new_json = mx_json_make_json(JS_LOG_IN, &json);
-    mx_printstr(new_json + 4);
+    mx_logger("JSON write",  new_json + 4);
     SSL_write(client->ssl, new_json , strlen(new_json + 4) + 4);
     mx_strdel(&new_json);
     for(int i = 0; i < json.channels_arr_size; i++) {
@@ -79,6 +76,7 @@ static void json_login_unauthorized(t_clients *client) {
     t_json_data json = {.type = JS_LOG_IN, .status = 401};
     char *new_json = mx_json_make_json(JS_LOG_IN, &json);
 
+    mx_logger("JSON write:",  new_json + 4);
     SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
     mx_strdel(&new_json);
 }
@@ -87,6 +85,7 @@ static void json_login_incorrectly_filled_fields(t_clients *client) {
     t_json_data json = {.type = JS_LOG_IN, .status = 412};
     char *new_json = mx_json_make_json(JS_LOG_IN, &json);
 
+    mx_logger("JSON write:",  new_json + 4);
     SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
     mx_strdel(&new_json);
 }
