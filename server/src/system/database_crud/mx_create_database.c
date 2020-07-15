@@ -12,6 +12,7 @@ static int sqlite3_database_sql(char *table, char *fill_table, char *value_table
              table, fill_table, value_table);
     mx_printstr(sql);
     mx_printstr("\n");
+    mx_logger("create_databases sql", sql);
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
     last_id = sqlite3_last_insert_rowid(db);

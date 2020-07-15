@@ -32,7 +32,7 @@ static void get_message_id_from_database(t_json_data *json) {
              json->message.text,
              fill[4],
              json->message.channel_id);
-    data = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), "id", where);
+    data = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), fill[0], where);
     json->message.message_id = mx_atoi(data->data);
     mx_strdel(&user_id);
     mx_strdel(&where);

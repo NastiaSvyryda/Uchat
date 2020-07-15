@@ -14,3 +14,4 @@ uchat_server
 client/src/*.cc
 server/src/*.cc
 ./*.json
+log.txt

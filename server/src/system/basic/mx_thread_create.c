@@ -17,9 +17,7 @@ void *main_cycle(void *newfd) {
 //            len -= 4; //влада джсон надо перепроверить, поведение с длиной строки
             json_str = mx_strnew(len);
             SSL_read(cur_client->ssl, json_str, len);
-            mx_printstr(json_str);
-            mx_printchar('\n');
-            mx_printint(len);
+            mx_logger("json", json_str);
             json = mx_json_parse(json_str);
             mx_routes(json, client, cur_client);
             if (json != NULL) {

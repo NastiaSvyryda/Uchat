@@ -195,6 +195,7 @@ void mx_migration_delivery_user(bool status);
 
 ///System
 //Basic
+void mx_logger(const char* tag, const char* message);
 void mx_conn_list_sock(int *fd, char **argv);
 struct sockaddr_in mx_accept_connections(t_clients *client, int listenfd);
 void mx_thread_create(t_clients *client, struct sockaddr_in cli);

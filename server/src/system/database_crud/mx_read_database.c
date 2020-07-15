@@ -23,8 +23,7 @@ t_list *sqlite3_database__read(char *table, char *fill_table, char *where) {
         asprintf(&sql, "SELECT %s FROM %s;", fill_table, table);
     else
         asprintf(&sql, "SELECT %s FROM %s WHERE %s;", fill_table, table, where);
-    mx_printstr(sql);
-    mx_printstr("\n");
+    mx_logger("read_database sql", sql);
     rc = sqlite3_exec(db, sql, callback, &list, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
     mx_strdel(&sql);
