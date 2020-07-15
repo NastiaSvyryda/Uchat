@@ -160,6 +160,8 @@ void mx_controller_message(t_clients *client, t_json_data *json);
 void mx_controller_edit_message(t_json_data *json, t_clients *client);
 t_list *mx_get_user_id_from_database_channels(int channel_id);
 void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *json, int type);
+//User
+void mx_controller_user_all(t_clients *client);
 ///end controllers
 
 ///Models

@@ -34,5 +34,5 @@ void mx_thread_create(t_clients *client, struct sockaddr_in cli) {
         mx_printerr("uchat_server: thread creating error");
         exit(1);
     }
-    mx_logger("Connection", inet_ntoa(cli.sin_addr);
+    mx_logger("Connection", inet_ntoa(cli.sin_addr));
 }
