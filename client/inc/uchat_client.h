@@ -50,10 +50,14 @@ typedef struct s_registre {
 }               t_registre;
 
 typedef struct s_MainWindowObjects {//changed
-    GtkWindow *loginWindow;
-    GtkWindow *registreWindow;
-    GtkWindow *mainWindow;
-    GtkWindow *chatWindow;
+    GtkBuilder *builder;
+
+    GtkWindow *Window;
+
+    GtkWidget *loginWindow;
+    GtkWidget *registreWindow;
+    GtkWidget *mainWindow;
+    GtkWidget *chatWindow;
 
     GtkEntry  *entryLogin_l;
     GtkEntry  *entryPass_l;
@@ -63,12 +67,14 @@ typedef struct s_MainWindowObjects {//changed
     GtkEntry  *entryPass_r2;
     GtkEntry  *entryName_r;
     GtkEntry  *entrySurname_r;
-    GtkEntry  *entryMessage;
+
+    GtkWidget  *entryMessage;
 
     GtkWidget *row;
     GtkWidget *mess_row;
     GtkWidget *list;
     GtkWidget *messageList;
+
     int fd;
     int user_id;
     char token[MX_TOKEN_LEN + 1];
@@ -83,17 +89,18 @@ void mx_show_certs(SSL* ssl);
 
 //Buttons
 gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
-void mx_on_butLogin_clicked(GtkWidget *window, gpointer data);
-void mx_on_butRegistreIn_clicked(GtkWidget *button, gpointer data);
+void mx_onExit_clicked(__attribute__((unused)) GtkWidget *button, __attribute__((unused)) gpointer data);
+void mx_on_butLogin_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
+void mx_on_butRegistreIn_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
 void mx_on_butRegistre_clicked(GtkWidget *window, gpointer data);
 
 GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo);
-GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo);
+GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo, int align);
 void mx_on_chat_clicked(GtkWidget *button, gpointer data);
-void mx_create_main_window(struct s_MainWindowObjects *mwo);
-void mx_create_login_window(t_mainWindowObjects main, int fg);
+void mx_create_login_window(t_mainWindowObjects *main);
 void mx_create_registre_window(struct s_MainWindowObjects *mwo);
 
+void mx_set_component(t_mainWindowObjects *mwo, GtkWidget *gtk_component);
 //gtk
 
 typedef enum e_json_types {

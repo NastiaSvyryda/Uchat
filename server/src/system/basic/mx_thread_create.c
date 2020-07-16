@@ -16,6 +16,7 @@ void *main_cycle(void *newfd) {
             json_str = mx_strnew(len);
             SSL_read(cur_client->ssl, json_str, len);
             mx_logger("JSON parse:", json_str);
+            mx_printstr(json_str);
             json = mx_json_parse(json_str);
             mx_routes(json, client, cur_client);
             if (json != NULL) {
