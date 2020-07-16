@@ -17,18 +17,14 @@ static void login_request(t_login *login,  SSL *ssl)
         SSL_write(ssl, json_str, mx_strlen(json_str + 4) + 4);
 }
 
-void mx_on_butLogin_clicked(GtkWidget *button, gpointer data)
+void mx_on_butLogin_clicked(__attribute__((unused))GtkWidget *button, gpointer data)
 {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
     t_login login;
 
-    if (button != NULL)
-    {
-        // gdk_threads_add_idle (mx_input, mwo);
         login.type = strdup("login");
         login.login = (char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryLogin_l));
         login.password = (char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryPass_l));
         login_request(&login, mwo->ssl);
         printf("login = %s\npassword = %s\n", login.login, login.password);
-    }
 }

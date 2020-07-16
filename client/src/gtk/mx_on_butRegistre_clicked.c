@@ -16,11 +16,10 @@ static void registre_request(t_registre *registre, SSL *ssl) {
         SSL_write(ssl, json_str, mx_strlen(json_str + 4) + 4);
     }
 
-void mx_on_butRegistre_clicked(GtkWidget *button, gpointer data) {
+void mx_on_butRegistre_clicked(__attribute__((unused))GtkWidget *button, gpointer data) {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
     t_registre registre;
 
-    if (button != NULL) {
         // gdk_threads_add_idle (mx_input, mwo);
         puts("registre_button");
         registre.type = strdup("register");
@@ -35,13 +34,10 @@ void mx_on_butRegistre_clicked(GtkWidget *button, gpointer data) {
         printf("login = %s\npassword = %s\nname = %s\nsurname = %s\n",
                registre.login, registre.password, registre.name,
                registre.surname);
-    }
 }
 
-void mx_on_butRegistreIn_clicked(GtkWidget *button, gpointer data) {
-    if (button != NULL) {
-        t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
-        gtk_window_close(mwo->loginWindow);
-        mx_create_registre_window(mwo);
-    }
+void mx_on_butRegistreIn_clicked(__attribute__((unused))GtkWidget *button, gpointer data) {
+    t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
+
+    mx_set_component(mwo, mwo->registreWindow);
 }
