@@ -6,10 +6,8 @@ void mx_back_to_chats(__attribute__((unused))GtkWidget *button, gpointer data) {
     mx_set_component(mwo, mwo->mainWindow);
 }
 
-void mx_add_chat(__attribute__((unused))GtkWidget *button, gpointer data) {
+void mx_add_chat(__attribute__((unused))GtkWidget *button, gpointer data) {//создавать новое диалоговое окно
     t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
-    GtkWidget *row;
-    gchar *text;
     char *json_str = NULL;
     t_json_data json = {.user_id = mwo->user_id, .type = JS_GET_USERS};
     strcpy(json.token, mwo->token);
@@ -17,11 +15,9 @@ void mx_add_chat(__attribute__((unused))GtkWidget *button, gpointer data) {
     mx_printstr(json_str + 4);
     SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
     mx_strdel(&json_str);
-    text = g_strdup_printf("message 2");
-    row = mx_create_chat(text, mwo);//change signal connectors
-    gtk_list_box_insert(GTK_LIST_BOX(mwo->list), row, -1);
-    gtk_widget_show_all(GTK_WIDGET(mwo->mainWindow));
-    free(text);
+
+    gtk_widget_show_all(mwo->addChat_Dialog);
+    gtk_dialog_run(GTK_DIALOG(mwo->addChat_Dialog));
 }
 
 char *get_text_of_textview(GtkWidget *text_view) {

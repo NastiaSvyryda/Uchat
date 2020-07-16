@@ -40,14 +40,13 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects)
     g_io_add_watch(g_io_channel_unix_new((gint)mainObjects->fd), G_IO_IN, (GIOFunc)mx_reciever, mainObjects);
 
     mainObjects->Window = GTK_WINDOW(gtk_builder_get_object(mainObjects->builder, "main_window"));
-
     mainObjects->loginWindow = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "login_box"));
-
     mainObjects->mainWindow = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "chats_box"));
-
     mainObjects->chatWindow = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "chat_box"));
-
     mainObjects->registreWindow = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "registre_box"));
+
+    mainObjects->infoDialog = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "dialog_info"));
+    mainObjects->addChat_Dialog = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "dialog_add_chat"));
 
     mainObjects->entryLogin_l = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "login_entry_l"));
     mainObjects->entryPass_l = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "password_entry_l"));

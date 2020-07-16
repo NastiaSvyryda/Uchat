@@ -59,6 +59,9 @@ typedef struct s_MainWindowObjects {//changed
     GtkWidget *mainWindow;
     GtkWidget *chatWindow;
 
+    GtkWidget *infoDialog;
+    GtkWidget *addChat_Dialog;
+
     GtkEntry  *entryLogin_l;
     GtkEntry  *entryPass_l;
 
@@ -92,7 +95,8 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
 void mx_onExit_clicked(__attribute__((unused)) GtkWidget *button, __attribute__((unused)) gpointer data);
 void mx_on_butLogin_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
 void mx_on_butRegistreIn_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
-void mx_on_butRegistre_clicked(GtkWidget *window, gpointer data);
+void mx_on_butRegistre_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
+void mx_info_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
 
 GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo);
 GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo, int align);
