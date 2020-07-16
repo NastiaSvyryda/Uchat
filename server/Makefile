@@ -7,6 +7,7 @@ SRC_DIRS = src \
 			src/controllers \
 			src/controllers/auth \
 			src/controllers/messages \
+			src/controllers/user \
 			src/json \
 			src/json/auth \
 			src/json/message \

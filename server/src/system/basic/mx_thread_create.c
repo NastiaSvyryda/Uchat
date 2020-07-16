@@ -6,18 +6,16 @@ void *main_cycle(void *newfd) {
     t_clients *cur_client = client;
     int len = 0;
     char *json_str = NULL;
-
-    if (SSL_accept(client->ssl) == -1)     /* do SSL-protocol accept */
-        mx_printstr("The connection is not secure");
-    else {
+    if (SSL_accept(client->ssl) == -1) {
+        mx_logger("Connection", "The connection is not secure");
+    } else {
         while(true) {
             len = 0;
             client = client->first;
             SSL_read(cur_client->ssl, &len, 4);
-//            len -= 4; //влада джсон надо перепроверить, поведение с длиной строки
             json_str = mx_strnew(len);
             SSL_read(cur_client->ssl, json_str, len);
-            mx_logger("json", json_str);
+            mx_logger("JSON parse:", json_str);
             json = mx_json_parse(json_str);
             mx_routes(json, client, cur_client);
             if (json != NULL) {
@@ -36,6 +34,5 @@ void mx_thread_create(t_clients *client, struct sockaddr_in cli) {
         mx_printerr("uchat_server: thread creating error");
         exit(1);
     }
-    printf("%s ", "\033[0;32mUser connected from ip:\033[0;32m");
-    printf("%s\n", inet_ntoa(cli.sin_addr));
+    mx_logger("Connection", inet_ntoa(cli.sin_addr));
 }
