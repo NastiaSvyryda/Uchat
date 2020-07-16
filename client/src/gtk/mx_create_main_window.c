@@ -69,9 +69,21 @@ void mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data) {
     gtk_list_box_insert(GTK_LIST_BOX(mwo->messageList), row, -1);
     gtk_widget_show_all(GTK_WIDGET(mwo->chatWindow));
     ///
+    int user_ids1[3] = {1, 2, 3};
+    t_channel channels[1] = {
+            {
+                    .channel_id = 0,
+                    .channel_name = "asdasdasdddsdsdas",
+                    .user_ids = user_ids1,
+                    .user_ids_size = 3,
+                    .last_mes_time = 0
+            }
+    };
     json->type = JS_MES_OUT;
     json->message.text = strdup(message);
     json->user_id = mwo->user_id;
+    json->new_channel = true;
+    json->new_channel_data = channels[0];
     strcpy(json->token, mwo->token);
     json->message.client1_id = mwo->user_id;
     json->message.channel_id= 1;

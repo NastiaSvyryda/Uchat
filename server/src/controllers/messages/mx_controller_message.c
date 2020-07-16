@@ -16,6 +16,9 @@ static void fill_database_message(t_json_data *json) {
              "datetime('now')",
              json->message.channel_id);
     mx_create_databases(mx_model_message_database(), mx_model_message_name_table(), fill_str, value_str);
+    mx_del_strarr(&fill_table);
+    mx_strdel(&value_str);
+    mx_strdel(&fill_str);
 }
 
 static void get_message_id_from_database(t_json_data *json) {
@@ -78,13 +81,13 @@ void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *js
 void mx_controller_message(t_clients *client, t_json_data *json) {
     t_list *data = NULL;
     client = client->first;
-
+    if (json->new_channel == true) {
+        mx_controller_new_channel(json);
+    }
     fill_database_message(json);
     data = mx_get_user_id_from_database_channels(json->message.channel_id);
     get_message_id_from_database(json);
-    if (client->first->index > 1) { // количество пользователей
-        mx_send_message_to_channel(data, client, json, JS_MES_IN);
-    }
+    mx_send_message_to_channel(data, client, json, JS_MES_IN);
     mx_del_list(data, mx_list_size(data));
 }
 

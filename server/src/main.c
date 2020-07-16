@@ -7,7 +7,6 @@ static t_clients *create_clients() {
     client->user_id = 0;
     client->token = NULL;
     client->channel_id = 0;
-    client->index = 0;
     client->first = client;
     client->next = NULL;
     return  client;

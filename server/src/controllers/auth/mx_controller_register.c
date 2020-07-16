@@ -21,7 +21,7 @@ static void json_register_success(t_clients *client, t_json_data *json_data) {
     SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
     mx_strdel(&new_json);
 }
-
+//SLAVA FIX IT PLEASE!!!
 static t_list *check_login (char **fill, t_json_data *json) {
     char *where = NULL;
 

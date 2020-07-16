@@ -106,7 +106,6 @@ typedef struct s_clients {
     int user_id;
     char *token;
     int channel_id;
-    int index;
     struct s_clients *first;
     struct s_clients *next;
 }               t_clients;
@@ -160,6 +159,7 @@ void mx_controller_message(t_clients *client, t_json_data *json);
 void mx_controller_edit_message(t_json_data *json, t_clients *client);
 t_list *mx_get_user_id_from_database_channels(int channel_id);
 void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *json, int type);
+void mx_controller_new_channel(t_json_data *json);
 ///end controllers
 
 ///Models

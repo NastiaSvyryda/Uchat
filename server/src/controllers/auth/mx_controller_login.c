@@ -61,7 +61,6 @@ static void json_login_success(t_list *data, t_clients *client) {
     mx_strcpy(json.pers_info.last_name, data->next->next->data);
     mx_strcpy(json.token, client->token);
     mx_fill_channels(&json);
-    client->first->index++;
     new_json = mx_json_make_json(JS_LOG_IN, &json);
     mx_logger("JSON write",  new_json + 4);
     SSL_write(client->ssl, new_json , strlen(new_json + 4) + 4);
