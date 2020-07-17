@@ -59,6 +59,7 @@ static void json_login_success(t_list *data, t_clients *client) {
             .user_id = mx_atoi(data->data)};
     mx_strcpy(json.pers_info.first_name, data->next->data);
     mx_strcpy(json.pers_info.last_name, data->next->next->data);
+    strcpy(json.pers_info.login, data->next->next->next->data);
     mx_strcpy(json.token, client->token);
     mx_fill_channels(&json);
     new_json = mx_json_make_json(JS_LOG_IN, &json);

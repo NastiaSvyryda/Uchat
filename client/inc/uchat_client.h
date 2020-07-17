@@ -100,13 +100,24 @@ typedef struct s_json_data {
     t_message *messages_arr;
     int messages_arr_size;
 }              t_json_data;
+typedef struct s_message_list {
+    int message_id;
+    time_t delivery_time;
+//    char *text;
+    int channel_id;
+    int last_message_id;
+    struct s_message_list *first;
+    struct s_message_list *next;
+}              t_message_list;
 
 typedef struct s_channel_info {
     t_channel channel_data;
     GtkWidget *chat_button;
+    t_message_list *message;
     struct s_channel_info *first;
     struct s_channel_info *next;
 }               t_channel_info;
+
 
 typedef struct s_login {
     char *type;
@@ -153,6 +164,9 @@ typedef struct s_MainWindowObjects {//changed
 
     int fd;
     int user_id;
+    char login[MX_VARCHAR_LEN + 1];
+    char first_name[MX_MAX_NAME_LEN + 1];
+    char last_name[MX_MAX_NAME_LEN + 1];
     char token[MX_TOKEN_LEN + 1];
     SSL *ssl;
     t_channel_info *channel_info;

@@ -25,7 +25,7 @@ char *mx_json_log_in_response(t_json_data *data) {
 
     asprintf(&tmp, mx_get_json_format_template(JS_LOG_IN), JS_LOG_IN,
         data->status, data->user_id, data->pers_info.first_name,
-        data->pers_info.last_name, data->token, data->channels_arr_size);
+        data->pers_info.last_name, data->pers_info.login, data->token, data->channels_arr_size);
     jo = json_tokener_parse(tmp);
     free(tmp);
     arr = json_object_object_get(jo, "channels");
