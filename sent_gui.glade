@@ -143,12 +143,10 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkSearchEntry">
+                          <object class="GtkEntry" id="entry_user_chat">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="primary_icon_name">edit-find-symbolic</property>
-                            <property name="primary_icon_activatable">False</property>
-                            <property name="primary_icon_sensitive">False</property>
+                            <property name="max_width_chars">20</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -157,11 +155,12 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="add_user_chat">
                             <property name="label" translatable="yes">+</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="mx_add_user_chat" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -170,11 +169,12 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="delete_user_chat">
                             <property name="label" translatable="yes">-</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="mx_delete_user_chat" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -197,26 +197,13 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkScrolledWindow">
+                  <object class="GtkScrolledWindow" id="scrolled_window_chatUsers">
                     <property name="height_request">160</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkViewport">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <child>
-                          <object class="GtkScrolledWindow" id="users_scrolled_window">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="shadow_type">in</property>
-                            <child>
-                              <placeholder/>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
+                      <placeholder/>
                     </child>
                   </object>
                   <packing>
@@ -670,7 +657,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="mx_info_clicked" swapped="no"/>
+                        <signal name="clicked" handler="mx_on_info_clicked" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -703,7 +690,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_stock">True</property>
-                        <signal name="clicked" handler="mx_add_chat" swapped="no"/>
+                        <signal name="clicked" handler="mx_on_butAddchat" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -876,7 +863,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_stock">True</property>
-                        <signal name="clicked" handler="mx_back_to_chats" swapped="no"/>
+                        <signal name="clicked" handler="mx_onBack_to_chats" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -969,7 +956,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="mx_add_message" swapped="no"/>
+                        <signal name="clicked" handler="mx_on_butSend_clicked" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>

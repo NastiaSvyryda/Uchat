@@ -1,18 +1,5 @@
 #include "uchat_client.h"
 
-void mx_add_out_message(t_mainWindowObjects *mwo, char *text_char)
-{
-    GtkWidget *row;
-    gchar *text;
-    if (text_char == NULL)
-        puts("NULL\n");
-    text = g_strdup_printf("%s", text_char);
-    row = mx_create_message(text, mwo, 1); //change signal connectors
-    gtk_list_box_insert(GTK_LIST_BOX(mwo->messageList), row, -1);
-    gtk_widget_show_all(mwo->chatWindow);
-    free(text);
-}
-
 static char *strtrim(const char *str) {
     int len = 0;
     char *new = NULL;
@@ -25,6 +12,7 @@ static char *strtrim(const char *str) {
     new = mx_strndup(str, len);
     return (char *)new;
 }
+
 static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
     gchar *text;
     char *temp = NULL;
@@ -34,7 +22,7 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
         strcpy(mwo->channel_info->channel_data.channel_name, temp);
         text = g_strdup_printf("%s", mwo->channel_info->channel_data.channel_name);
         mwo->channel_info->chat_button = mx_create_chat(mwo->channel_info->channel_data.channel_name, mwo);
-        gtk_list_box_insert(GTK_LIST_BOX(mwo->list), mwo->channel_info->chat_button, 0);
+        gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, 0);
         mwo->channel_info->channel_data.channel_id = json->channels_arr[i].channel_id;
         mwo->channel_info->channel_data.last_mes_time = json->channels_arr[i].last_mes_time;
         mwo->channel_info->channel_data.user_ids_size = json->channels_arr[i].user_ids_size;
@@ -90,12 +78,12 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     {
         if (json->status == 200)
         {
+            mwo->user_id = json->user_id;
             strcpy(mwo->login, json->pers_info.login);
             strcpy(mwo->first_name, json->pers_info.first_name);
             strcpy(mwo->last_name, json->pers_info.last_name);
-            mwo->user_id = json->user_id;
             strcpy(mwo->token, json->token);
-
+            gtk_label_set_text(GTK_LABEL(mwo->label_login), (const gchar *)mwo->login);
             mx_set_component(mwo, mwo->mainWindow);
         }
     }
@@ -105,7 +93,13 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
         {
             fill_channel_info(mwo, json);
             mwo->user_id = json->user_id;
+            if (strlen(json->pers_info.login) == 0)
+                puts("NULL login");
+            strcpy(mwo->login, json->pers_info.login);
+            strcpy(mwo->first_name, json->pers_info.first_name);
+            strcpy(mwo->last_name, json->pers_info.last_name);
             strcpy(mwo->token, json->token);
+            gtk_label_set_text(GTK_LABEL(mwo->label_login), (const gchar *)mwo->login);
             mx_set_component(mwo, mwo->mainWindow);
         }
     }

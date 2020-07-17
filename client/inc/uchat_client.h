@@ -162,10 +162,11 @@ typedef struct s_MainWindowObjects {//changed
     GtkWidget *label_login;
     GtkWidget *label_chat;
 
-    GtkWidget *row;
+    GtkWidget *chat_row;
     GtkWidget *mess_row;
-    GtkWidget *list;
+    GtkWidget *chatList;
     GtkWidget *messageList;
+    GtkWidget *usersList;
 
     gchar *curr_chat;
 
@@ -186,19 +187,12 @@ SSL_CTX* mx_init_ctx(void);
 void mx_show_certs(SSL* ssl);
 ///end TLS
 
-//Buttons
 gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
-void mx_onExit_clicked(__attribute__((unused)) GtkWidget *button, __attribute__((unused)) gpointer data);
-void mx_on_butLogin_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
-void mx_on_butRegistreIn_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
-void mx_on_butRegistre_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
-void mx_info_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
+void mx_add_out_message(t_mainWindowObjects *mwo, char *text_char);
 
 GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo);
 GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo, int align);
-void mx_on_chat_clicked(GtkWidget *button, gpointer data);
 void mx_create_login_window(t_mainWindowObjects *main);
-void mx_create_registre_window(struct s_MainWindowObjects *mwo);
 
 void mx_set_component(t_mainWindowObjects *mwo, GtkWidget *gtk_component);
 // Validation
