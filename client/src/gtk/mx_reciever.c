@@ -30,8 +30,6 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
     char *temp = NULL;
 
     for (int i = 0; i < json->channels_arr_size; i++) {
-        mx_printstr("\nname:");
-
         temp = strtrim(json->channels_arr[i].channel_name);
         strcpy(mwo->channel_info->channel_data.channel_name, temp);
         text = g_strdup_printf("%s", mwo->channel_info->channel_data.channel_name);
@@ -65,7 +63,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     SSL_read(mwo->ssl, json_str, length);
     json = mx_json_parse(json_str);
     mx_printstr("Response recieved:\n");
-    mx_printstr(json_str + 4);
+    mx_printstr(json_str);
     mx_printchar('\n');
     if (json->type == JS_REG)
     {

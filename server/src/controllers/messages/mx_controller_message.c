@@ -37,6 +37,9 @@ static void get_message_id_from_database(t_json_data *json) {
              json->message.channel_id);
     data = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), fill[0], where);
     json->message.message_id = mx_atoi(data->data);
+    mx_del_list(data, mx_list_size(data));
+    data = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), fill[3], where);
+    json->message.delivery_time = (long)data->data;
     mx_strdel(&user_id);
     mx_strdel(&where);
     mx_del_strarr(&fill);
@@ -57,7 +60,7 @@ t_list *mx_get_user_id_from_database_channels(int channel_id) {
     mx_del_strarr(&fill);
     return data;
 }
-void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *json, int type) {
+void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *json, int type, int type_response) {
     t_list *tmp = data;
     char *json_str = NULL;
 
@@ -71,6 +74,14 @@ void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *js
                 mx_logger("JSON write:",  json_str + 4);
                 SSL_write(client->ssl, json_str, mx_strlen(json_str + 4) + 4);
                 break;
+            }
+            else if (client->user_id == json->message.client1_id
+                       && client->user_id == mx_atoi(data->data)) {
+                json->type = type_response;
+                json->status = 200;
+                json_str = mx_json_make_json(type_response, json);
+                mx_logger("JSON write:",  json_str + 4);
+                SSL_write(client->ssl, json_str, mx_strlen(json_str + 4) + 4);
             }
             data = data->next;
         }
@@ -87,7 +98,7 @@ void mx_controller_message(t_clients *client, t_json_data *json) {
     fill_database_message(json);
     data = mx_get_user_id_from_database_channels(json->message.channel_id);
     get_message_id_from_database(json);
-    mx_send_message_to_channel(data, client, json, JS_MES_IN);
+    mx_send_message_to_channel(data, client, json, JS_MES_IN, JS_MES_OUT);
     mx_del_list(data, mx_list_size(data));
 }
 
