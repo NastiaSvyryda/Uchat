@@ -143,6 +143,7 @@ typedef struct s_MainWindowObjects {//changed
     GtkEntry  *entryPass_r2;
     GtkEntry  *entryName_r;
     GtkEntry  *entrySurname_r;
+    GtkEntry *entryChatName;
 
     GtkWidget  *entryMessage;
 
