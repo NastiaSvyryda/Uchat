@@ -124,6 +124,7 @@ void mx_valid_sqlite3_failed_data(int rc, sqlite3 *db, char *err_msg);
 int mx_valid_str_isalpha(char *str);
 int mx_valid_register(t_json_data *json);
 bool mx_valid_login(t_json_data *json);
+bool mx_valid_token(int id, char *token);
 ///end validation
 
 ///JSON
