@@ -56,6 +56,8 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects)
     mainObjects->entryName_r = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "name_entry_r"));
     mainObjects->entrySurname_r = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "surname_entry_r"));
 
+    mainObjects->entryChatName = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "entry_chat_name"));
+
     mainObjects->entryMessage = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "message_entry"));
 
     mainObjects->list = gtk_list_box_new();
