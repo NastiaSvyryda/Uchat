@@ -1,5 +1,49 @@
 #include "uchat_client.h"
 
+char *mx_handle_str(const char *s) 
+{ 
+    char *oldW = "\\";
+    char *newW = "\\\\";
+    char *result; 
+    int i, cnt = 0; 
+    int newWlen = strlen(newW); 
+    int oldWlen = strlen(oldW); 
+  
+    // Counting the number of times old word 
+    // occur in the string 
+    for (i = 0; s[i] != '\0'; i++) 
+    { 
+        if (strstr(&s[i], oldW) == &s[i]) 
+        { 
+            cnt++; 
+  
+            // Jumping to index after the old word. 
+            i += oldWlen - 1; 
+        } 
+    } 
+  
+    // Making new string of enough length 
+    result = (char *)malloc(i + cnt * (newWlen - oldWlen) + 1); 
+  
+    i = 0; 
+    while (*s) 
+    { 
+        // compare the substring with the result 
+        if (strstr(s, oldW) == s) 
+        { 
+            strcpy(&result[i], newW); 
+            i += newWlen; 
+            s += oldWlen; 
+        } 
+        else
+            result[i++] = *s++; 
+    } 
+  
+    result[i] = '\0'; 
+    return result; 
+} 
+
+
 void mx_show_popup(void *parent_window, char *msg)
 {
     GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(parent_window),
@@ -15,12 +59,12 @@ _Bool mx_valid_string(char *str)
 {
     if (!str || !(*str) || strlen(str) < 3)
         return 0;
-    while (*str)
-    {
-        if (!(isalpha(*str) || isdigit(*str)))
-            return 0;
-        str++;
-    }
+    // while (*str)
+    // {
+    //     if (!(isalpha(*str) || isdigit(*str)))
+    //         return 0;
+    //     str++;
+    // }
     return 1;
 }
 
@@ -48,8 +92,9 @@ void mx_on_butLogin_clicked(__attribute__((unused)) GtkWidget *button, gpointer 
     t_login login;
 
     login.type = strdup("login");
-    login.login = (char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryLogin_l));
-    login.password = (char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryPass_l));
+    login.login = mx_handle_str((char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryLogin_l)));
+    login.password = mx_handle_str((char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryPass_l)));
+    
     if (!mx_valid_string(login.login))
     {
         mx_show_popup(mwo->Window, "Invalid login! Login must consist only of English characters or digits and must be no longer than 255 symbols and have length minimum 3!");

@@ -197,6 +197,7 @@ void mx_create_registre_window(struct s_MainWindowObjects *mwo);
 void mx_set_component(t_mainWindowObjects *mwo, GtkWidget *gtk_component);
 _Bool mx_valid_string(char *str);
 void mx_show_popup(void *parent_window, char *msg);
+char *mx_handle_str(const char *s);
 //gtk
 
 
