@@ -39,6 +39,14 @@ char *mx_handle_user_input(const char *s)
             result[i++] = *s++;
     }
 
+    for (int y = 0; result[y]; ++y)
+    {
+        if (result[y] == '"')
+            result[y] = '`';
+        if (result[y] == '\'')
+            result[y] = '`';
+    }
+
     result[i] = '\0';
     return result;
 }
@@ -125,9 +133,6 @@ _Bool mx_validate_user_surname(char *str, void *window)
         mx_show_popup(window, "User surname must be more than 0 symbols and less than 256 symbols!");
     return valid;
 }
-
-
-
 
 static void login_request(t_login *login, SSL *ssl)
 {
