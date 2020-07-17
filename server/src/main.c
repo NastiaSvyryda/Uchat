@@ -22,13 +22,13 @@ int main(int argc, char **argv) {
     mx_migration(argv[1]);
     mx_valid_check_argc_error(argc);
     SSL_library_init();
-    ctx = mx_init_server_ctx();        /* initialize SSL */
-    mx_load_certificates(ctx, mx_ssl_file_name(), mx_ssl_file_name()); /* load certs */
+    ctx = mx_init_server_ctx();/* initialize SSL */
+    mx_load_certificates(ctx, mx_config_ssl_file_name(), mx_config_ssl_file_name()); /* load certs */
     listenfd = mx_open_listener(atoi(argv[1]));
     while (true) {
         cli = mx_accept_connections(client, listenfd);
-        client->ssl = SSL_new(ctx);              /* get new SSL state with context */
-        SSL_set_fd(client->ssl, client->fd);      /* set connection socket to SSL state */
+        client->ssl = SSL_new(ctx);/* get new SSL state with context */
+        SSL_set_fd(client->ssl, client->fd);/* set connection socket to SSL state */
         mx_thread_create(client, cli);
         client->next = create_clients();
         client->next->first = client->first;

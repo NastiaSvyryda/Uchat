@@ -44,6 +44,7 @@ static bool check_users_in_channels (t_json_data *json, int index) {
     mx_del_list(data, mx_list_size(data));
     return ret;
 }
+
 void mx_get_channel_id_from_database_channels(t_json_data *json) {
     char *where = NULL;
     char **fill = NULL;
@@ -61,7 +62,6 @@ void mx_get_channel_id_from_database_channels(t_json_data *json) {
     mx_del_strarr(&fill);
     mx_del_list(data, mx_list_size(data));
 }
-
 
 static void fill_database_channels(t_json_data *json) {
     char *fill_str = NULL;
