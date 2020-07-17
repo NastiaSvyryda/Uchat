@@ -34,6 +34,11 @@ void mx_add_message(__attribute__((unused)) GtkWidget *button, gpointer data) {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
     GtkWidget *row;
     char *message = get_text_of_textview(mwo->entryMessage);
+    if (!mx_valid_string(message))
+    {
+        mx_show_popup(mwo->Window, "Invalid message! Message must consist only of English characters or digits and must be no longer than 255 symbols and have length minimum 3!");
+        return;
+    }
     char *json_str = NULL;
     t_json_data *json = calloc(1, sizeof(t_json_data));
 
