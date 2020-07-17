@@ -12,12 +12,13 @@ static void json_get_message_history(t_clients *client, t_list **list) {
         mx_strcpy(json.messages_arr[i].text, ((*list)->next->next->data));
         json.messages_arr->delivery_time = mx_atoi((*list)->next->next->data);
         json.messages_arr->channel_id = mx_atoi((*list)->next->next->next->data);
-        *list = (*list)->next->next->next->data;
+        *list = (*list)->next->next->next->next;
     }
     json.messages_arr_size = len / 5;
     new_json = mx_json_make_json(JS_MES_HIST, &json);
     mx_logger("JSON write:",  new_json + 4);
     SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
+    free(json.messages_arr);
     mx_del_list(*list, len);
     mx_strdel(&new_json);
 }
