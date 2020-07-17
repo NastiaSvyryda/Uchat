@@ -11,7 +11,7 @@ bool mx_valid_token(int id, char *token) {
     asprintf(&fill_table ,"%s, %s",
              fill[0],
              fill[5]);
-    asprintf(&where ,"%s=%i AND %s=%s",
+    asprintf(&where ,"%s=%i AND %s='%s'",
             fill[0],
             id,
             fill[5],
