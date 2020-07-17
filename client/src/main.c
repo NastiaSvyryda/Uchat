@@ -4,6 +4,8 @@ int main(int argc, char **argv) {
     t_mainWindowObjects mainObjects;
     SSL_CTX *ctx;
 
+    mainObjects.channel_info = malloc(sizeof(t_channel_info));
+    mainObjects.channel_info->first = mainObjects.channel_info;
     /* Init GTK+ */
     gtk_init(&argc, &argv);
 

@@ -35,77 +35,7 @@
 #define MX_MAX_NAME_LEN 100
 // #define MX_MAX_MESSAGE_LEN 65000
 
-typedef struct s_login {
-    char *type;
-    char *login;
-    char *password;
-}               t_login;
 
-typedef struct s_registre {
-    char *type;
-    char *login;
-    char *password;
-    char *name;
-    char *surname;
-}               t_registre;
-
-typedef struct s_MainWindowObjects {//changed
-    GtkBuilder *builder;
-
-    GtkWindow *Window;
-
-    GtkWidget *loginWindow;
-    GtkWidget *registreWindow;
-    GtkWidget *mainWindow;
-    GtkWidget *chatWindow;
-
-    GtkWidget *infoDialog;
-    GtkWidget *addChat_Dialog;
-
-    GtkEntry  *entryLogin_l;
-    GtkEntry  *entryPass_l;
-
-    GtkEntry  *entryLogin_r;
-    GtkEntry  *entryPass_r;
-    GtkEntry  *entryPass_r2;
-    GtkEntry  *entryName_r;
-    GtkEntry  *entrySurname_r;
-
-    GtkWidget  *entryMessage;
-
-    GtkWidget *row;
-    GtkWidget *mess_row;
-    GtkWidget *list;
-    GtkWidget *messageList;
-
-    int fd;
-    int user_id;
-    char token[MX_TOKEN_LEN + 1];
-    SSL *ssl;
-} t_mainWindowObjects;
-
-///TLS
-int mx_open_connection(const char *hostname, int port);
-SSL_CTX* mx_init_ctx(void);
-void mx_show_certs(SSL* ssl);
-///end TLS
-
-//Buttons
-gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
-void mx_onExit_clicked(__attribute__((unused)) GtkWidget *button, __attribute__((unused)) gpointer data);
-void mx_on_butLogin_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
-void mx_on_butRegistreIn_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
-void mx_on_butRegistre_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
-void mx_info_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
-
-GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo);
-GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo, int align);
-void mx_on_chat_clicked(GtkWidget *button, gpointer data);
-void mx_create_login_window(t_mainWindowObjects *main);
-void mx_create_registre_window(struct s_MainWindowObjects *mwo);
-
-void mx_set_component(t_mainWindowObjects *mwo, GtkWidget *gtk_component);
-//gtk
 
 typedef enum e_json_types {
     JS_REG,          // JSON Type - register
@@ -170,6 +100,87 @@ typedef struct s_json_data {
     t_message *messages_arr;
     int messages_arr_size;
 }              t_json_data;
+
+typedef struct s_channel_info {
+    t_channel channel_data;
+    GtkWidget *chat_button;
+    struct s_channel_info *first;
+    struct s_channel_info *next;
+}               t_channel_info;
+
+typedef struct s_login {
+    char *type;
+    char *login;
+    char *password;
+}               t_login;
+
+typedef struct s_registre {
+    char *type;
+    char *login;
+    char *password;
+    char *name;
+    char *surname;
+}               t_registre;
+
+typedef struct s_MainWindowObjects {//changed
+    GtkBuilder *builder;
+
+    GtkWindow *Window;
+
+    GtkWidget *loginWindow;
+    GtkWidget *registreWindow;
+    GtkWidget *mainWindow;
+    GtkWidget *chatWindow;
+
+    GtkWidget *infoDialog;
+    GtkWidget *addChat_Dialog;
+
+    GtkEntry  *entryLogin_l;
+    GtkEntry  *entryPass_l;
+
+    GtkEntry  *entryLogin_r;
+    GtkEntry  *entryPass_r;
+    GtkEntry  *entryPass_r2;
+    GtkEntry  *entryName_r;
+    GtkEntry  *entrySurname_r;
+
+    GtkWidget  *entryMessage;
+
+    GtkWidget *row;
+    GtkWidget *mess_row;
+    GtkWidget *list;
+    GtkWidget *messageList;
+
+    int fd;
+    int user_id;
+    char token[MX_TOKEN_LEN + 1];
+    SSL *ssl;
+    t_channel_info *channel_info;
+} t_mainWindowObjects;
+
+
+///TLS
+int mx_open_connection(const char *hostname, int port);
+SSL_CTX* mx_init_ctx(void);
+void mx_show_certs(SSL* ssl);
+///end TLS
+
+//Buttons
+gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
+void mx_onExit_clicked(__attribute__((unused)) GtkWidget *button, __attribute__((unused)) gpointer data);
+void mx_on_butLogin_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
+void mx_on_butRegistreIn_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
+void mx_on_butRegistre_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
+void mx_info_clicked(__attribute__((unused))GtkWidget *button, gpointer data);
+
+GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo);
+GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo, int align);
+void mx_on_chat_clicked(GtkWidget *button, gpointer data);
+void mx_create_login_window(t_mainWindowObjects *main);
+void mx_create_registre_window(struct s_MainWindowObjects *mwo);
+
+void mx_set_component(t_mainWindowObjects *mwo, GtkWidget *gtk_component);
+//gtk
 
 
 void mx_str_to_file(const char *filepath, const char *data);
