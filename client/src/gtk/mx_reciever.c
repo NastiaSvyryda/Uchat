@@ -42,6 +42,9 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
         for(int j = 0; j < json->channels_arr[i].user_ids_size; j++) {
             mwo->channel_info->channel_data.user_ids[j] = json->channels_arr[i].user_ids[j];
         }
+        mwo->channel_info->message = malloc(sizeof(t_message_list));
+        mwo->channel_info->message->first = NULL;
+        mwo->channel_info->message->next = NULL;
         mwo->channel_info->next = malloc(sizeof(t_channel_info));
         mwo->channel_info->next->first = mwo->channel_info->first;
         mwo->channel_info = mwo->channel_info->next;
@@ -51,6 +54,25 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
     gtk_widget_show_all(mwo->mainWindow);
 }
 
+static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
+    mwo->channel_info = mwo->channel_info->first;
+    while (mwo->channel_info->channel_data.channel_id != json->message.channel_id) {
+        mwo->channel_info = mwo->channel_info->next;
+    }
+    if (mwo->channel_info->message->first == NULL) {
+        mwo->channel_info->message->first = mwo->channel_info->message;
+    }
+//    mwo->channel_info->message->next = NULL;
+//    while (mwo->channel_info->message->next != NULL)
+//        mwo->channel_info->message = mwo->channel_info->message->next;
+    mwo->channel_info->message->message_id = json->message.message_id;
+    mwo->channel_info->message->channel_id = json->message.channel_id;
+    mwo->channel_info->message->delivery_time = json->message.delivery_time;
+    mwo->channel_info->message->next = malloc(sizeof(t_message_list));
+    mwo->channel_info->message->next->first = mwo->channel_info->message->first;
+    mwo->channel_info->message = mwo->channel_info->message->next;
+}
+
 gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data)
 {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
@@ -58,7 +80,6 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     int length = 0;
     t_json_data *json = NULL;
     SSL_read(mwo->ssl, &length, 4);
-    //    length -= 4; //влада джсон надо перепроверить, поведение с длиной строки
     json_str = mx_strnew(length);
     SSL_read(mwo->ssl, json_str, length);
     json = mx_json_parse(json_str);
@@ -69,6 +90,9 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     {
         if (json->status == 200)
         {
+            strcpy(mwo->login, json->pers_info.login);
+            strcpy(mwo->first_name, json->pers_info.first_name);
+            strcpy(mwo->last_name, json->pers_info.last_name);
             mwo->user_id = json->user_id;
             strcpy(mwo->token, json->token);
 
@@ -88,6 +112,10 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     else if (json->type == JS_MES_IN)
     {
         mx_add_out_message(mwo, json->message.text);
+    }
+    else if (json->type == JS_MES_OUT)
+    {
+        fill_message_info_(mwo, json);
     }
     return TRUE;
 }
