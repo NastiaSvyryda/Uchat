@@ -147,17 +147,20 @@ typedef struct s_MainWindowObjects {//changed
     GtkWidget *infoDialog;
     GtkWidget *addChat_Dialog;
 
-    GtkEntry  *entryLogin_l;
-    GtkEntry  *entryPass_l;
+    GtkEntry *entryLogin_l;
+    GtkEntry *entryPass_l;
 
-    GtkEntry  *entryLogin_r;
-    GtkEntry  *entryPass_r;
-    GtkEntry  *entryPass_r2;
-    GtkEntry  *entryName_r;
-    GtkEntry  *entrySurname_r;
+    GtkEntry *entryLogin_r;
+    GtkEntry *entryPass_r;
+    GtkEntry *entryPass_r2;
+    GtkEntry *entryName_r;
+    GtkEntry *entrySurname_r;
     GtkEntry *entryChatName;
 
-    GtkWidget  *entryMessage;
+    GtkWidget *entryMessage;
+
+    GtkWidget *label_login;
+    GtkWidget *label_chat;
 
     GtkWidget *row;
     GtkWidget *mess_row;
@@ -198,8 +201,15 @@ void mx_create_login_window(t_mainWindowObjects *main);
 void mx_create_registre_window(struct s_MainWindowObjects *mwo);
 
 void mx_set_component(t_mainWindowObjects *mwo, GtkWidget *gtk_component);
-_Bool mx_valid_string(char *str);
+// Validation
+char *mx_handle_user_input(const char *s);
 void mx_show_popup(void *parent_window, char *msg);
+_Bool mx_validate_login(char *str, void *window);
+_Bool mx_validate_password(char *str, void *window);
+_Bool mx_validate_chat_name(char *str, void *window);
+_Bool mx_validate_message(char *str, void *window);
+_Bool mx_validate_user_name(char *str, void *window);
+_Bool mx_validate_user_surname(char *str, void *window);
 //gtk
 
 
