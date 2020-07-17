@@ -155,7 +155,9 @@ typedef struct s_MainWindowObjects {//changed
     GtkEntry *entryPass_r2;
     GtkEntry *entryName_r;
     GtkEntry *entrySurname_r;
+
     GtkEntry *entryChatName;
+    GtkEntry *entryChatUsers;
 
     GtkWidget *entryMessage;
 
@@ -169,6 +171,7 @@ typedef struct s_MainWindowObjects {//changed
     GtkWidget *usersList;
 
     gchar *curr_chat;
+    char **curr_chat_users;
 
     int fd;
     int user_id;
@@ -177,6 +180,7 @@ typedef struct s_MainWindowObjects {//changed
     char last_name[MX_MAX_NAME_LEN + 1];
     char token[MX_TOKEN_LEN + 1];
     SSL *ssl;
+    t_id_login *ids_logins_arr;
     t_channel_info *channel_info;
 } t_mainWindowObjects;
 

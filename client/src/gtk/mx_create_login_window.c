@@ -29,8 +29,8 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects) {
     mainObjects->chatWindow = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "chat_box"));
     mainObjects->registreWindow = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "registre_box"));
 
-//    mainObjects->infoDialog = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "dialog_info"));
-//    mainObjects->addChat_Dialog = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "dialog_add_chat"));
+    mainObjects->infoDialog = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "dialog_info"));
+    mainObjects->addChat_Dialog = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "dialog_add_chat"));
 
     mainObjects->entryLogin_l = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "login_entry_l"));
     mainObjects->entryPass_l = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "password_entry_l"));
@@ -40,7 +40,9 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects) {
     mainObjects->entryName_r = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "name_entry_r"));
     mainObjects->entrySurname_r = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "surname_entry_r"));
 
-//    mainObjects->entryChatName = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "entry_chat_name"));
+    mainObjects->entryChatName = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "entry_chat_name"));
+    mainObjects->entryChatUsers = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "entry_user_chat"));
+
 
     mainObjects->entryMessage = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "message_entry"));
 
@@ -52,9 +54,9 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects) {
     gtk_list_box_set_selection_mode(GTK_LIST_BOX(mainObjects->messageList), GTK_SELECTION_NONE);
     gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mainObjects->builder, "scrolled_chat")), mainObjects->messageList);
 
-//    mainObjects->usersList = gtk_list_box_new();
-//    gtk_list_box_set_selection_mode(GTK_LIST_BOX(mainObjects->messageList), GTK_SELECTION_NONE);
-//    gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mainObjects->builder, "scrolled_window_chatUsers")), mainObjects->messageList);
+    mainObjects->usersList = gtk_list_box_new();
+    gtk_list_box_set_selection_mode(GTK_LIST_BOX(mainObjects->usersList), GTK_SELECTION_NONE);
+    gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mainObjects->builder, "scrolled_window_chatUsers")), mainObjects->usersList);
 
     mainObjects->label_login = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "label_user"));
     mainObjects->label_chat = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "label_curr_chat"));

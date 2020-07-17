@@ -93,7 +93,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
         {
             fill_channel_info(mwo, json);
             mwo->user_id = json->user_id;
-            if (strlen(json->pers_info.login) == 0)
+            if (strlen(json->pers_info.login) == 0)//тут пусто
                 puts("NULL login");
             strcpy(mwo->login, json->pers_info.login);
             strcpy(mwo->first_name, json->pers_info.first_name);
@@ -110,6 +110,27 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     else if (json->type == JS_MES_OUT)
     {
         fill_message_info_(mwo, json);
+    }
+    else if (json->type == JS_GET_USERS)//для добавления юзеров
+    {
+        GtkWidget *row;
+        GtkWidget *label;
+        gchar *text;
+        char *temp = NULL;
+        mwo->ids_logins_arr = malloc(sizeof(t_id_login) * json->ids_logins_arr_size);
+        for (int i = 0; i < json->ids_logins_arr_size; i++) {
+            temp = strtrim(json->ids_logins_arr[i].login);
+            strcpy(mwo->ids_logins_arr[i].login, temp);
+            mwo->ids_logins_arr->user_id = json->ids_logins_arr[i].user_id;
+            text = g_strdup_printf("%s", mwo->ids_logins_arr[i].login);
+            row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+            label = gtk_label_new (text);
+            gtk_container_add(GTK_CONTAINER(row), label);
+            gtk_list_box_insert(GTK_LIST_BOX(mwo->usersList), row, 0);
+            free(text);
+            mx_strdel(&temp);
+        }
+        gtk_widget_show_all(mwo->addChat_Dialog);
     }
     return TRUE;
 }
