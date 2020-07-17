@@ -196,9 +196,15 @@ void mx_create_login_window(t_mainWindowObjects *main);
 void mx_create_registre_window(struct s_MainWindowObjects *mwo);
 
 void mx_set_component(t_mainWindowObjects *mwo, GtkWidget *gtk_component);
-_Bool mx_valid_string(char *str);
+// Validation
+char *mx_handle_user_input(const char *s);
 void mx_show_popup(void *parent_window, char *msg);
-char *mx_handle_str(const char *s);
+_Bool mx_validate_login(char *str, void *window);
+_Bool mx_validate_password(char *str, void *window);
+_Bool mx_validate_chat_name(char *str, void *window);
+_Bool mx_validate_message(char *str, void *window);
+_Bool mx_validate_user_name(char *str, void *window);
+_Bool mx_validate_user_surname(char *str, void *window);
 //gtk
 
 

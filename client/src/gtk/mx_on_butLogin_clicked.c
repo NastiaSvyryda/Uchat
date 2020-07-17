@@ -1,48 +1,47 @@
 #include "uchat_client.h"
 
-char *mx_handle_str(const char *s) 
-{ 
+char *mx_handle_user_input(const char *s)
+{
     char *oldW = "\\";
     char *newW = "\\\\";
-    char *result; 
-    int i, cnt = 0; 
-    int newWlen = strlen(newW); 
-    int oldWlen = strlen(oldW); 
-  
-    // Counting the number of times old word 
-    // occur in the string 
-    for (i = 0; s[i] != '\0'; i++) 
-    { 
-        if (strstr(&s[i], oldW) == &s[i]) 
-        { 
-            cnt++; 
-  
-            // Jumping to index after the old word. 
-            i += oldWlen - 1; 
-        } 
-    } 
-  
-    // Making new string of enough length 
-    result = (char *)malloc(i + cnt * (newWlen - oldWlen) + 1); 
-  
-    i = 0; 
-    while (*s) 
-    { 
-        // compare the substring with the result 
-        if (strstr(s, oldW) == s) 
-        { 
-            strcpy(&result[i], newW); 
-            i += newWlen; 
-            s += oldWlen; 
-        } 
-        else
-            result[i++] = *s++; 
-    } 
-  
-    result[i] = '\0'; 
-    return result; 
-} 
+    char *result;
+    int i, cnt = 0;
+    int newWlen = strlen(newW);
+    int oldWlen = strlen(oldW);
 
+    // Counting the number of times old word
+    // occur in the string
+    for (i = 0; s[i] != '\0'; i++)
+    {
+        if (strstr(&s[i], oldW) == &s[i])
+        {
+            cnt++;
+
+            // Jumping to index after the old word.
+            i += oldWlen - 1;
+        }
+    }
+
+    // Making new string of enough length
+    result = (char *)malloc(i + cnt * (newWlen - oldWlen) + 1);
+
+    i = 0;
+    while (*s)
+    {
+        // compare the substring with the result
+        if (strstr(s, oldW) == s)
+        {
+            strcpy(&result[i], newW);
+            i += newWlen;
+            s += oldWlen;
+        }
+        else
+            result[i++] = *s++;
+    }
+
+    result[i] = '\0';
+    return result;
+}
 
 void mx_show_popup(void *parent_window, char *msg)
 {
@@ -55,18 +54,80 @@ void mx_show_popup(void *parent_window, char *msg)
     gtk_widget_destroy(dialog);
 }
 
-_Bool mx_valid_string(char *str)
+_Bool mx_validate_login(char *str, void *window)
 {
-    if (!str || !(*str) || strlen(str) < 3)
-        return 0;
-    // while (*str)
-    // {
-    //     if (!(isalpha(*str) || isdigit(*str)))
-    //         return 0;
-    //     str++;
-    // }
-    return 1;
+    _Bool valid = (str && *str && strlen(str) > 0 && strlen(str) < 256);
+    if (!valid)
+    {
+        mx_show_popup(window, "Login must be more than 0 symbols and less than 256 symbols!");
+    }
+
+    if (strcmp(str, "Valerka") == 0)
+    {
+        mx_show_popup(window, "Valerka is The Cool boy!!!");
+    }
+    if (strcmp(str, "Sasha") == 0)
+    {
+        mx_show_popup(window, "Sasha is The King!!!");
+    }
+    if (strcmp(str, "Vlad") == 0)
+    {
+        mx_show_popup(window, "Vlad is The Prince!!!");
+    }
+    if (strcmp(str, "Nastya") == 0)
+    {
+        mx_show_popup(window, "Nastya is The Qeen!!!");
+    }
+    if (strcmp(str, "Slava") == 0)
+    {
+        mx_show_popup(window, "Slava is The best Comedian!!!");
+    }
+
+    return valid;
 }
+
+_Bool mx_validate_password(char *str, void *window)
+{
+    _Bool valid = (str && *str && strlen(str) > 7 && strlen(str) < 256);
+    if (!valid)
+        mx_show_popup(window, "Password must be more than 7 symbols and less than 256 symbols!");
+    return valid;
+}
+
+_Bool mx_validate_chat_name(char *str, void *window)
+{
+    _Bool valid = (str && *str && strlen(str) > 0 && strlen(str) < 256);
+    if (!valid)
+        mx_show_popup(window, "Chat name must be more than 0 symbols and less than 256 symbols!");
+    return valid;
+}
+
+_Bool mx_validate_message(char *str, void *window)
+{
+    _Bool valid = (str && *str && strlen(str) > 0 && strlen(str) < 1024);
+    if (!valid)
+        mx_show_popup(window, "Message must be more than 0 symbols and less than 1024 symbols!");
+    return valid;
+}
+
+_Bool mx_validate_user_name(char *str, void *window)
+{
+    _Bool valid = (str && *str && strlen(str) > 0 && strlen(str) < 256);
+    if (!valid)
+        mx_show_popup(window, "User name must be more than 0 symbols and less than 256 symbols!");
+    return valid;
+}
+
+_Bool mx_validate_user_surname(char *str, void *window)
+{
+    _Bool valid = (str && *str && strlen(str) > 0 && strlen(str) < 256);
+    if (!valid)
+        mx_show_popup(window, "User surname must be more than 0 symbols and less than 256 symbols!");
+    return valid;
+}
+
+
+
 
 static void login_request(t_login *login, SSL *ssl)
 {
@@ -92,19 +153,13 @@ void mx_on_butLogin_clicked(__attribute__((unused)) GtkWidget *button, gpointer 
     t_login login;
 
     login.type = strdup("login");
-    login.login = mx_handle_str((char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryLogin_l)));
-    login.password = mx_handle_str((char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryPass_l)));
-    
-    if (!mx_valid_string(login.login))
-    {
-        mx_show_popup(mwo->Window, "Invalid login! Login must consist only of English characters or digits and must be no longer than 255 symbols and have length minimum 3!");
+    login.login = mx_handle_user_input((char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryLogin_l)));
+    login.password = mx_handle_user_input((char *)gtk_entry_get_text(GTK_ENTRY(mwo->entryPass_l)));
+
+    _Bool valid = mx_validate_login(login.login, mwo->Window) && mx_validate_password(login.password, mwo->Window);
+    if (!valid)
         return;
-    }
-    if (!mx_valid_string(login.password))
-    {
-        mx_show_popup(mwo->Window, "Invalid password! Password must consist only of English characters or digits and must be no longer than 255 symbols and have length minimum 3!");
-        return;
-    }
+
     login_request(&login, mwo->ssl);
     printf("login = %s\npassword = %s\n", login.login, login.password);
 }
