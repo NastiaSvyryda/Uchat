@@ -2,6 +2,7 @@
 #define UCHAT_UCHAT_H
 #define _GNU_SOURCE
 
+#include <ctype.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -194,6 +195,8 @@ void mx_create_login_window(t_mainWindowObjects *main);
 void mx_create_registre_window(struct s_MainWindowObjects *mwo);
 
 void mx_set_component(t_mainWindowObjects *mwo, GtkWidget *gtk_component);
+_Bool mx_valid_string(char *str);
+void mx_show_popup(void *parent_window, char *msg);
 //gtk
 
 
