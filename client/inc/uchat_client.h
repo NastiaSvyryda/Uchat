@@ -164,6 +164,8 @@ typedef struct s_MainWindowObjects {//changed
     GtkWidget *list;
     GtkWidget *messageList;
 
+    gchar *curr_chat;
+
     int fd;
     int user_id;
     char login[MX_VARCHAR_LEN + 1];

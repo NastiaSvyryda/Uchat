@@ -45,8 +45,8 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects)
     mainObjects->chatWindow = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "chat_box"));
     mainObjects->registreWindow = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "registre_box"));
 
-    mainObjects->infoDialog = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "dialog_info"));
-    mainObjects->addChat_Dialog = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "dialog_add_chat"));
+//    mainObjects->infoDialog = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "dialog_info"));
+//    mainObjects->addChat_Dialog = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "dialog_add_chat"));
 
     mainObjects->entryLogin_l = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "login_entry_l"));
     mainObjects->entryPass_l = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "password_entry_l"));
@@ -56,7 +56,7 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects)
     mainObjects->entryName_r = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "name_entry_r"));
     mainObjects->entrySurname_r = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "surname_entry_r"));
 
-    mainObjects->entryChatName = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "entry_chat_name"));
+//    mainObjects->entryChatName = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "entry_chat_name"));
 
     mainObjects->entryMessage = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "message_entry"));
 

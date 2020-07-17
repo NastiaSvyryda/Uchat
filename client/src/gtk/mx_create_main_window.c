@@ -16,8 +16,10 @@ void mx_add_chat(__attribute__((unused))GtkWidget *button, gpointer data) {//ÑÐ
     SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
     mx_strdel(&json_str);
 
-    gtk_widget_show_all(mwo->addChat_Dialog);
-    gtk_dialog_run(GTK_DIALOG(mwo->addChat_Dialog));
+    mwo->addChat_Dialog = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "dialog_add_chat"));
+    mwo->entryChatName = GTK_ENTRY(gtk_builder_get_object(mwo->builder, "entry_chat_name"));
+    gtk_widget_show(mwo->addChat_Dialog);
+    //gtk_dialog_run(GTK_DIALOG(mwo->addChat_Dialog));
 }
 
 char *get_text_of_textview(GtkWidget *text_view) {
