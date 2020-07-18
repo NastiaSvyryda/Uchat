@@ -22,11 +22,13 @@ static void json_register_success(t_clients *client, t_json_data *json_data) {
     SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
     mx_strdel(&new_json);
 }
-//SLAVA FIX IT PLEASE!!!
+
 static t_list *check_login (char **fill, t_json_data *json) {
     char *where = NULL;
 
-    asprintf(&where, "login = '%s'", json->pers_info.login);
+    asprintf(&where, "%s = '%s'",
+            fill[3],
+            json->pers_info.login);
     return mx_read_database(mx_model_user_database(), mx_model_user_name_table(), fill[3], where);
 }
 

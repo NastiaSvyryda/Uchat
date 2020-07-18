@@ -114,7 +114,8 @@ int main(int argc, char **argv);
 void mx_routes(t_json_data *json, t_clients *client, t_clients *cur_client);
 ///Config
 char *mx_config_sqlite3_db_name(void);
-char *mx_ssl_file_name(void);
+int mx_config_pagination(void);
+char *mx_config_ssl_file_name(void);
 ///end config
 
 ///Validation
@@ -124,6 +125,7 @@ void mx_valid_sqlite3_failed_data(int rc, sqlite3 *db, char *err_msg);
 int mx_valid_str_isalpha(char *str);
 int mx_valid_register(t_json_data *json);
 bool mx_valid_login(t_json_data *json);
+bool mx_valid_token(int id, char *token);
 ///end validation
 
 ///JSON
@@ -157,6 +159,7 @@ void mx_controller_log_out(void);
 //Messages
 void mx_controller_message(t_clients *client, t_json_data *json);
 void mx_controller_edit_message(t_json_data *json, t_clients *client);
+void mx_controller_message_history(t_json_data *json, t_clients *client);
 t_list *mx_get_user_id_from_database_channels(int channel_id);
 void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *json, int type, int type_response);
 void mx_controller_new_channel(t_json_data *json);

@@ -24,8 +24,7 @@ static void create_table_for_sqlite3(void) {
                          mx_model_user_name_table(),
                          fill[2],
                          mx_model_channel_name_table());
-    mx_printstr(sql);
-    mx_printstr("\n");
+    mx_logger("Migration up:",  sql);
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
     mx_del_strarr(&fill);
@@ -41,8 +40,7 @@ static void delete_table_for_sqlite3(void) {
 
     mx_valid_sqlite3_open_db(rc, db);
     asprintf(&sql, "DROP TABLE IF EXISTS %s;", mx_model_user_channel_name_table());
-    mx_printstr(sql);
-    mx_printstr("\n");
+    mx_logger("Migration ds:",  sql);
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
     mx_strdel(&sql);
