@@ -25,23 +25,26 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
     gtk_list_box_insert(GTK_LIST_BOX(mwo->messageList), row, -1);
     gtk_widget_show_all(GTK_WIDGET(mwo->chatWindow));
     ///
-    int user_ids1[3] = {1, 2, 3};
-    t_channel channels[1] = {
-            {.channel_id = 0,
-                    .channel_name = "asdasdasdddsdsdas",
-                    .user_ids = user_ids1,
-                    .user_ids_size = 3,
-                    .last_mes_time = 0}};
+
+//    if (mwo->curr_chat_users != NULL && mwo->curr_chat != NULL) {
+        t_channel channels[1] = {{
+                        .channel_id = 0,
+                        .user_ids = mwo->user_ids,
+                        .user_ids_size = mwo->ids_logins_arr_size,
+                        .last_mes_time = 0}};
+        json->new_channel_data = channels[0];
+        strcpy(channels->channel_name, mwo->curr_chat);
+//    }
     json->type = JS_MES_OUT;
     json->message.text = strdup(message);
     json->user_id = mwo->user_id;
     json->new_channel = true;
-    json->new_channel_data = channels[0];
     strcpy(json->token, mwo->token);
     json->message.client1_id = mwo->user_id;
     json->message.channel_id = 1;
 
     json_str = mx_json_make_json(JS_MES_OUT, json);
+    mx_printstr(json_str + 4);
     if (SSL_connect(mwo->ssl) == -1) /* perform the connection */
         ERR_print_errors_fp(stderr);
     else

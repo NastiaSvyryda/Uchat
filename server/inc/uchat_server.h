@@ -155,7 +155,7 @@ char *mx_json_message_history_response(t_json_data *data);
 //Auth
 void mx_controller_login(t_json_data *json, t_clients *client);
 void mx_controller_register(t_json_data *json, t_clients *client);
-void mx_controller_log_out(void);
+void mx_controller_log_out(t_json_data *json, t_clients *client);
 //Messages
 void mx_controller_message(t_clients *client, t_json_data *json);
 void mx_controller_edit_message(t_json_data *json, t_clients *client);
