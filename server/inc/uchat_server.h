@@ -105,7 +105,6 @@ typedef struct s_clients {
     SSL *ssl;
     int user_id;
     char *token;
-    int channel_id;
     struct s_clients *first;
     struct s_clients *next;
 }               t_clients;
@@ -202,6 +201,9 @@ void mx_migration_delivery_user(bool status);
 //Basic
 void mx_daemon(void);
 void mx_logger(const char* tag, const char* message);
+t_clients *mx_create_client(void);
+void mx_free_client(t_clients **cur_client);
+void mx_delete_client(t_clients *cur_client);
 struct sockaddr_in mx_accept_connections(t_clients *client, int listenfd);
 void mx_thread_create(t_clients *client, struct sockaddr_in cli);
 //CRUD

@@ -22,6 +22,7 @@ void mx_controller_log_out(t_json_data *json, t_clients *client) {
              fill[0],
              json->user_id);
     mx_update_database(mx_model_user_database(), mx_model_user_name_table(), set, where);
+    mx_free_client(&client);
     json_log_out_success(client);
     mx_strdel(&set);
     mx_strdel(&where);
