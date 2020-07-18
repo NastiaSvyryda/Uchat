@@ -1,12 +1,5 @@
 #include "uchat_client.h"
 
-/*
-0 - startup windows
-1 - register
-2 - main
-3 - chat
-*/
-
 void mx_error(char *msg)
 {
     mx_printstr(msg);
@@ -19,6 +12,7 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects) {
     mainObjects->builder = gtk_builder_new();
     if (!gtk_builder_add_from_file(mainObjects->builder, "sent_gui.glade", &error))
     {
+        mx_printstr(error->message);
         mx_error("Cannot add from file!\n");
     }
     g_io_add_watch(g_io_channel_unix_new((gint)mainObjects->fd), G_IO_IN, (GIOFunc)mx_reciever, mainObjects);
