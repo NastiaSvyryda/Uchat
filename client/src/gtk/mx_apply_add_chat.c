@@ -27,7 +27,7 @@ void mx_apply_add_chat(__attribute__((unused)) GtkWidget *button, gpointer data)
         return;
     row = mx_create_chat(mwo->curr_chat, mwo);
     gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), row, -1);
-    gtk_widget_destroy(mwo->addChat_Dialog);
+    //gtk_widget_destroy(mwo->addChat_Dialog);
     mx_set_component(mwo, mwo->chatWindow);
 }
 
