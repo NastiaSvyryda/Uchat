@@ -121,6 +121,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
         gchar *text;
         char *temp = NULL;
         mwo->ids_logins_arr = malloc(sizeof(t_id_login) * json->ids_logins_arr_size);
+        mwo->ids_logins_arr_size = json->ids_logins_arr_size;
         for (int i = 0; i < json->ids_logins_arr_size; i++) {
             temp = strtrim(json->ids_logins_arr[i].login);
             strcpy(mwo->ids_logins_arr[i].login, temp);

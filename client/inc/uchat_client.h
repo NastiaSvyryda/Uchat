@@ -172,6 +172,7 @@ typedef struct s_MainWindowObjects {//changed
 
     gchar *curr_chat;
     char **curr_chat_users;
+    int *user_ids;
 
     int fd;
     int user_id;
@@ -181,6 +182,7 @@ typedef struct s_MainWindowObjects {//changed
     char token[MX_TOKEN_LEN + 1];
     SSL *ssl;
     t_id_login *ids_logins_arr;
+    int ids_logins_arr_size;
     t_channel_info *channel_info;
 } t_mainWindowObjects;
 
