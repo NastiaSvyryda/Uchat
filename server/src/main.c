@@ -34,5 +34,6 @@ int main(int argc, char **argv) {
         client->next->first = client->first;
         client = client->next;
     }
+    close(listenfd);
     return 0;
 }
