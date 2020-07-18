@@ -30,9 +30,7 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
         for(int j = 0; j < json->channels_arr[i].user_ids_size; j++) {
             mwo->channel_info->channel_data.user_ids[j] = json->channels_arr[i].user_ids[j];
         }
-        mwo->channel_info->message = malloc(sizeof(t_message_list));
-        mwo->channel_info->message->first = NULL;
-        mwo->channel_info->message->next = NULL;
+        mwo->channel_info->message = NULL;
         mwo->channel_info->next = malloc(sizeof(t_channel_info));
         mwo->channel_info->next->first = mwo->channel_info->first;
         mwo->channel_info = mwo->channel_info->next;
@@ -43,22 +41,29 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
 }
 
 static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
+    t_message_list *temp_mess = NULL;
+    t_message_list *temp = NULL;
+
     mwo->channel_info = mwo->channel_info->first;
     while (mwo->channel_info->channel_data.channel_id != json->message.channel_id) {
         mwo->channel_info = mwo->channel_info->next;
     }
-    if (mwo->channel_info->message->first == NULL) {
+    temp_mess = malloc(sizeof(t_message_list));
+    temp_mess->channel_id = json->message.channel_id;
+    temp_mess->message_id = json->message.message_id;
+    temp_mess->delivery_time = json->message.delivery_time;
+    temp_mess->next = NULL;
+    if (mwo->channel_info->message == NULL) {
+        mwo->channel_info->message = temp_mess;
         mwo->channel_info->message->first = mwo->channel_info->message;
     }
-//    mwo->channel_info->message->next = NULL;
-//    while (mwo->channel_info->message->next != NULL)
-//        mwo->channel_info->message = mwo->channel_info->message->next;
-    mwo->channel_info->message->message_id = json->message.message_id;
-    mwo->channel_info->message->channel_id = json->message.channel_id;
-    mwo->channel_info->message->delivery_time = json->message.delivery_time;
-    mwo->channel_info->message->next = malloc(sizeof(t_message_list));
-    mwo->channel_info->message->next->first = mwo->channel_info->message->first;
-    mwo->channel_info->message = mwo->channel_info->message->next;
+    else {
+        temp = mwo->channel_info->message;
+        mwo->channel_info->message = temp_mess;
+        temp_mess->next = temp;
+    }
+//
+
 }
 
 gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data)
