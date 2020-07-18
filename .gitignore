@@ -15,4 +15,4 @@ client/src/*.cc
 server/src/*.cc
 ./*.json
 log.txt
-database/database.db
+database.db
