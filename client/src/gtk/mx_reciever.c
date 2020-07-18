@@ -34,6 +34,7 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
         mwo->channel_info->next = malloc(sizeof(t_channel_info));
         mwo->channel_info->next->first = mwo->channel_info->first;
         mwo->channel_info = mwo->channel_info->next;
+        mwo->channel_info->next = NULL;
         free(text);
         mx_strdel(&temp);
     }
@@ -125,7 +126,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
         for (int i = 0; i < json->ids_logins_arr_size; i++) {
             temp = strtrim(json->ids_logins_arr[i].login);
             strcpy(mwo->ids_logins_arr[i].login, temp);
-            mwo->ids_logins_arr->user_id = json->ids_logins_arr[i].user_id;
+            mwo->ids_logins_arr[i].user_id = json->ids_logins_arr[i].user_id;
             text = g_strdup_printf("%s", mwo->ids_logins_arr[i].login);
             row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
             label = gtk_label_new (text);

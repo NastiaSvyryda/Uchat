@@ -26,19 +26,30 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
     gtk_widget_show_all(GTK_WIDGET(mwo->chatWindow));
     ///
 
-//    if (mwo->curr_chat_users != NULL && mwo->curr_chat != NULL) {
+    if (mwo->curr_chat_users != NULL && mwo->curr_chat != NULL) {
         t_channel channels[1] = {{
                         .channel_id = 0,
-                        .user_ids = mwo->user_ids,
-                        .user_ids_size = mwo->ids_logins_arr_size,
+                        .user_ids_size = mx_arrlen(mwo->curr_chat_users) + 1,
                         .last_mes_time = 0}};
-        json->new_channel_data = channels[0];
         strcpy(channels->channel_name, mwo->curr_chat);
-//    }
+        channels->user_ids = malloc(sizeof(int) * channels->user_ids_size);
+        for (int i = 0; i < channels->user_ids_size; i++) {
+            channels->user_ids[i] = mwo->user_ids[i];
+        }
+        json->new_channel_data = channels[0];
+        g_free(mwo->curr_chat);
+        mx_del_strarr(&mwo->curr_chat_users);
+        json->new_channel = true;
+        mwo->channel_info = mwo->channel_info->first;
+        while (mwo->channel_info->next != NULL) {
+            mwo->channel_info = mwo->channel_info->next;
+        }
+
+    }
     json->type = JS_MES_OUT;
     json->message.text = strdup(message);
     json->user_id = mwo->user_id;
-    json->new_channel = true;
+    //json->new_channel = false;
     strcpy(json->token, mwo->token);
     json->message.client1_id = mwo->user_id;
     json->message.channel_id = 1;

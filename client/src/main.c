@@ -3,9 +3,12 @@
 int main(int argc, char **argv) {
     t_mainWindowObjects mainObjects;
     SSL_CTX *ctx;
+    mainObjects.curr_chat_users = NULL;
+    mainObjects.curr_chat = NULL;
 
     mainObjects.channel_info = malloc(sizeof(t_channel_info));
     mainObjects.channel_info->first = mainObjects.channel_info;
+    mainObjects.channel_info->next = NULL;
     /* Init GTK+ */
     gtk_init(&argc, &argv);
 
