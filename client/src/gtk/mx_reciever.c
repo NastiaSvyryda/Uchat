@@ -93,8 +93,6 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
         {
             fill_channel_info(mwo, json);
             mwo->user_id = json->user_id;
-            if (strlen(json->pers_info.login) == 0)//тут пусто
-                puts("NULL login");
             strcpy(mwo->login, json->pers_info.login);
             strcpy(mwo->first_name, json->pers_info.first_name);
             strcpy(mwo->last_name, json->pers_info.last_name);
@@ -131,6 +129,12 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
             mx_strdel(&temp);
         }
         gtk_widget_show_all(mwo->addChat_Dialog);
+    }
+    else if (json->type == JS_MES_HIST) {
+//        mwo->channel_info = mwo->channel_info->first;
+//        while (mwo->channel_info->channel_data.channel_id != json->message.channel_id) {
+//            mwo->channel_info = mwo->channel_info->next;
+//        }
     }
     return TRUE;
 }

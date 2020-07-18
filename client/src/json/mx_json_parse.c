@@ -48,8 +48,12 @@ t_json_data *mx_json_parse(char *s) {
                json_object_get_string(json_object_object_get(
                        jo, "last_name")));
     }
+    if ((buf = json_object_object_get(jo, "login"))) {
+        strcpy(json->pers_info.login,
+               json_object_get_string(buf));
+    }
 
-    if ((buf = json_object_object_get(jo, "message_id"))
+        if ((buf = json_object_object_get(jo, "message_id"))
         && ((json->message.message_id = json_object_get_int(buf)) == 0
         && errno == EINVAL))
         return parse_failed(jo, json);
