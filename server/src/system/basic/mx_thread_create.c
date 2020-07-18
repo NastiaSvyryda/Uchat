@@ -17,8 +17,7 @@ void *main_cycle(void *newfd) {
             if (len == 0) {
                 SSL_free(cur_client->ssl);
                 close(cur_client->fd);
-                cur_client->fd = -1;
-                continue;
+                break;
             }
             json_str = mx_strnew(len);
             SSL_read(cur_client->ssl, json_str, len);
