@@ -91,6 +91,9 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
             gtk_label_set_text(GTK_LABEL(mwo->label_login), (const gchar *)mwo->login);
             mx_set_component(mwo, mwo->mainWindow);
         }
+        if (json->status == 412) {
+            mx_show_popup(mwo->Window, "Such user already exist!");
+        }
     }
     else if (json->type == JS_LOG_IN)
     {
@@ -104,6 +107,9 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
             strcpy(mwo->token, json->token);
             gtk_label_set_text(GTK_LABEL(mwo->label_login), (const gchar *)mwo->login);
             mx_set_component(mwo, mwo->mainWindow);
+        }
+        if (json->status == 401) {
+            mx_show_popup(mwo->Window, "Invalid user or password!");
         }
     }
     else if (json->type == JS_MES_IN)
