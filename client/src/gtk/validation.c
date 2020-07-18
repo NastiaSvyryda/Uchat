@@ -2,6 +2,12 @@
 
 //rename file
 
+void mx_hide_show_password(GtkWidget *entry, __attribute__((unused)) gpointer data)
+{
+    // t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
+    gtk_entry_set_visibility(GTK_ENTRY(entry), TRUE);
+}
+
 char *mx_handle_user_input(const char *s)
 {
     char *oldW = "\\";
