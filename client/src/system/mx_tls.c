@@ -23,8 +23,8 @@ int mx_open_connection(const char *hostname, int port) {
     }
     if ( connect(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0 ) {
         close(sd);
-        perror(hostname);
-        abort();
+        mx_printerr("uchat: connection failed\n");
+        exit(1);
     }
     return sd;
 }
