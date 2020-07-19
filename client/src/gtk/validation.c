@@ -5,7 +5,7 @@
 void mx_hide_show_password(GtkWidget *entry, __attribute__((unused)) gpointer data)
 {
     // t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
-    gtk_entry_set_visibility(GTK_ENTRY(entry), TRUE);
+    gtk_entry_set_visibility(GTK_ENTRY(entry), FALSE);
 }
 
 char *mx_handle_user_input(const char *s)
@@ -74,7 +74,10 @@ _Bool mx_validate_login(char *str, void *window)
     _Bool valid = (str && *str && strlen(str) > 0 && strlen(str) < MX_LOGIN_LEN);
     char *msg;
 
-    asprintf(&msg, "Login must be more than 0 symbols and less than %d symbols!", MX_LOGIN_LEN);
+    for (int i = 0; str[i]; i++)
+        if (str[i] == ' ')
+            valid = 0;
+    asprintf(&msg, "Login cannot contain space ande must be more than 0 symbols and less than %d symbols!", MX_LOGIN_LEN);
     if (!valid)
         mx_show_popup(window, msg);
     return valid;
