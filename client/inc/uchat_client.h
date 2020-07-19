@@ -114,6 +114,7 @@ typedef struct s_message_list {
 typedef struct s_channel_info {
     t_channel channel_data;
     GtkWidget *chat_button;
+    GtkWidget *chatWindow;
     t_message_list *message;
     struct s_channel_info *first;
     struct s_channel_info *next;
@@ -183,6 +184,7 @@ typedef struct s_MainWindowObjects {//changed
     t_id_login *ids_logins_arr;
     int ids_logins_arr_size;
     t_channel_info *channel_info;
+    t_channel_info *curr_channel_info;
 } t_mainWindowObjects;
 
 

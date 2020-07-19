@@ -11,7 +11,12 @@ static void json_get_message_history(t_clients *client, t_list *list) {
         json.messages_arr[i].client1_id = mx_atoi(list->next->data);
         json.messages_arr[i].text = mx_strdup((list->next->next->data));
         json.messages_arr[i].delivery_time = mx_atoi(list->next->next->next->data);
-        json.messages_arr[i].channel_id = mx_atoi(list->next->next->next->next->data);
+        json.message.channel_id = mx_atoi(list->next->next->next->next->data);
+        puts("\n");
+        puts("\n");
+        mx_printint(mx_atoi(list->next->next->next->next->data));
+        puts("\n");
+        puts("\n");
         list = list->next->next->next->next->next;
     }
     json.messages_arr_size = len / 5;

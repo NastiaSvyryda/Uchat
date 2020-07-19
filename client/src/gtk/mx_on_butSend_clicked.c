@@ -44,13 +44,14 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
         }
 
     }
+    else
+        json->message.channel_id = mwo->curr_channel_info->channel_data.channel_id;
     json->type = JS_MES_OUT;
     json->message.text = strdup(message);
     json->user_id = mwo->user_id;
     //json->new_channel = false;
     strcpy(json->token, mwo->token);
     json->message.client1_id = mwo->user_id;
-    json->message.channel_id = 1;
 
     json_str = mx_json_make_json(JS_MES_OUT, json);
     mx_printstr(json_str + 4);

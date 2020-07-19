@@ -15,7 +15,7 @@ void mx_parse_messages(struct json_object *messages_arr, t_json_data *data) {
             json_object_object_get(message, "message_id"));
         data->messages_arr[i].delivery_time = json_object_get_int(
             json_object_object_get(message, "delivery_time"));
-        strcpy(data->messages_arr[i].text, json_object_to_json_string(
+        data->messages_arr[i].text = strdup(json_object_to_json_string(
             json_object_object_get(message, "text")));
     }
 }

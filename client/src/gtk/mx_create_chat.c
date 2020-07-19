@@ -1,18 +1,18 @@
 #include "uchat_client.h"
 
 void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data)
-{
+{ // почистить при выходе из чата
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
-    t_channel_info *channel_info = malloc(sizeof(t_channel_info));
+    mwo->curr_channel_info = malloc(sizeof(t_channel_info));
 //    int channel_id = 0;
 
-    channel_info = g_object_get_data(G_OBJECT(button),(gchar *)"channel_id");
+    mwo->curr_channel_info = g_object_get_data(G_OBJECT(button),(gchar *)"channel_id");
 
     //gtk_label_set_text(GTK_LABEL(mwo->label_chat),);
     char *json_str = NULL;
     t_json_data json = {.user_id = mwo->user_id, .message.last_message_id = -1, .type = JS_MES_HIST};
     puts("\n");
-    mx_printstr(channel_info->channel_data.channel_name);
+    mx_printstr(mwo->curr_channel_info->channel_data.channel_name);
 //    mx_printint(channel_info->channel_data.channel_id);
     puts("\n");
 
@@ -23,14 +23,14 @@ void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
 //            break;
 //        mwo->channel_info = mwo->channel_info->next;
 //    }
-    json.message.channel_id = channel_info->channel_data.channel_id;
+    json.message.channel_id = mwo->curr_channel_info->channel_data.channel_id;
     json_str = mx_json_make_json(JS_MES_HIST, &json);
     mx_printstr(json_str + 4);
     if (SSL_connect(mwo->ssl) == -1) /* perform the connection */
         ERR_print_errors_fp(stderr);
     else
         SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
-    mx_set_component(mwo, mwo->chatWindow);
+    mx_set_component(mwo, mwo->curr_channel_info->chatWindow);
 }
 
 GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo)
@@ -47,6 +47,7 @@ GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo)
     g_signal_connect(button, "clicked", G_CALLBACK(mx_on_chat_clicked), mwo);
     mx_printint(mwo->channel_info->channel_data.channel_id);
     puts("\n");
+    mwo->channel_info->chatWindow = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "chat_box"));
     g_object_set_data(G_OBJECT(button), (gchar *)"channel_id",mwo->channel_info);
     return chat_row;
 }
