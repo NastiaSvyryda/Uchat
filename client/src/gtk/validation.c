@@ -17,26 +17,19 @@ char *mx_handle_user_input(const char *s)
     int newWlen = strlen(newW);
     int oldWlen = strlen(oldW);
 
-    // Counting the number of times old word
-    // occur in the string
     for (i = 0; s[i] != '\0'; i++)
     {
         if (strstr(&s[i], oldW) == &s[i])
         {
             cnt++;
-
-            // Jumping to index after the old word.
             i += oldWlen - 1;
         }
     }
-
-    // Making new string of enough length
     result = (char *)malloc(i + cnt * (newWlen - oldWlen) + 1);
 
     i = 0;
     while (*s)
     {
-        // compare the substring with the result
         if (strstr(s, oldW) == s)
         {
             strcpy(&result[i], newW);
@@ -48,13 +41,8 @@ char *mx_handle_user_input(const char *s)
     }
 
     for (int y = 0; result[y]; ++y)
-    {
-        if (result[y] == '"')
+        if (result[y] == '"' || result[y] == '\'')
             result[y] = '`';
-        if (result[y] == '\'')
-            result[y] = '`';
-    }
-
     result[i] = '\0';
     return result;
 }
