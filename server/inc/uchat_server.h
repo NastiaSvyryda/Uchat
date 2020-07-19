@@ -37,7 +37,7 @@
 #define MX_LAST_NAME_LEN 256
 #define MX_LAST_NAME_LEN 256
 #define MX_MAX_NAME_LEN 100
-// #define MX_MAX_MESSAGE_LEN 65000
+#define MX_MAX_MESSAGE_LEN 4096
 
 typedef enum e_json_types {
     JS_REG,          // JSON Type - register
