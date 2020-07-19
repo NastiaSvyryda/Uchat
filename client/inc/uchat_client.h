@@ -164,7 +164,6 @@ typedef struct s_MainWindowObjects {//changed
     GtkWidget *label_login;
     GtkWidget *label_chat;
 
-    GtkWidget *chat_row;
     GtkWidget *mess_row;
     GtkWidget *chatList;
     GtkWidget *messageList;

@@ -21,8 +21,6 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
         temp = strtrim(json->channels_arr[i].channel_name);
         strcpy(mwo->channel_info->channel_data.channel_name, temp);
         text = g_strdup_printf("%s", mwo->channel_info->channel_data.channel_name);
-        mwo->channel_info->chat_button = mx_create_chat(mwo->channel_info->channel_data.channel_name, mwo);
-        gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, 0);
         mwo->channel_info->channel_data.channel_id = json->channels_arr[i].channel_id;
         mwo->channel_info->channel_data.last_mes_time = json->channels_arr[i].last_mes_time;
         mwo->channel_info->channel_data.user_ids_size = json->channels_arr[i].user_ids_size;
@@ -31,12 +29,14 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
             mwo->channel_info->channel_data.user_ids[j] = json->channels_arr[i].user_ids[j];
         }
         mwo->channel_info->message = NULL;
+        mwo->channel_info->chat_button = mx_create_chat(mwo->channel_info->channel_data.channel_name, mwo);
+        gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, 0);
+        free(text);
+        mx_strdel(&temp);
         mwo->channel_info->next = malloc(sizeof(t_channel_info));
         mwo->channel_info->next->first = mwo->channel_info->first;
         mwo->channel_info = mwo->channel_info->next;
         mwo->channel_info->next = NULL;
-        free(text);
-        mx_strdel(&temp);
     }
     gtk_widget_show_all(mwo->mainWindow);
 }
@@ -46,8 +46,31 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
     t_message_list *temp = NULL;
 
     mwo->channel_info = mwo->channel_info->first;
-    while (mwo->channel_info->channel_data.channel_id != json->message.channel_id) {
+    if (mwo->channel_info->chat_button != NULL) {
+        while (mwo->channel_info->channel_data.channel_id !=
+               json->message.channel_id) {
+            mwo->channel_info = mwo->channel_info->next;
+        }
+    }
+    else {
+        strcpy(mwo->channel_info->channel_data.channel_name, mwo->curr_chat);
+        mwo->channel_info->channel_data.channel_id = json->message.channel_id;
+        mwo->channel_info->channel_data.last_mes_time = json->message.delivery_time;
+        mwo->channel_info->channel_data.user_ids_size = mx_arrlen(mwo->curr_chat_users) + 1;
+        mwo->channel_info->channel_data.user_ids = malloc(sizeof(int) * mwo->channel_info->channel_data.user_ids_size);
+        for (int i = 0; i < mwo->channel_info->channel_data.user_ids_size; i++) {
+            mwo->channel_info->channel_data.user_ids[i] = mwo->user_ids[i];
+        }
+        mwo->channel_info->message = NULL;
+        mwo->channel_info->chat_button = mx_create_chat(mwo->curr_chat, mwo); //change signal connectors
+        gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, -1);
+        mwo->channel_info->next = malloc(sizeof(t_channel_info));
+        mwo->channel_info->next->first = mwo->channel_info->first;
         mwo->channel_info = mwo->channel_info->next;
+        mwo->channel_info->next = NULL;
+        free(mwo->user_ids);
+        g_free(mwo->curr_chat);
+        mx_del_strarr(&mwo->curr_chat_users);
     }
     temp_mess = malloc(sizeof(t_message_list));
     temp_mess->channel_id = json->message.channel_id;

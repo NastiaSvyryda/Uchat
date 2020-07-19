@@ -14,15 +14,15 @@ static char *get_text_of_textview(GtkWidget *text_view)
 void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer data)
 {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
-    GtkWidget *row;
+    GtkWidget *mess_row;
     char *message = mx_handle_user_input(get_text_of_textview(mwo->entryMessage));
     if (!mx_validate_message(message, mwo->Window))
         return;
     char *json_str = NULL;
     t_json_data *json = calloc(1, sizeof(t_json_data));
 
-    row = mx_create_message(message, mwo, 0); //change signal connectors
-    gtk_list_box_insert(GTK_LIST_BOX(mwo->messageList), row, -1);
+    mess_row = mx_create_message(message, mwo, 0); //change signal connectors
+    gtk_list_box_insert(GTK_LIST_BOX(mwo->messageList), mess_row, -1);
     gtk_widget_show_all(GTK_WIDGET(mwo->chatWindow));
     ///
 
@@ -37,8 +37,6 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
             channels->user_ids[i] = mwo->user_ids[i];
         }
         json->new_channel_data = channels[0];
-        g_free(mwo->curr_chat);
-        mx_del_strarr(&mwo->curr_chat_users);
         json->new_channel = true;
         mwo->channel_info = mwo->channel_info->first;
         while (mwo->channel_info->next != NULL) {

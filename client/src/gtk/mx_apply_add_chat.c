@@ -2,43 +2,37 @@
 
 void mx_apply_add_chat(__attribute__((unused)) GtkWidget *button, gpointer data) { //открывать переписку а уже при оправке первого смс создать чат
     t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
-//    GtkWidget *row;
     int len = 0;
     int j = 0;
 
-    //gtk_dialog_response(GTK_DIALOG(mwo->addChat_Dialog), GTK_RESPONSE_DELETE_EVENT);
-    mwo->curr_chat = (gchar *) mx_handle_user_input(gtk_entry_get_text(mwo->entryChatName));
-    mwo->curr_chat_users = mx_strsplit(gtk_entry_get_text(mwo->entryChatUsers), ' ');
-    len = mx_arrlen(mwo->curr_chat_users);
-    mwo->user_ids = malloc(sizeof(int) * (len + 1));
-    for (int i = 0; i < len; i++) {
-        j = 0;
-        while (j < mwo->ids_logins_arr_size) {
-            if(strcmp(mwo->curr_chat_users[i], mwo->ids_logins_arr[j].login) == 0)
-                mwo->user_ids[i] = mwo->ids_logins_arr[j].user_id;
-            puts(mwo->ids_logins_arr[j].login);
-            puts("\n");
-            mx_printint(mwo->ids_logins_arr[j].user_id);
-            puts("\n");
-            j++;
+    if (mwo->ids_logins_arr) {
+        //gtk_dialog_response(GTK_DIALOG(mwo->addChat_Dialog), GTK_RESPONSE_DELETE_EVENT);
+        mwo->curr_chat = (gchar *) mx_handle_user_input(
+                gtk_entry_get_text(mwo->entryChatName));
+        mwo->curr_chat_users = mx_strsplit(
+                gtk_entry_get_text(mwo->entryChatUsers), ' ');
+        len = mx_arrlen(mwo->curr_chat_users);
+        mwo->user_ids = malloc(sizeof(int) * (len + 1));
+        for (int i = 0; i < len; i++) {
+            j = 0;
+            while (j < mwo->ids_logins_arr_size) {
+                if (strcmp(mwo->curr_chat_users[i],
+                           mwo->ids_logins_arr[j].login) == 0)
+                    mwo->user_ids[i] = mwo->ids_logins_arr[j].user_id;
+                puts(mwo->ids_logins_arr[j].login);
+                puts("\n");
+                mx_printint(mwo->ids_logins_arr[j].user_id);
+                puts("\n");
+                j++;
+            }
         }
+        mwo->user_ids[len] = mwo->user_id;
+        if (!mx_validate_chat_name(mwo->curr_chat, mwo->Window))
+            return;
+        //gtk_widget_destroy(mwo->addChat_Dialog);
+        mx_set_component(mwo, mwo->chatWindow);
+        free(mwo->ids_logins_arr);
     }
-    mwo->user_ids[len] = mwo->user_id;
-//    while (mwo->curr_chat_users[z]) {
-//        puts(mwo->curr_chat_users[z]);
-//        puts("\n");
-//        mx_printint(mwo->user_ids[z]);
-//        puts("\n");
-//        z++;
-//    }
-    if (!mx_validate_chat_name(mwo->curr_chat, mwo->Window))
-        return;
-    //
-//    row = mx_create_chat(mwo->curr_chat, mwo);
-//    gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), row, -1);
-//
-    //gtk_widget_destroy(mwo->addChat_Dialog);
-    mx_set_component(mwo, mwo->chatWindow);
 }
 
 void mx_cancel_add_chat(__attribute__((unused)) GtkWidget *button, __attribute__((unused)) gpointer data) {

@@ -5,7 +5,7 @@ char *mx_config_sqlite3_db_name(void) {
 }
 
 int mx_config_pagination(void) {
-    return 50;
+    return 100000000;
 }
 
 char *mx_config_ssl_file_name(void) {
