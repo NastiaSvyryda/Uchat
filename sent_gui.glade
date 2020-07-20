@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.1 -->
+<!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkDialog" id="dialog_add_chat">
@@ -7,7 +7,7 @@
     <property name="border_width">0</property>
     <property name="type_hint">dialog</property>
     <signal name="destroy" handler="mx_cancel_add_chat" swapped="no"/>
-    <child>
+    <child type="titlebar">
       <placeholder/>
     </child>
     <child internal-child="vbox">
@@ -233,7 +233,7 @@
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
     <signal name="destroy" handler="mx_exit_clicked_info" swapped="no"/>
-    <child>
+    <child type="titlebar">
       <placeholder/>
     </child>
     <child internal-child="vbox">
@@ -371,7 +371,7 @@
     <property name="default_width">400</property>
     <property name="default_height">600</property>
     <signal name="destroy" handler="mx_onExit_clicked" swapped="no"/>
-    <child>
+    <child type="titlebar">
       <placeholder/>
     </child>
     <child>
@@ -943,6 +943,7 @@
                       <object class="GtkTextView" id="message_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="wrap_mode">char</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>

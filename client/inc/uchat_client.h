@@ -104,9 +104,9 @@ typedef struct s_json_data {
 typedef struct s_message_list {
     int message_id;
     time_t delivery_time;
-//    char *text;
+    char *text;
     int channel_id;
-    int last_message_id;
+//    int last_message_id;
     struct s_message_list *first;
     struct s_message_list *next;
 }              t_message_list;
