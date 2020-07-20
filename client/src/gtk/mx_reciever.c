@@ -73,9 +73,6 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
         gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, -1);
         mwo->channel_info->next = malloc(sizeof(t_channel_info));
         mwo->channel_info->next->first = mwo->channel_info->first;
-        mwo->channel_info = mwo->channel_info->next;
-        mwo->channel_info->next = NULL;
-        mwo->channel_info->chat_button = NULL;
         free(mwo->user_ids);
         g_free(mwo->curr_chat);
         mx_del_strarr(&mwo->curr_chat_users);
@@ -94,6 +91,9 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
         mwo->channel_info->message = temp_mess;
         temp_mess->next = temp;
     }
+    mwo->channel_info = mwo->channel_info->next;
+    mwo->channel_info->next = NULL;
+    mwo->channel_info->chat_button = NULL;
 //
 
 }
