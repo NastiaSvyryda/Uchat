@@ -6,7 +6,8 @@ void mx_error(char *msg)
     exit(0);
 }
 
-void mx_create_login_window(t_mainWindowObjects *mainObjects) {
+void mx_create_login_window(t_mainWindowObjects *mainObjects)
+{
     GError *error = NULL;
 
     mainObjects->builder = gtk_builder_new();
@@ -36,7 +37,6 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects) {
 
     mainObjects->entryChatName = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "entry_chat_name"));
     mainObjects->entryChatUsers = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "entry_user_chat"));
-
 
     mainObjects->entryMessage = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "message_entry"));
 
