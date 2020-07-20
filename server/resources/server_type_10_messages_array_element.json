@@ -2,5 +2,5 @@
     "client1_id": %d,
     "message_id": %d,
     "delivery_time": %ld,
-    "text:": "%s"
+    "text": "%s"
 }

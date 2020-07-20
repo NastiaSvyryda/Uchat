@@ -3,7 +3,7 @@
 void mx_onBack_to_chats(__attribute__((unused)) GtkWidget *button, gpointer data)
 {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
-
+    gtk_widget_hide(mwo->channel_info->messageList);
     mx_set_component(mwo, mwo->mainWindow);
 }
 

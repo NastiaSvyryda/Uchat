@@ -29,6 +29,9 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
             mwo->channel_info->channel_data.user_ids[j] = json->channels_arr[i].user_ids[j];
         }
         mwo->channel_info->message = NULL;
+        mwo->channel_info->messageList = gtk_list_box_new();
+        gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->channel_info->messageList), GTK_SELECTION_NONE);
+        gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->channel_info->messageList);
         mwo->channel_info->chat_button = mx_create_chat(mwo->channel_info->channel_data.channel_name, mwo);
         gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, 0);
         free(text);
@@ -46,15 +49,15 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
     t_message_list *temp = NULL;
 
     mwo->channel_info = mwo->channel_info->first;
-    if (mwo->channel_info != NULL) {
+    //if (mwo->channel_info != NULL) {
         while (mwo->channel_info != NULL) {
             if (mwo->channel_info->channel_data.channel_id !=
                 json->message.channel_id)
                 break;
             mwo->channel_info = mwo->channel_info->next;
         }
-    }
-    else {
+    //}
+    if (mwo->curr_chat_users != NULL && mwo->curr_chat != NULL) {
         strcpy(mwo->channel_info->channel_data.channel_name, mwo->curr_chat);
         mwo->channel_info->channel_data.channel_id = json->message.channel_id;
         mwo->channel_info->channel_data.last_mes_time = json->message.delivery_time;
@@ -94,6 +97,32 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
 
 }
 
+static void push_front_message_list(t_message_list **list, t_json_data *json, int index) {
+    t_message_list *front_list = NULL;
+    t_message_list *temp = NULL;
+
+    front_list = malloc(sizeof(t_message_list));
+    front_list->channel_id = json->message.channel_id;
+    front_list->message_id = json->messages_arr[index].message_id;
+    front_list->delivery_time = json->messages_arr[index].delivery_time;
+    front_list->text = mx_strdup(json->messages_arr[index].text);
+    front_list->next = NULL;
+    front_list->first = front_list;
+    if (list == NULL)
+        *list = front_list;
+    else {
+        temp = *list;
+        front_list->next = temp;
+        *list = front_list;
+        while ((*list)->next != NULL) {
+            (*list)->first = front_list;
+            *list = (*list)->next;
+        }
+        (*list)->first = front_list;
+        (*list) = front_list;
+    }
+}
+
 gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data)
 {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
@@ -127,13 +156,13 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     {
         if (json->status == 200)
         {
-            fill_channel_info(mwo, json);
             mwo->user_id = json->user_id;
             strcpy(mwo->login, json->pers_info.login);
             strcpy(mwo->first_name, json->pers_info.first_name);
             strcpy(mwo->last_name, json->pers_info.last_name);
             strcpy(mwo->token, json->token);
             gtk_label_set_text(GTK_LABEL(mwo->label_login), (const gchar *)mwo->login);
+            fill_channel_info(mwo, json);
             mx_set_component(mwo, mwo->mainWindow);
         }
         if (json->status == 401) {
@@ -175,10 +204,19 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
         gtk_widget_show_all(mwo->addChat_Dialog);
     }
     else if (json->type == JS_MES_HIST) {
-//        mwo->channel_info = mwo->channel_info->first;
-//        while (mwo->channel_info->channel_data.channel_id != json->message.channel_id) {
-//            mwo->channel_info = mwo->channel_info->next;
-//        }
+        mwo->channel_info = mwo->channel_info->first;
+        while (mwo->channel_info != NULL) {
+            if (mwo->channel_info->channel_data.channel_id ==
+                json->message.channel_id)
+                break;
+            mwo->channel_info = mwo->channel_info->next;
+        }
+        for (int i = 0; i < json->messages_arr_size; i++) {
+            push_front_message_list(&mwo->channel_info->message, json, i);
+            mx_add_out_message(mwo, mwo->channel_info->message->text);
+            //mwo->channel_info->message = mwo->channel_info->message->next;
+        }
+
     }
     if (json->message.text != NULL) {
         mx_strdel(&json->message.text);

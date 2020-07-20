@@ -24,10 +24,11 @@ void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
         ERR_print_errors_fp(stderr);
     else
         SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
-    mwo->curr_channel_info->messageList = gtk_list_box_new();
-    gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->curr_channel_info->messageList), GTK_SELECTION_NONE);
-    gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_channel_info->messageList);
+//    mwo->curr_channel_info->messageList = gtk_list_box_new();
+//    gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->curr_channel_info->messageList), GTK_SELECTION_NONE);
+//    gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_channel_info->messageList);
     mx_set_component(mwo, mwo->curr_channel_info->chatWindow);
+    gtk_widget_show_all(GTK_WIDGET(mwo->curr_channel_info->messageList));
 }
 
 GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo)
