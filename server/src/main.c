@@ -6,9 +6,9 @@ int main(int argc, char **argv) {
     struct sockaddr_in cli;
     SSL_CTX *ctx;
 
-    //mx_daemon();
-    mx_migration(argv[1]);
+    mx_daemon();
     mx_valid_check_argc_error(argc);
+    mx_migration(argv[1]);
     SSL_library_init();
     ctx = mx_init_server_ctx();/* initialize SSL */
     mx_load_certificates(ctx, mx_config_ssl_file_name(), mx_config_ssl_file_name()); /* load certs */
