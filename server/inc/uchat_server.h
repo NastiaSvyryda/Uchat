@@ -163,6 +163,7 @@ t_list *mx_get_user_id_from_database_channels(int channel_id);
 void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *json, int type, int type_response);
 void mx_controller_new_channel(t_json_data *json);
 void mx_controller_user_all(t_clients *client);
+void mx_controller_delete_message(t_json_data *json, t_clients *client);
 ///end controllers
 
 ///Models
@@ -210,7 +211,7 @@ void mx_thread_create(t_clients *client, struct sockaddr_in cli);
 int mx_create_databases(char *database, char *table, char *fill_table, char *value_table);
 t_list *mx_read_database(char *database, char *table, char *fill_table, char *where);
 void mx_update_database(char *database, char *table, char *set, char *where);
-void mx_delete_database(char *database, char *table, char *fill_table, char *where);
+void mx_delete_database(char *database, char *fill_table, char *where);
 //Security
 int mx_open_listener(int port);
 SSL_CTX* mx_init_server_ctx(void);
