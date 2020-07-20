@@ -46,9 +46,11 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
     t_message_list *temp = NULL;
 
     mwo->channel_info = mwo->channel_info->first;
-    if (mwo->channel_info->chat_button != NULL) {
-        while (mwo->channel_info->channel_data.channel_id !=
-               json->message.channel_id) {
+    if (mwo->channel_info != NULL) {
+        while (mwo->channel_info != NULL) {
+            if (mwo->channel_info->channel_data.channel_id !=
+                json->message.channel_id)
+                break;
             mwo->channel_info = mwo->channel_info->next;
         }
     }
@@ -63,6 +65,8 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
         }
         mwo->channel_info->message = NULL;
         mwo->channel_info->chat_button = mx_create_chat(mwo->curr_chat, mwo); //change signal connectors
+        mwo->channel_info->chatWindow = mwo->curr_chatWindow;//исправить когда message_in
+        mwo->curr_channel_info = mwo->channel_info;//
         gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, -1);
         mwo->channel_info->next = malloc(sizeof(t_channel_info));
         mwo->channel_info->next->first = mwo->channel_info->first;
@@ -150,19 +154,23 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
         GtkWidget *label;
         gchar *text;
         char *temp = NULL;
-        mwo->ids_logins_arr = malloc(sizeof(t_id_login) * json->ids_logins_arr_size);
-        mwo->ids_logins_arr_size = json->ids_logins_arr_size;
+        int k = 0;
+        mwo->ids_logins_arr = malloc(sizeof(t_id_login) * (json->ids_logins_arr_size - 1));
+        mwo->ids_logins_arr_size = json->ids_logins_arr_size - 1;
         for (int i = 0; i < json->ids_logins_arr_size; i++) {
-            temp = strtrim(json->ids_logins_arr[i].login);
-            strcpy(mwo->ids_logins_arr[i].login, temp);
-            mwo->ids_logins_arr[i].user_id = json->ids_logins_arr[i].user_id;
-            text = g_strdup_printf("%s", mwo->ids_logins_arr[i].login);
-            row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
-            label = gtk_label_new (text);
-            gtk_container_add(GTK_CONTAINER(row), label);
-            gtk_list_box_insert(GTK_LIST_BOX(mwo->usersList), row, 0);
-            free(text);
-            mx_strdel(&temp);
+            if (mwo->user_id != json->ids_logins_arr[i].user_id) {
+                temp = strtrim(json->ids_logins_arr[i].login);
+                strcpy(mwo->ids_logins_arr[k].login, temp);
+                mwo->ids_logins_arr[k].user_id = json->ids_logins_arr[i].user_id;
+                text = g_strdup_printf("%s", mwo->ids_logins_arr[k].login);
+                row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+                label = gtk_label_new(text);
+                gtk_container_add(GTK_CONTAINER(row), label);
+                gtk_list_box_insert(GTK_LIST_BOX(mwo->usersList), row, 0);
+                free(text);
+                mx_strdel(&temp);
+                k++;
+            }
         }
         gtk_widget_show_all(mwo->addChat_Dialog);
     }
@@ -171,6 +179,9 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
 //        while (mwo->channel_info->channel_data.channel_id != json->message.channel_id) {
 //            mwo->channel_info = mwo->channel_info->next;
 //        }
+    }
+    if (json->message.text != NULL) {
+        mx_strdel(&json->message.text);
     }
     return TRUE;
 }

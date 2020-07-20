@@ -21,31 +21,38 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
     char *json_str = NULL;
     t_json_data *json = calloc(1, sizeof(t_json_data));
 
-    mess_row = mx_create_message(message, mwo, 0); //change signal connectors
-    gtk_list_box_insert(GTK_LIST_BOX(mwo->messageList), mess_row, -1);
-    gtk_widget_show_all(GTK_WIDGET(mwo->chatWindow));
     ///
 
     if (mwo->curr_chat_users != NULL && mwo->curr_chat != NULL) {
         t_channel channels[1] = {{
-                        .channel_id = 0,
+                        .channel_id = -1,
                         .user_ids_size = mx_arrlen(mwo->curr_chat_users) + 1,
                         .last_mes_time = 0}};
         strcpy(channels->channel_name, mwo->curr_chat);
         channels->user_ids = malloc(sizeof(int) * channels->user_ids_size);
         for (int i = 0; i < channels->user_ids_size; i++) {
             channels->user_ids[i] = mwo->user_ids[i];
+            puts("\n\n\nonbutsend");
+            mx_printint(channels->user_ids[i]);
+            puts("\n\n\n");
         }
+        json->message.channel_id = -1;
         json->new_channel_data = channels[0];
         json->new_channel = true;
-        mwo->channel_info = mwo->channel_info->first;
-        while (mwo->channel_info->next != NULL) {
-            mwo->channel_info = mwo->channel_info->next;
-        }
-
+//        mwo->channel_info = mwo->channel_info->first;
+//        while (mwo->channel_info->next != NULL) {
+//            mwo->channel_info = mwo->channel_info->next;
+//        }
+        mwo->curr_messageList = gtk_list_box_new();
+        gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->curr_messageList), GTK_SELECTION_NONE);
+        gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_messageList);
     }
-    else
+    else {
+        mess_row = mx_create_message(message, mwo, 0); //change signal connectors
+        gtk_list_box_insert(GTK_LIST_BOX(mwo->curr_channel_info->messageList), mess_row, -1);
+        gtk_widget_show_all(GTK_WIDGET(mwo->curr_channel_info->chatWindow));
         json->message.channel_id = mwo->curr_channel_info->channel_data.channel_id;
+    }
     json->type = JS_MES_OUT;
     json->message.text = strdup(message);
     json->user_id = mwo->user_id;
