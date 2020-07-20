@@ -50,8 +50,8 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
 
     mwo->channel_info = mwo->channel_info->first;
     //if (mwo->channel_info != NULL) {
-        while (mwo->channel_info != NULL) {
-            if (mwo->channel_info->channel_data.channel_id !=
+        while (mwo->channel_info != NULL && mwo->channel_info->chat_button != NULL) {
+            if (mwo->channel_info->channel_data.channel_id ==
                 json->message.channel_id)
                 break;
             mwo->channel_info = mwo->channel_info->next;
@@ -75,6 +75,7 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
         mwo->channel_info->next->first = mwo->channel_info->first;
         mwo->channel_info = mwo->channel_info->next;
         mwo->channel_info->next = NULL;
+        mwo->channel_info->chat_button = NULL;
         free(mwo->user_ids);
         g_free(mwo->curr_chat);
         mx_del_strarr(&mwo->curr_chat_users);
@@ -213,7 +214,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
         }
         for (int i = 0; i < json->messages_arr_size; i++) {
             push_front_message_list(&mwo->channel_info->message, json, i);
-            mx_add_out_message(mwo, mwo->channel_info->message->text);
+            //mx_add_out_message(mwo, mwo->channel_info->message->text);
             //mwo->channel_info->message = mwo->channel_info->message->next;
         }
 
