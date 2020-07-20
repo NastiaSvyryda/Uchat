@@ -1,7 +1,7 @@
 #include "uchat_client.h"
 
 void mx_add_out_message(t_mainWindowObjects *mwo, char *text_char)
-{
+{//change :find list by channel_id
     GtkWidget *row;
     gchar *text;
     if (text_char == NULL)

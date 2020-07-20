@@ -17,12 +17,6 @@ void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
     puts("\n");
 
     strcpy(json.token, mwo->token);
-//    mwo->channel_info = mwo->channel_info->first;
-//    while (mwo->channel_info->next->next != NULL) {
-//        if (mwo->channel_info->chat_button == button)
-//            break;
-//        mwo->channel_info = mwo->channel_info->next;
-//    }
     json.message.channel_id = mwo->curr_channel_info->channel_data.channel_id;
     json_str = mx_json_make_json(JS_MES_HIST, &json);
     mx_printstr(json_str + 4);
@@ -30,6 +24,9 @@ void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
         ERR_print_errors_fp(stderr);
     else
         SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
+    mwo->curr_channel_info->messageList = gtk_list_box_new();
+    gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->curr_channel_info->messageList), GTK_SELECTION_NONE);
+    gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_channel_info->messageList);
     mx_set_component(mwo, mwo->curr_channel_info->chatWindow);
 }
 
@@ -45,8 +42,8 @@ GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo)
     gtk_widget_set_valign(button, GTK_ALIGN_CENTER);
     gtk_container_add(GTK_CONTAINER(chat_row), button);
     g_signal_connect(button, "clicked", G_CALLBACK(mx_on_chat_clicked), mwo);
-    mx_printint(mwo->channel_info->channel_data.channel_id);
-    puts("\n");
+//    mx_printint(mwo->channel_info->channel_data.channel_id);
+//    puts("\n");
     mwo->channel_info->chatWindow = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "chat_box"));
     g_object_set_data(G_OBJECT(button), (gchar *)"channel_id",mwo->channel_info);
     return chat_row;
