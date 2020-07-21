@@ -175,6 +175,8 @@ typedef struct s_MainWindowObjects {//changed
     int *user_ids;
     GtkWidget *curr_messageList;
 
+    GtkCssProvider *provider;
+
     t_id_login *ids_logins_arr;
     int ids_logins_arr_size;
 
