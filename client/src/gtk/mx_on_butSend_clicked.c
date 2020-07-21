@@ -43,6 +43,14 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
 //        while (mwo->channel_info->next != NULL) {
 //            mwo->channel_info = mwo->channel_info->next;
 //        }
+//        GList *children, *iter;
+//
+//        children = gtk_container_get_children(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")));
+//        for (iter = children; iter != NULL; iter = g_list_next(iter)) {
+//            gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), GTK_WIDGET(iter->data));
+//        }
+////    gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(mwo->builder, "gtkbox")), gtk_component, TRUE, TRUE, 5);
+//        gtk_widget_show_all(GTK_WIDGET(mwo->Window));
         mwo->curr_messageList = gtk_list_box_new();
         gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->curr_messageList), GTK_SELECTION_NONE);
         gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_messageList);
@@ -50,15 +58,24 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
         gtk_list_box_insert(GTK_LIST_BOX(mwo->curr_messageList), mess_row, -1);
         //gtk_widget_show_all(GTK_WIDGET(mwo->curr_messageList));
         //mx_set_chat_component(mwo, mwo->curr_messageList);
-        //gtk_widget_show_all(GTK_WIDGET(mwo->curr_chatWindow));
+        //gtk_widget_show_all(GTK_WIDGET(mwo->chatWindow));
         gtk_widget_show_all(GTK_WIDGET(mwo->curr_messageList));
     }
     else {
+        mwo->channel_info = mwo->channel_info->first;
+        if (mwo->channel_info) {
+            while (mwo->channel_info->next != NULL) {
+                if (mwo->channel_info->channel_data.channel_id ==
+                        mwo->curr_channel_info->channel_data.channel_id)
+                    break;
+                mwo->channel_info = mwo->channel_info->next;
+            }
+        }
         mess_row = mx_create_message(message, mwo, 0); //change signal connectors
-        gtk_list_box_insert(GTK_LIST_BOX(mwo->curr_channel_info->messageList), mess_row, -1);
-        gtk_widget_show_all(GTK_WIDGET(mwo->curr_channel_info->messageList));
+        gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), mess_row, -1);
+        gtk_widget_show_all(GTK_WIDGET(mwo->channel_info->messageList));
 //        gtk_widget_show(GTK_WIDGET(mwo->curr_channel_info->messageList));
-        json->message.channel_id = mwo->curr_channel_info->channel_data.channel_id;
+        json->message.channel_id = mwo->channel_info->channel_data.channel_id;
     }
     json->type = JS_MES_OUT;
     json->message.text = strdup(message);

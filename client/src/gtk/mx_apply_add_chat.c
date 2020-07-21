@@ -31,7 +31,6 @@ void mx_apply_add_chat(__attribute__((unused)) GtkWidget *button, gpointer data)
             return;
         //gtk_widget_destroy(mwo->addChat_Dialog);
         mx_set_component(mwo, mwo->chatWindow);
-        free(mwo->ids_logins_arr);
     }
 }
 

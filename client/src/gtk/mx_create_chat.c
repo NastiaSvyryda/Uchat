@@ -14,22 +14,21 @@ void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
                 break;
             mwo->channel_info = mwo->channel_info->next;
         }
-        mwo->curr_channel_info = mwo->channel_info;
     }
     else
-        mwo->curr_channel_info = curr_channel_info;
+       puts("ERR mx_on_chat_clicked");
 
     //gtk_label_set_text(GTK_LABEL(mwo->label_chat),);
-    if (mwo->curr_channel_info->message == NULL) {
+    if (mwo->channel_info->message == NULL) {
         char *json_str = NULL;
         t_json_data json = {.user_id = mwo->user_id, .message.last_message_id = -1, .type = JS_MES_HIST};
         puts("\n");
-        mx_printstr(mwo->curr_channel_info->channel_data.channel_name);
+        mx_printstr(mwo->channel_info->channel_data.channel_name);
 //    mx_printint(channel_info->channel_data.channel_id);
         puts("\n");
 
         strcpy(json.token, mwo->token);
-        json.message.channel_id = mwo->curr_channel_info->channel_data.channel_id;
+        json.message.channel_id = mwo->channel_info->channel_data.channel_id;
         json_str = mx_json_make_json(JS_MES_HIST, &json);
         mx_printstr(json_str + 4);
         if (SSL_connect(mwo->ssl) == -1) /* perform the connection */
@@ -40,9 +39,17 @@ void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
 //    gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->curr_channel_info->messageList), GTK_SELECTION_NONE);
 //    gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_channel_info->messageList);
     }
+//    GList *children, *iter;
+//
+//    children = gtk_container_get_children(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")));
+//    for (iter = children; iter != NULL; iter = g_list_next(iter)) {
+//        gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), GTK_WIDGET(iter->data));
+//    }
+////    gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(mwo->builder, "gtkbox")), gtk_component, TRUE, TRUE, 5);
+//    gtk_widget_show_all(GTK_WIDGET(mwo->Window));
+    gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->channel_info->messageList);
     mx_set_component(mwo, mwo->chatWindow);
-    gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_channel_info->messageList);
-    gtk_widget_show_all(GTK_WIDGET(mwo->curr_channel_info->messageList));
+    //gtk_widget_show_all(GTK_WIDGET(mwo->channel_info->messageList));
 }
 
 GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo)

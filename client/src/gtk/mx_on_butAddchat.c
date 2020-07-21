@@ -19,13 +19,14 @@ void mx_onBack_to_chats(__attribute__((unused)) GtkWidget *button, gpointer data
 //        g_object_unref(&mwo->curr_chatWindow);
 //    if (mwo->curr_messageList)
 //        g_object_unref(&mwo->curr_messageList);
-    gtk_widget_hide(mwo->curr_channel_info->messageList);
+    //gtk_widget_hide(mwo->curr_channel_info->messageList);
 //    if (mwo->curr_channel_info) {
 //        free(mwo->curr_channel_info);
 //        mwo->curr_channel_info = NULL;
 //    }
+    gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_channel_info->messageList);
     mx_set_component(mwo, mwo->mainWindow);
-    mx_set_chat_component(mwo);
+    //mx_set_chat_component(mwo);
 }
 
 void mx_on_butAddchat(__attribute__((unused)) GtkWidget *button, gpointer data)
