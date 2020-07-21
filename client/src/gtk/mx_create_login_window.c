@@ -10,6 +10,9 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects) {
     GError *error = NULL;
 
     mainObjects->builder = gtk_builder_new();
+    gtk_style_context_add_provider_for_screen (gdk_screen_get_default(),
+                                               GTK_STYLE_PROVIDER(mainObjects->provider),
+                                               GTK_STYLE_PROVIDER_PRIORITY_USER);
     if (!gtk_builder_add_from_file(mainObjects->builder, "sent_gui.glade", &error))
     {
         mx_printstr(error->message);
@@ -25,7 +28,6 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects) {
 
     mainObjects->infoDialog = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "dialog_info"));
     mainObjects->addChat_Dialog = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "dialog_add_chat"));
-
     mainObjects->entryLogin_l = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "login_entry_l"));
     mainObjects->entryPass_l = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "password_entry_l"));
     mainObjects->entryLogin_r = GTK_ENTRY(gtk_builder_get_object(mainObjects->builder, "login_entry_r"));

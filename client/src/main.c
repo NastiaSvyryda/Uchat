@@ -12,6 +12,10 @@ int main(int argc, char **argv) {
     mainObjects.channel_info->first = mainObjects.channel_info;
     mainObjects.channel_info->next = NULL;
     mainObjects.channel_info->chat_button = NULL;
+    mainObjects.provider = gtk_css_provider_new ();
+
+    gtk_css_provider_load_from_path (mainObjects.provider,
+                                     "./style.css", NULL);
     /* Init GTK+ */
     gtk_init(&argc, &argv);
 
