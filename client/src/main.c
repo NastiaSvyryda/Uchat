@@ -26,5 +26,7 @@ int main(int argc, char **argv) {
     mainObjects.ssl = SSL_new(ctx);
     mx_show_certs(mainObjects.ssl);
     SSL_set_fd(mainObjects.ssl, mainObjects.fd);
-    mx_create_login_window(&mainObjects);
+//    t_json_data json = {.message.message_id = 31,
+//    .message.channel_id = 2, .user_id = 1};
+     mx_create_login_window(&mainObjects);
 }

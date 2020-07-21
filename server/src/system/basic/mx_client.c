@@ -4,9 +4,9 @@ t_clients *mx_create_client(void) {
     t_clients *client = malloc(sizeof(t_clients));
     client->fd = 0;
     client->ssl = NULL;
+    client->wait = NULL;
     client->user_id = 0;
     client->token = NULL;
-    client->first = client;
     client->next = NULL;
     return client;
 }
