@@ -114,7 +114,6 @@ typedef struct s_message_list {
 typedef struct s_channel_info {
     t_channel channel_data;
     GtkWidget *chat_button;
-    GtkWidget *chatWindow;
     GtkWidget *messageList;
     t_message_list *message;
     struct s_channel_info *first;
@@ -174,7 +173,6 @@ typedef struct s_MainWindowObjects {//changed
     gchar *curr_chat;
     char **curr_chat_users;
     int *user_ids;
-    GtkWidget *curr_chatWindow;
     GtkWidget *curr_messageList;
 
     t_id_login *ids_logins_arr;
@@ -206,6 +204,7 @@ GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo,
 void mx_create_login_window(t_mainWindowObjects *main);
 
 void mx_set_component(t_mainWindowObjects *mwo, GtkWidget *gtk_component);
+void mx_set_chat_component(t_mainWindowObjects *mwo);
 // Validation
 char *mx_handle_user_input(const char *s);
 void mx_show_popup(void *parent_window, char *msg);

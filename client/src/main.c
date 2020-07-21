@@ -6,7 +6,6 @@ int main(int argc, char **argv) {
     mainObjects.curr_chat_users = NULL;
     mainObjects.curr_chat = NULL;
     mainObjects.curr_channel_info = NULL;
-    mainObjects.curr_chatWindow = NULL;
     mainObjects.curr_messageList = NULL;
     mainObjects.user_ids = NULL;
     mainObjects.channel_info = malloc(sizeof(t_channel_info));

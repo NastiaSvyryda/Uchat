@@ -32,9 +32,9 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
         channels->user_ids = malloc(sizeof(int) * channels->user_ids_size);
         for (int i = 0; i < channels->user_ids_size; i++) {
             channels->user_ids[i] = mwo->user_ids[i];
-            puts("\n\n\nonbutsend");
-            mx_printint(channels->user_ids[i]);
-            puts("\n\n\n");
+//            puts("\n\n\nonbutsend");
+//            mx_printint(channels->user_ids[i]);
+//            puts("\n\n\n");
         }
         json->message.channel_id = -1;
         json->new_channel_data = channels[0];
@@ -48,14 +48,16 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
         gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_messageList);
         mess_row = mx_create_message(message, mwo, 0); //change signal connectors
         gtk_list_box_insert(GTK_LIST_BOX(mwo->curr_messageList), mess_row, -1);
+        //gtk_widget_show_all(GTK_WIDGET(mwo->curr_messageList));
+        //mx_set_chat_component(mwo, mwo->curr_messageList);
         //gtk_widget_show_all(GTK_WIDGET(mwo->curr_chatWindow));
-        gtk_widget_show(GTK_WIDGET(mwo->curr_messageList));
+        gtk_widget_show_all(GTK_WIDGET(mwo->curr_messageList));
     }
     else {
         mess_row = mx_create_message(message, mwo, 0); //change signal connectors
         gtk_list_box_insert(GTK_LIST_BOX(mwo->curr_channel_info->messageList), mess_row, -1);
-        gtk_widget_show_all(GTK_WIDGET(mwo->curr_channel_info->chatWindow));
-        gtk_widget_show(GTK_WIDGET(mwo->curr_channel_info->messageList));
+        gtk_widget_show_all(GTK_WIDGET(mwo->curr_channel_info->messageList));
+//        gtk_widget_show(GTK_WIDGET(mwo->curr_channel_info->messageList));
         json->message.channel_id = mwo->curr_channel_info->channel_data.channel_id;
     }
     json->type = JS_MES_OUT;
