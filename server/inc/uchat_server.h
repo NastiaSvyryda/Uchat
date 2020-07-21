@@ -100,11 +100,19 @@ typedef struct s_json_data {
     int messages_arr_size;
 }              t_json_data;
 
+typedef struct s_wait {
+    int user_id;
+    char *json_str;
+    struct s_wait *first;
+    struct s_wait *next;
+}               t_wait;
+
 typedef struct s_clients {
     int fd;
     SSL *ssl;
     int user_id;
     char *token;
+    t_wait *wait;
     struct s_clients *first;
     struct s_clients *next;
 }               t_clients;
