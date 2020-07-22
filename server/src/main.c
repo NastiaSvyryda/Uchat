@@ -2,13 +2,18 @@
 
 int main(int argc, char **argv) {
     t_clients *client = mx_create_client();
+    client->first = client;
+    client->first->wait = malloc(sizeof(t_wait));
+    client->first->wait->next = NULL;
+    client->first->wait->json_str = NULL;
+    client->first->wait->first = client->first->wait;
     int listenfd = 0;
     struct sockaddr_in cli;
     SSL_CTX *ctx;
 
     //mx_daemon();
-    mx_migration(argv[1]);
     mx_valid_check_argc_error(argc);
+    mx_migration(argv[1]);
     SSL_library_init();
     ctx = mx_init_server_ctx();/* initialize SSL */
     mx_load_certificates(ctx, mx_config_ssl_file_name(), mx_config_ssl_file_name()); /* load certs */
@@ -19,6 +24,12 @@ int main(int argc, char **argv) {
         SSL_set_fd(client->ssl, client->fd);/* set connection socket to SSL state */
         mx_thread_create(client, cli);
         client->next = mx_create_client();
+//        if (client->first->wait == NULL) {
+//            client->first->wait = malloc(sizeof(t_wait));
+//            client->first->wait->first = client->wait;
+//            client->first->wait->next = NULL;
+//            client->first->wait->json_str = NULL;
+//        }
         client->next->first = client->first;
         client = client->next;
     }

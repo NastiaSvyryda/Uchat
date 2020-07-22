@@ -65,6 +65,17 @@ static void json_login_success(t_list *data, t_clients *client) {
     new_json = mx_json_make_json(JS_LOG_IN, &json);
     mx_logger("JSON write",  new_json + 4);
     SSL_write(client->ssl, new_json , strlen(new_json + 4) + 4);
+    client->first->wait = client->first->wait->first;
+    if (client->first->wait != NULL) {
+        while (client->first->wait->json_str != NULL) {
+            if (client->first->wait->user_id == json.user_id) {
+                mx_printstr(client->first->wait->json_str + 4);
+                SSL_write(client->ssl, client->first->wait->json_str, strlen(client->first->wait->json_str + 4) + 4);
+            }
+            client->first->wait = client->first->wait->next;
+        }
+        client->first->wait = client->first->wait->first;
+    }
     mx_strdel(&new_json);
     for(int i = 0; i < json.channels_arr_size; i++) {
         free(json.channels_arr[i].user_ids);

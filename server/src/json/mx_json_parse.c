@@ -10,7 +10,7 @@ static bool is_valid_json_data(t_json_data *data) {
         || (data->type == JS_MES_DEL_IN && data->message.channel_id
             && data->status && data->message.message_id)
         || (data->type == JS_MES_DEL_OUT && data->message.message_id
-            && data->message.client1_id)
+            && data->message.channel_id && data->user_id)
         || (data->type == JS_MES_EDIT_IN && data->status
             && data->message.message_id && data->message.channel_id)
         || (data->type == JS_MES_EDIT_OUT && data->message.message_id

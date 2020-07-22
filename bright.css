@@ -1,0 +1,38 @@
+* {
+    background: lemonchiffon;
+    font-family: Vemana2000;
+    color: aliceblue
+}
+
+box > label {
+    font-family: Chilanka;
+    background: none;
+    text-shadow: white 0 0 .5px;
+    /*font-weight: bold;*/
+    box-shadow: none;
+    border-width: 1px;
+}
+
+lable {
+    text-shadow: white 0 0 .5px;
+    font-weight: bold;
+    box-shadow: none;
+    border-width: 1px;
+}
+label:hover {
+    border-color: #2583c7;
+
+}
+button {
+    text-shadow: white 0 0 .5px;
+    font-weight: bold;
+    box-shadow: none;
+    border-width: 1px;
+}
+
+button:hover {
+    border-color: #2583c7;
+
+}
+
+

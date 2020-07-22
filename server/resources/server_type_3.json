@@ -1,5 +1,5 @@
 {
     "type": %d,
     "message_id": %d,
-    "client1_id": %d
+    "channel_id": %d
 }

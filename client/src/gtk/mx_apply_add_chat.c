@@ -30,9 +30,7 @@ void mx_apply_add_chat(__attribute__((unused)) GtkWidget *button, gpointer data)
         if (!mx_validate_chat_name(mwo->curr_chat, mwo->Window))
             return;
         //gtk_widget_destroy(mwo->addChat_Dialog);
-        mwo->curr_chatWindow = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "chat_box"));
         mx_set_component(mwo, mwo->chatWindow);
-        free(mwo->ids_logins_arr);
     }
 }
 

@@ -13,11 +13,40 @@ static char *strtrim(const char *str) {
     return (char *)new;
 }
 
+//GObject *
+//g_object_clone(GObject *src)
+//{
+//    GObject *dst;
+//    GParameter *params;
+//    GParamSpec **specs;
+//    guint n, n_specs, n_params;
+//
+//    specs = g_object_class_list_properties(G_OBJECT_GET_CLASS(src), &n_specs);
+//    params = g_new0(GParameter, n_specs);
+//    n_params = 0;
+//
+//    for (n = 0; n < n_specs; ++n)
+//        if (strcmp(specs[n]->name, "parent") &&
+//            (specs[n]->flags & G_PARAM_READWRITE) == G_PARAM_READWRITE) {
+//            params[n_params].name = g_intern_string(specs[n]->name);
+//            g_value_init(&params[n_params].value, specs[n]->value_type);
+//            g_object_get_property(src, specs[n]->name, &params[n_params].value);
+//            ++ n_params;
+//        }
+//
+//    dst = g_object_newv(G_TYPE_FROM_INSTANCE(src), n_params, params);
+//    g_free(specs);
+//    g_free(params);
+//
+//    return dst;
+//}
+
 static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
     gchar *text;
     char *temp = NULL;
+//    GtkWidget button;
 
-    for (int i = 0; i < json->channels_arr_size; i++) {
+    for (int i = 0; i < json->channels_arr_size; i++) {//задать первый
         temp = strtrim(json->channels_arr[i].channel_name);
         strcpy(mwo->channel_info->channel_data.channel_name, temp);
         text = g_strdup_printf("%s", mwo->channel_info->channel_data.channel_name);
@@ -31,13 +60,13 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
         mwo->channel_info->message = NULL;
         mwo->channel_info->messageList = gtk_list_box_new();
         gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->channel_info->messageList), GTK_SELECTION_NONE);
-        gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->channel_info->messageList);
+//        gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->channel_info->messageList);
         mwo->channel_info->chat_button = mx_create_chat(mwo->channel_info->channel_data.channel_name, mwo);
         gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, 0);
         free(text);
         mx_strdel(&temp);
         mwo->channel_info->next = malloc(sizeof(t_channel_info));
-        mwo->channel_info->next->first = mwo->channel_info->first;
+        mwo->channel_info->next->first = mwo->channel_info->first;//????
         mwo->channel_info = mwo->channel_info->next;
         mwo->channel_info->next = NULL;
     }
@@ -50,8 +79,8 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
 
     mwo->channel_info = mwo->channel_info->first;
     //if (mwo->channel_info != NULL) {
-        while (mwo->channel_info != NULL) {
-            if (mwo->channel_info->channel_data.channel_id !=
+        while (mwo->channel_info != NULL && mwo->channel_info->chat_button != NULL) {
+            if (mwo->channel_info->channel_data.channel_id ==
                 json->message.channel_id)
                 break;
             mwo->channel_info = mwo->channel_info->next;
@@ -67,14 +96,13 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
             mwo->channel_info->channel_data.user_ids[i] = mwo->user_ids[i];
         }
         mwo->channel_info->message = NULL;
+        mwo->channel_info->messageList = g_object_ref(mwo->curr_messageList);
         mwo->channel_info->chat_button = mx_create_chat(mwo->curr_chat, mwo); //change signal connectors
-        mwo->channel_info->chatWindow = mwo->curr_chatWindow;//исправить когда message_in
-        mwo->curr_channel_info = mwo->channel_info;//
         gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, -1);
         mwo->channel_info->next = malloc(sizeof(t_channel_info));
+        //mwo->channel_info->first = mwo->channel_info;
         mwo->channel_info->next->first = mwo->channel_info->first;
-        mwo->channel_info = mwo->channel_info->next;
-        mwo->channel_info->next = NULL;
+        mwo->channel_info->next->chat_button = NULL;
         free(mwo->user_ids);
         g_free(mwo->curr_chat);
         mx_del_strarr(&mwo->curr_chat_users);
@@ -93,6 +121,7 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
         mwo->channel_info->message = temp_mess;
         temp_mess->next = temp;
     }
+    mwo->curr_channel_info = mwo->channel_info;
 //
 
 }
@@ -105,7 +134,7 @@ static void push_front_message_list(t_message_list **list, t_json_data *json, in
     front_list->channel_id = json->message.channel_id;
     front_list->message_id = json->messages_arr[index].message_id;
     front_list->delivery_time = json->messages_arr[index].delivery_time;
-    front_list->text = mx_strdup(json->messages_arr[index].text);
+    //front_list->text = mx_strdup(json->messages_arr[index].text);
     front_list->next = NULL;
     front_list->first = front_list;
     if (list == NULL)
@@ -171,7 +200,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     }
     else if (json->type == JS_MES_IN)
     {
-        mx_add_out_message(mwo, json->message.text);
+        mx_add_out_message(mwo, json);
     }
     else if (json->type == JS_MES_OUT)
     {
@@ -203,7 +232,10 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
         }
         gtk_widget_show_all(mwo->addChat_Dialog);
     }
-    else if (json->type == JS_MES_HIST) {
+    else if (json->type == JS_MES_HIST) {//доюавить листы смс + mess_in тоже апись в смс лист
+        GtkWidget *mess_row;
+        gchar *text_t;
+        char *temp = NULL;
         mwo->channel_info = mwo->channel_info->first;
         while (mwo->channel_info != NULL) {
             if (mwo->channel_info->channel_data.channel_id ==
@@ -213,10 +245,18 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
         }
         for (int i = 0; i < json->messages_arr_size; i++) {
             push_front_message_list(&mwo->channel_info->message, json, i);
-            mx_add_out_message(mwo, mwo->channel_info->message->text);
+            temp = strtrim(json->messages_arr[i].text);
+            text_t = g_strdup_printf("%s", temp);
+            if (json->messages_arr[i].client1_id == mwo->user_id)
+                mess_row = mx_create_message(text_t, mwo, 0); //change signal connectors
+            else
+                mess_row = mx_create_message(text_t, mwo, 1);
+            gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), mess_row, 0);
+            //mx_add_out_message(mwo, mwo->channel_info->message->text);
             //mwo->channel_info->message = mwo->channel_info->message->next;
+            mx_strdel(&temp);
         }
-
+        gtk_widget_show_all(GTK_WIDGET(mwo->channel_info->messageList));
     }
     if (json->message.text != NULL) {
         mx_strdel(&json->message.text);
