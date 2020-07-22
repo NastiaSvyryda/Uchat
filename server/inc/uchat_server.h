@@ -162,7 +162,7 @@ char *mx_json_message_history_response(t_json_data *data);
 //Auth
 void mx_controller_login(t_json_data *json, t_clients *client);
 void mx_controller_register(t_json_data *json, t_clients *client);
-void mx_controller_log_out(t_json_data *json, t_clients *client);
+void mx_controller_log_out(t_json_data *json, t_clients *client, t_clients *cur_client);
 //Messages
 void mx_controller_message(t_clients *client, t_json_data *json);
 void mx_controller_edit_message(t_json_data *json, t_clients *client);
@@ -211,8 +211,7 @@ void mx_migration_delivery_user(bool status);
 void mx_daemon(void);
 void mx_logger(const char* tag, const char* message);
 t_clients *mx_create_client(void);
-void mx_free_client(t_clients **cur_client);
-void mx_delete_client(t_clients *cur_client);
+void mx_delete_client(t_clients **clients, int key);
 struct sockaddr_in mx_accept_connections(t_clients *client, int listenfd);
 void mx_thread_create(t_clients *client, struct sockaddr_in cli);
 //CRUD
