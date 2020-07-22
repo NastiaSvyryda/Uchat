@@ -199,7 +199,7 @@ void mx_show_certs(SSL* ssl);
 ///end TLS
 
 gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
-void mx_add_out_message(t_mainWindowObjects *mwo, char *text_char);
+void mx_add_out_message(t_mainWindowObjects *mwo, t_json_data *json);
 
 GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo);
 GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo, int align);
