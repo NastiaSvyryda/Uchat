@@ -58,19 +58,7 @@ void mx_show_popup(void *parent_window, char *msg)
     gtk_widget_destroy(dialog);
 }
 
-_Bool mx_validate_login(char *str, void *window)
-{
-    if (strcmp(str, "Valerka") == 0)
-        mx_show_popup(window, "Valerka is The Cool boy!!!");
-    if (strcmp(str, "Sasha") == 0 || strcmp(str, "oarnopolin") == 0)
-        mx_show_popup(window, "Sasha is The King!!!");
-    if (strcmp(str, "Vlad") == 0)
-        mx_show_popup(window, "Vlad is The Prince!!!");
-    if (strcmp(str, "Nastya") == 0)
-        mx_show_popup(window, "Nastya is The Qeen!!!");
-    if (strcmp(str, "Slava") == 0 || strcmp(str, "spleshkov") == 0)
-        mx_show_popup(window, "Slava is The best Comedian!!!");
-
+_Bool mx_validate_login(char *str, void *window) {
     _Bool valid = (str && *str && strlen(str) > 0 && strlen(str) < MX_LOGIN_LEN);
     char *msg;
 
