@@ -25,7 +25,7 @@ char *mx_handle_user_input(const char *s)
             i += oldWlen - 1;
         }
     }
-    result = (char *)malloc(i + cnt * (newWlen - oldWlen) + 1);
+    result = mx_strnew(i + cnt * (newWlen - oldWlen) + 1);
 
     i = 0;
     while (*s)

@@ -17,7 +17,7 @@ void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
     }
     else
        puts("ERR mx_on_chat_clicked");
-
+    mwo->curr_channel_info = mwo->channel_info;
     //gtk_label_set_text(GTK_LABEL(mwo->label_chat),);
     if (mwo->channel_info->message == NULL) {
         char *json_str = NULL;

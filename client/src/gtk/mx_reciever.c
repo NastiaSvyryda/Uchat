@@ -100,7 +100,7 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
         mwo->channel_info->chat_button = mx_create_chat(mwo->curr_chat, mwo); //change signal connectors
         gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, -1);
         mwo->channel_info->next = malloc(sizeof(t_channel_info));
-        mwo->channel_info->first = mwo->channel_info;
+        //mwo->channel_info->first = mwo->channel_info;
         mwo->channel_info->next->first = mwo->channel_info->first;
         mwo->channel_info->next->chat_button = NULL;
         free(mwo->user_ids);

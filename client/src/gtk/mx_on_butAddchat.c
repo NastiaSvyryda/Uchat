@@ -14,6 +14,7 @@ void mx_set_chat_component(t_mainWindowObjects *mwo) {
 
 void mx_onBack_to_chats(__attribute__((unused)) GtkWidget *button, gpointer data)
 {
+    //почистить текстовый буфер
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
 //    if (mwo->curr_chatWindow)
 //        g_object_unref(&mwo->curr_chatWindow);
