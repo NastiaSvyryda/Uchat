@@ -145,6 +145,8 @@ typedef struct s_MainWindowObjects {//changed
     GtkWidget *mainWindow;
     GtkWidget *chatWindow;
 
+    GtkWidget *viewPort;
+
     GtkWidget *infoDialog;
     GtkWidget *addChat_Dialog;
 

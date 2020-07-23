@@ -53,7 +53,7 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
 //        gtk_widget_show_all(GTK_WIDGET(mwo->Window));
         mwo->curr_messageList = gtk_list_box_new();
         gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->curr_messageList), GTK_SELECTION_NONE);
-        gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_messageList);
+        gtk_container_add(GTK_CONTAINER(mwo->viewPort), mwo->curr_messageList);
         mess_row = mx_create_message(message, mwo, 0); //change signal connectors
         gtk_list_box_insert(GTK_LIST_BOX(mwo->curr_messageList), mess_row, -1);
         //gtk_widget_show_all(GTK_WIDGET(mwo->curr_messageList));

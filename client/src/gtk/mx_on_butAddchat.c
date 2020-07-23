@@ -4,7 +4,7 @@ void mx_set_chat_component(t_mainWindowObjects *mwo) {
 
     children = gtk_container_get_children(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")));
     for (iter = children; iter != NULL; iter = g_list_next(iter)) {
-        gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), GTK_WIDGET(iter->data));
+        gtk_container_remove(GTK_CONTAINER(mwo->viewPort), GTK_WIDGET(iter->data));
     }
 //    gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(mwo->builder, "gtkbox")), gtk_component, TRUE, TRUE, 5);
     gtk_widget_show_all(GTK_WIDGET(mwo->Window));
@@ -35,7 +35,7 @@ void mx_onBack_to_chats(__attribute__((unused)) GtkWidget *button, gpointer data
         mwo->channel_info = mwo->channel_info->next;
     }
     mwo->channel_info->messageList = g_object_ref(mwo->curr_channel_info->messageList);
-    gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_channel_info->messageList);
+    gtk_container_remove(GTK_CONTAINER(mwo->viewPort), mwo->curr_channel_info->messageList);
     mx_set_component(mwo, mwo->mainWindow);
     //mx_set_chat_component(mwo);
 }
