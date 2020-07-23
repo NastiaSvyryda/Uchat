@@ -73,7 +73,7 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
         }
         mess_row = mx_create_message(message, mwo, 0); //change signal connectors
         gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), mess_row, -1);
-        gtk_widget_show_all(GTK_WIDGET(mwo->channel_info->messageList));
+        gtk_widget_show_all(GTK_WIDGET(mwo->Window));
 //        gtk_widget_show(GTK_WIDGET(mwo->curr_channel_info->messageList));
         json->message.channel_id = mwo->channel_info->channel_data.channel_id;
     }

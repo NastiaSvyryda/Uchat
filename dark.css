@@ -1,53 +1,41 @@
 * {
     background: #494d57;
-    font-family: Vemana2000;
-    color: aliceblue
+    font-family: "Ubuntu Mono";
+    font-weight: bolder;
+    border-radius: 5px;
+    color: aliceblue;
+    outline: 0;
 }
-entry {
-    border: 0;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 1px;
-    padding-right: 1px;
+*:active, *:hover, *:focus {
+    box-shadow: none;
+    border-color: #2583c7;
 }
+
+label {
+}
+
 box > label {
-    font-family: Chilanka;
+    margin-top: 1.1em;
+    color: #2583c7;
+    font-family: C059;
     background: none;
-    text-shadow: white 0 0 .5px;
-    /*font-weight: bold;*/
     box-shadow: none;
     border-width: 1px;
 }
-label:hover {
-    border-color: #2583c7;
-    caret-color: aquamarine;
-
-}
 button {
-    text-shadow: white 0 0 .5px;
     font-weight: bold;
     box-shadow: none;
     border-width: 1px;
 }
-
-button:hover {
-    border-color: #2583c7;
-
+#dialog label {
+    color: #000;
 }
-window {
 
+textview text{
+    box-shadow: none;
+    border: .7px solid white;
+    color: #737A82;
+    font-weight: 300;
 }
-/*button:hover, b:hover > label{*/
-/*    color: #2583c7;*/
-/*    background-color: brown;*/
-/*    cursor: pointer;*/
-/*    user-select: all;*/
-/*    border: none;*/
-/*    outline: none;*/
-/*    transition: background 9999999s;*/
-/*}*/
-/*#dark:active, #dark:active > label {*/
-/*    background: #251c37*/
-/*}*/
 
 

@@ -10,9 +10,9 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects) {
     GError *error = NULL;
 
     mainObjects->builder = gtk_builder_new();
-    gtk_style_context_add_provider_for_screen (gdk_screen_get_default(),
-                                               GTK_STYLE_PROVIDER(mainObjects->provider),
-                                               GTK_STYLE_PROVIDER_PRIORITY_USER);
+//    gtk_style_context_add_provider_for_screen (gdk_screen_get_default(),
+//                                               GTK_STYLE_PROVIDER(mainObjects->provider),
+//                                               GTK_STYLE_PROVIDER_PRIORITY_USER);
     if (!gtk_builder_add_from_file(mainObjects->builder, "sent_gui.glade", &error))
     {
         mx_printstr(error->message);

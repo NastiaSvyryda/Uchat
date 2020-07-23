@@ -48,8 +48,11 @@ void mx_add_out_message(t_mainWindowObjects *mwo, t_json_data *json)
         //gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_messageList);
         mwo->channel_info->messageList = gtk_list_box_new();
         gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->channel_info->messageList), GTK_SELECTION_NONE);
+//        gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_messageList);
+//        mwo->channel_info->messageList = g_object_ref(mwo->curr_messageList);
+//        gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_messageList);
         mwo->channel_info->chat_button = mx_create_chat(mwo->channel_info->channel_data.channel_name, mwo); //change signal connectors
-        gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, -1);
+        gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, 0);
         mwo->channel_info->next = malloc(sizeof(t_channel_info));
         //mwo->channel_info->first = mwo->channel_info;
         mwo->channel_info->next->first = mwo->channel_info->first;
@@ -73,6 +76,6 @@ void mx_add_out_message(t_mainWindowObjects *mwo, t_json_data *json)
         mwo->channel_info->message = temp_mess;
         temp_mess->next = temp;
     }
-    gtk_widget_show_all(mwo->mainWindow);
+    gtk_widget_show_all(GTK_WIDGET(mwo->Window));
     g_free(text);
 }
