@@ -13,15 +13,21 @@ t_clients *mx_create_client(void) {
 
 void mx_delete_client(t_clients **clients, int key) {
     t_clients* temp = *clients, *prev;
+    t_clients* first = NULL;
 
     // If head node itself holds the key to be deleted
     if (temp != NULL && temp->fd == key) {
         SSL_free(temp->ssl);
         close(temp->fd);
         mx_strdel(&temp->token);
-        temp->next->first = NULL;
+        first = temp->next;
+        while (temp != NULL) {
+            temp->first = first;
+            temp = temp->next;
+        }
+        //temp->next->first = NULL;
         *clients = (*clients)->next; // Changed head
-        free(temp);			 // free old head
+        free(temp);    // free old head
         return;
     }
     // Search for the key to be deleted, keep track of the

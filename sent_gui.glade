@@ -508,7 +508,7 @@
                     <property name="can_focus">True</property>
                     <property name="max_length">256</property>
                     <property name="visibility">False</property>
-                    <property name="invisible_char">*</property>
+                    <property name="invisible_char">•</property>
                     <property name="placeholder_text" translatable="yes">password</property>
                     <property name="input_purpose">password</property>
                     <signal name="activate" handler="mx_on_butLogin_clicked" swapped="no"/>
@@ -523,9 +523,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkRadioButton" id="pass_visibility_button">
+                  <object class="GtkCheckButton" id="pass_visibility_button">
                     <property name="label" translatable="yes">show password</property>
-                    <property name="name">password_visibility_button</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -917,11 +916,11 @@
                         <property name="name">scrolled_window_chats</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
                         <child>
                           <object class="GtkViewport" id="scrolled_window_chats">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="shadow_type">etched-in</property>
                             <child>
                               <placeholder/>
                             </child>
@@ -1041,15 +1040,15 @@
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkScrolledWindow">
+                  <object class="GtkScrolledWindow" id="chatScrolledWindow">
                     <property name="name">scrolled_chat</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkViewport" id="scrolled_chat">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="shadow_type">etched-in</property>
                         <child>
                           <placeholder/>
                         </child>

@@ -73,6 +73,7 @@ int main(int argc, char **argv) {
     mainObjects.channel_info->first = mainObjects.channel_info;
     mainObjects.channel_info->next = NULL;
     mainObjects.channel_info->chat_button = NULL;
+    mainObjects.visibility = 1;
 
     GtkCssProvider *provider = gtk_css_provider_new ();
 

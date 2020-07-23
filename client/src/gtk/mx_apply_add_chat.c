@@ -38,6 +38,9 @@ void mx_apply_add_chat(__attribute__((unused)) GtkWidget *button, gpointer data)
 void mx_cancel_add_chat(__attribute__((unused)) GtkWidget *button, __attribute__((unused)) gpointer data) {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
 
+    g_clear_object(&mwo->addChat_Dialog);
+    //g_clear_object(&mwo->entryChatName);
+    //g_clear_object(&mwo->usersList);
     if (mwo->ids_logins_arr)
         free(mwo->ids_logins_arr);
 }
