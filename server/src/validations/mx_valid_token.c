@@ -1,26 +1,21 @@
 #include "uchat_server.h"
 
 bool mx_valid_token(int id, char *token) {
-    t_list *data = NULL;
-    char *where = NULL;
-    char *fill_table = NULL;
-    char **fill = NULL;
+    t_database_query *db = mx_database_query_create();
     bool status = true;
 
-    fill = mx_model_user_fill_table();
-    asprintf(&fill_table ,"%s, %s",
-             fill[0],
-             fill[5]);
-    asprintf(&where ,"%s=%i AND %s='%s'",
-            fill[0],
+    db->model_fill_table = mx_model_user_fill_table();
+    asprintf(&db->fill_table ,"%s, %s",
+            db->model_fill_table[0],
+            db->model_fill_table[5]);
+    asprintf(&db->where ,"%s=%i AND %s='%s'",
+            db->model_fill_table[0],
             id,
-            fill[5],
+            db->model_fill_table[5],
             token);
-    data = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), fill_table, where);
-    if (data == NULL)
+    db->list = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), db->fill_table, db->where);
+    if (db->list == NULL)
         status = false;
-    mx_del_list(data, mx_list_size(data));
-    mx_strdel(&fill_table);
-    mx_strdel(&where);
+    mx_database_query_clean(&db);
     return status;
 }

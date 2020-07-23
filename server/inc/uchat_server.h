@@ -167,6 +167,8 @@ char *mx_json_message_delete_out_response(t_json_data *data);
 char *mx_json_get_users_response(t_json_data *data);
 char *mx_json_message_history_response(t_json_data *data);
 //Response
+void mx_res_js_login_unauthorized(t_clients *client);
+void mx_res_js_login_incorrectly_filled_fields(t_clients *client);
 void mx_res_js_register_success(t_clients *client, t_json_data *json_data);
 void mx_res_js_register_incorrectly_filled_fields(t_clients *client);
 void mx_res_js_log_out_success(t_clients *cur_client);
