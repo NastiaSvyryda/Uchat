@@ -63,6 +63,7 @@ void mx_bright(__attribute__((unused)) GtkWidget *button){
 int main(int argc, char **argv) {
     t_mainWindowObjects mainObjects;
     SSL_CTX *ctx;
+    mainObjects.ids_logins_arr = NULL;
     mainObjects.curr_chat_users = NULL;
     mainObjects.curr_chat = NULL;
     mainObjects.curr_channel_info = NULL;

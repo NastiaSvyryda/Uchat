@@ -30,12 +30,14 @@ void mx_apply_add_chat(__attribute__((unused)) GtkWidget *button, gpointer data)
         if (!mx_validate_chat_name(mwo->curr_chat, mwo->Window))
             return;
         //gtk_widget_destroy(mwo->addChat_Dialog);
+        free(mwo->ids_logins_arr);
         mx_set_component(mwo, mwo->chatWindow);
     }
 }
 
 void mx_cancel_add_chat(__attribute__((unused)) GtkWidget *button, __attribute__((unused)) gpointer data) {
-    //t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
+    t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
 
-    gtk_main_quit();
+    if (mwo->ids_logins_arr)
+        free(mwo->ids_logins_arr);
 }
