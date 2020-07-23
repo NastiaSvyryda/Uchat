@@ -18,6 +18,11 @@ label {
     background-color: transparent;
 }
 
+#scrolled_chat > *{
+    background: transparent;
+    margin: 1px;
+}
+
 box > label {
     margin-top: 1.1em;
     color: #494d57;
