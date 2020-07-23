@@ -31,11 +31,31 @@ SRCS := $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c))
 INC = $(INC_DIR)/uchat_server.h
 OBJS := $(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:%.c=%.o)))
 
-LIBMX_DIR = libmx
+LIBS_DIR = libs
+
+LIBMX_DIR = $(LIBS_DIR)/libmx
 LIBMX = $(LIBMX_DIR)/libmx.a
 
-GTK_FLAGS = `pkg-config --cflags  --libs gtk+-3.0` `pkg-config --libs json-c`
-GTK_SORT_FLAGS = `pkg-config --cflags gtk+-3.0` `pkg-config --cflags json-c`
+JSONC_DIR = $(LIBS_DIR)/json-c
+JSONC = $(JSONC_DIR)/libjson-c.a
+
+SQLITE3_DIR = $(LIBS_DIR)/sqlite3
+SQLITE3 = $(SQLITE3_DIR)/libsqlite3.a
+
+SSL_DIR = /usr/local/opt/openssl/lib/
+SSL_INC = /usr/local/opt/openssl/include/
+ 
+
+GTK_LINK_FLAGS = `pkg-config --cflags  --libs gtk+-3.0`
+GTK_INC_FLAGS = `pkg-config --cflags gtk+-3.0`
+
+LIBS_FLAGS := $(addprefix -L, $(SSL_DIR) \
+	$(addprefix $(LIBS_DIR)/, json-c libmx sqlite3)) \
+	$(addprefix -l, ssl crypto sqlite3 json-c mx) $(GTK_LINK_FLAGS)
+LIBS_INCS := $(addprefix -I, $(addprefix $(LIBS_DIR)/, json-c libmx/inc sqlite3) \
+	$(INC_DIR) $(SSL_INC)) $(GTK_INC_FLAGS)
+
+LIBS = $(LIBMX) $(JSONC) $(SQLITE3)
 
 EMPTY =
 SPACE = $(EMPTY) $(EMPTY)
@@ -45,12 +65,12 @@ all: install
 
 install: $(NAME)
 
-$(NAME): $(OBJS) $(LIBMX)
-	@$(CCFLG) -lssl -lcrypto -lsqlite3 $(OBJS) $(GTK_FLAGS) -L$(LIBMX_DIR) -L/usr/local/opt/openssl/lib/ -lssl -lcrypto -lmx -o $@ --debug
+$(NAME): $(OBJS) $(LIBS)
+	@$(CCFLG) $(LIBS_FLAGS) $(OBJS) -o $@ --debug
 	@printf "\r\33[2K$@ \033[32;1mcreated\033[0m\n"
 
 $(OBJS): obj/%.o: %.c $(INC) Makefile | $(OBJ_DIR)
-	@$(CCFLG) $(CPPFLAGS) -I$(INC_DIR) -Ilibmx/inc -c $(GTK_SORT_FLAGS) -I/usr/local/opt/openssl/include/ -o $@ $< --debug
+	@$(CCFLG) $(LIBS_INCS) -c -o $@ $< --debug
 	@printf "\r\33[2K$(NAME) \033[33;1mcompile \033[0m$(<:$(SRC_DIR)/%.c=%) "
 
 $(OBJ_DIR):
@@ -60,6 +80,12 @@ $(OBJ_DIR):
 $(LIBMX):
 	@make -sC $(LIBMX_DIR)
 
+$(JSONC):
+	@make -sC $(JSONC_DIR)
+
+$(SQLITE3):
+	@make -sC $(SQLITE3_DIR)
+
 out: $(NAME_ROOT)
 
 $(NAME_ROOT): $(NAME)
@@ -68,11 +94,15 @@ $(NAME_ROOT): $(NAME)
 
 clean:
 	@make -sC $(LIBMX_DIR) $@
+	@make -sC $(JSONC_DIR) $@
+	@make -sC $(SQLITE3_DIR) $@
 	@rm -rf $(OBJ_DIR)
 	@printf "$(OBJ_DIR)\t   \033[31;1mdeleted\033[0m\n"
 
 uninstall: clean
 	@make -sC $(LIBMX_DIR) $@
+	@make -sC $(JSONC_DIR) $@
+	@make -sC $(SQLITE3_DIR) $@
 	@rm -rf $(NAME)
 	@printf "$(NAME) \033[31;1muninstalled\033[0m\n"
 
