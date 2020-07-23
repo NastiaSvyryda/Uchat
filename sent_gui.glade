@@ -201,7 +201,6 @@
                     <property name="height_request">160</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="shadow_type">in</property>
                     <child>
                       <placeholder/>
                     </child>
@@ -918,11 +917,11 @@
                         <property name="name">scrolled_window_chats</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="shadow_type">in</property>
                         <child>
                           <object class="GtkViewport" id="scrolled_window_chats">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="shadow_type">etched-in</property>
                             <child>
                               <placeholder/>
                             </child>
@@ -1046,11 +1045,11 @@
                     <property name="name">scrolled_chat</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkViewport" id="scrolled_chat">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="shadow_type">etched-in</property>
                         <child>
                           <placeholder/>
                         </child>
@@ -1069,15 +1068,23 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkTextView" id="message_entry">
-                        <property name="name">message_entry</property>
+                      <object class="GtkScrolledWindow">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="margin_top">8</property>
-                        <property name="wrap_mode">char</property>
-                        <style>
-                          <class name="message_entry"/>
-                        </style>
+                        <property name="window_placement">bottom-left</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkTextView" id="message_entry">
+                            <property name="name">message_entry</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="wrap_mode">char</property>
+                            <style>
+                              <class name="message_entry"/>
+                            </style>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">True</property>
