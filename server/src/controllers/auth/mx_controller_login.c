@@ -83,48 +83,27 @@ static void json_login_success(t_list *data, t_clients *client) {
     free(json.channels_arr);
 }
 
-static void json_login_unauthorized(t_clients *client) {
-    t_json_data json = {.type = JS_LOG_IN, .status = 401};
-    char *new_json = mx_json_make_json(JS_LOG_IN, &json);
-
-    mx_logger("JSON write:",  new_json + 4);
-    SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
-    mx_strdel(&new_json);
-}
-
-static void json_login_incorrectly_filled_fields(t_clients *client) {
-    t_json_data json = {.type = JS_LOG_IN, .status = 412};
-    char *new_json = mx_json_make_json(JS_LOG_IN, &json);
-
-    mx_logger("JSON write:",  new_json + 4);
-    SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
-    mx_strdel(&new_json);
-}
-
 void mx_controller_login(t_json_data *json, t_clients *client) {
-    char *where = NULL;
-    char **fill = NULL;
-    t_list *data = NULL;
+    t_database_query *db = mx_database_query_create();
 
     if (mx_valid_login(json) == false) {
-        json_login_incorrectly_filled_fields(client);
+        mx_res_js_login_incorrectly_filled_fields(client);
         return;
     }
-    fill = mx_model_user_fill_table();
-    asprintf(&where, "%s='%s' AND %s='%s'",
-             fill[3],
+    db->model_fill_table = mx_model_user_fill_table();
+    asprintf(&db->fill_table, "%s", "*");
+    asprintf(&db->where, "%s='%s' AND %s='%s'",
+             db->model_fill_table[3],
              json->pers_info.login,
-             fill[4],
+             db->model_fill_table[4],
              mx_hmac_sha_256(json->pers_info.login, json->pers_info.password));
-    data = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), "*", where);
-    if (data != NULL) {
-        client->user_id = mx_atoi(data->data);
-        client->token =  mx_insert_token(fill, client->user_id);
-        json_login_success(data, client);
+    db->list = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), db->fill_table, db->where);
+    if (db->list != NULL) {
+        client->user_id = mx_atoi(db->list->data);
+        client->token =  mx_insert_token(db->model_fill_table, client->user_id);
+        json_login_success(db->list, client);
         mx_strdel(&client->token);
     } else
-        json_login_unauthorized(client);
-    mx_del_list(data, mx_list_size(data));
-    mx_strdel(&where);
-    mx_del_strarr(&fill);
+        mx_res_js_login_unauthorized(client);
+    mx_database_query_clean(&db);
 }
