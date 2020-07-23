@@ -7,7 +7,7 @@
     outline: 0;
     box-shadow: none;
 }
-#scrolled_chat > *{
+scrolledwindow > *{
     background: transparent;
     margin: 1px;
 }
@@ -26,15 +26,16 @@ box > label {
     box-shadow: none;
     border-width: 1px;
 }
+label {background: transparent}
 button {
     font-weight: bold;
     box-shadow: none;
     border-width: 1px;
     text-shadow: white 0 0 .5px;
 }
-#dialog label {
-    color: #000;
-}
+/*#dialog label {*/
+/*    color: #000;*/
+/*}*/
 entry {
     background-color: aliceblue;
     color: #494d57;
@@ -54,6 +55,9 @@ textview text{
 }
 viewport {
     background-color: transparent;
+}
+#scrolled_window_chats box button{
+    min-width: 28em;
 }
 
 
