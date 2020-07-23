@@ -2,20 +2,20 @@
 
 void *main_cycle(void *newfd) {
     t_json_data *json = NULL;
-    t_clients *client = (t_clients *)newfd;
-    t_clients *cur_client = client;
+    t_main *main = (t_main *)newfd;
+    t_clients *cur_client = main->client;
     int len = 0;
     char *json_str = NULL;
 
-    if (SSL_accept(client->ssl) == -1) {
+    if (SSL_accept(main->client->ssl) == -1) {
         mx_logger("Connection", "The connection is not secure");
     } else {
         while(true) {
             len = 0;
-            client = client->first;
+            main->client = main->client->first;
             SSL_read(cur_client->ssl, &len, 4);
             if (len == 0) {
-                mx_delete_client(&client, cur_client->fd);
+                mx_delete_client(&main, cur_client->fd);
                 break;
             }
             json_str = mx_strnew(len);
@@ -23,7 +23,7 @@ void *main_cycle(void *newfd) {
             mx_logger("JSON parse:", json_str);
             mx_printstr(json_str);
             json = mx_json_parse(json_str);
-            mx_routes(json, client, cur_client);
+            mx_routes(json, main, cur_client);
             if (json != NULL) {
                 free(json);
                 mx_strdel(&json_str);
@@ -33,10 +33,10 @@ void *main_cycle(void *newfd) {
     return NULL;
 }
 
-void mx_thread_create(t_clients *client, struct sockaddr_in cli) {
+void mx_thread_create(t_main *main, struct sockaddr_in cli) {
     pthread_t thread = NULL;
 
-    if ((pthread_create(&thread, NULL, main_cycle, client)) != 0) {
+    if ((pthread_create(&thread, NULL, main_cycle, main)) != 0) {
         mx_printerr("uchat_server: thread creating error");
         exit(1);
     }

@@ -4,16 +4,16 @@ t_clients *mx_create_client(void) {
     t_clients *client = malloc(sizeof(t_clients));
     client->fd = 0;
     client->ssl = NULL;
-    client->wait = NULL;
     client->user_id = 0;
     client->token = NULL;
     client->next = NULL;
     return client;
 }
 
-void mx_delete_client(t_clients **clients, int key) {
-    t_clients* temp = *clients, *prev;
-    t_clients* first = NULL;
+
+void mx_delete_client(t_main **main, int key) {
+    t_clients *temp = (*main)->client, *prev;
+    t_clients *first = NULL;
 
     // If head node itself holds the key to be deleted
     if (temp != NULL && temp->fd == key) {
@@ -26,7 +26,7 @@ void mx_delete_client(t_clients **clients, int key) {
             temp = temp->next;
         }
         //temp->next->first = NULL;
-        *clients = (*clients)->next; // Changed head
+        (*main)->client = (*main)->client->next; // Changed head
         free(temp);    // free old head
         return;
     }

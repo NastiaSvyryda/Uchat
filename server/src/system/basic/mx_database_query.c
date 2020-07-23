@@ -29,3 +29,4 @@ void mx_database_query_clean(t_database_query **database_query) {
         free(*database_query);
     }
 }
+
