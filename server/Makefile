@@ -11,6 +11,7 @@ SRC_DIRS = src \
 			src/json \
 			src/json/auth \
 			src/json/message \
+			src/json/response/auth \
 			src/json/response/messages \
 			src/json/response/user \
 			src/migrations \
@@ -19,6 +20,7 @@ SRC_DIRS = src \
 			src/system/basic \
 			src/system/database_crud \
 			src/validations \
+			src/validations/auth \
 			src/system/security
 SRC_DIR = src
 

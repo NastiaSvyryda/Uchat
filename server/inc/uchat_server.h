@@ -42,6 +42,7 @@
 typedef struct s_database_query {
     char *fill_table;
     char **model_fill_table;
+    char *set;
     char *value;
     char *where;
     t_list *list;
@@ -141,6 +142,7 @@ int mx_valid_str_isalpha(char *str);
 int mx_valid_register(t_json_data *json);
 bool mx_valid_login(t_json_data *json);
 bool mx_valid_token(int id, char *token);
+bool mx_valid_is_login(char *model_fill_table, t_json_data *json);
 ///end validation
 
 ///JSON
@@ -165,6 +167,11 @@ char *mx_json_message_delete_out_response(t_json_data *data);
 char *mx_json_get_users_response(t_json_data *data);
 char *mx_json_message_history_response(t_json_data *data);
 //Response
+void mx_res_js_login_unauthorized(t_clients *client);
+void mx_res_js_login_incorrectly_filled_fields(t_clients *client);
+void mx_res_js_register_success(t_clients *client, t_json_data *json_data);
+void mx_res_js_register_incorrectly_filled_fields(t_clients *client);
+void mx_res_js_log_out_success(t_clients *cur_client);
 void mx_res_js_get_message_history(t_clients *client, t_list *list);
 void mx_res_js_get_users(t_clients *client, t_list *list);
 ///end JSON
