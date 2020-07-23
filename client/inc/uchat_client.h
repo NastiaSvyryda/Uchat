@@ -177,6 +177,8 @@ typedef struct s_MainWindowObjects {//changed
 
     GtkCssProvider *provider;
 
+    int visibility;
+
     t_id_login *ids_logins_arr;
     int ids_logins_arr_size;
 

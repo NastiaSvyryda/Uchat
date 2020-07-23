@@ -47,6 +47,17 @@ void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
 //    }
 ////    gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(mwo->builder, "gtkbox")), gtk_component, TRUE, TRUE, 5);
 //    gtk_widget_show_all(GTK_WIDGET(mwo->Window));
+    //GtkWidget *viewPort = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "scrolled_chat"));
+
+//    GtkWidget *scrolled_window = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "chatScrolledWindow"));
+//
+//    //gtk_container_add(GTK_CONTAINER(viewPort), mwo->channel_info->messageList);
+//
+//    GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow *)scrolled_window);
+//    gtk_adjustment_set_value(adjustment, gtk_adjustment_get_upper(adjustment));
+//    gtk_scrolled_window_set_vadjustment((GtkScrolledWindow *)scrolled_window, (GtkAdjustment *)adjustment);
+
+    //mx_set_component(mwo, mwo->chatWindow);
     gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->channel_info->messageList);
     mx_set_component(mwo, mwo->chatWindow);
     //gtk_widget_show_all(GTK_WIDGET(mwo->channel_info->messageList));

@@ -13,12 +13,20 @@ t_database_query *mx_database_query_create() {
 }
 
 void mx_database_query_clean(t_database_query **database_query) {
-    mx_strdel(&(*database_query)->fill_table);
-    mx_del_strarr(&(*database_query)->model_fill_table);
-    mx_strdel(&(*database_query)->value);
-    mx_strdel(&(*database_query)->set);
-    mx_strdel(&(*database_query)->where);
-    mx_del_list((*database_query)->list, mx_list_size((*database_query)->list));
-    if(*database_query != NULL)
+    if(database_query != NULL && *database_query != NULL) {
+        if((*database_query)->fill_table != NULL)
+            mx_strdel(&(*database_query)->fill_table);
+        if((*database_query)->model_fill_table != NULL)
+            mx_del_strarr(&(*database_query)->model_fill_table);
+        if((*database_query)->value != NULL)
+            mx_strdel(&(*database_query)->value);
+        if((*database_query)->set != NULL)
+            mx_strdel(&(*database_query)->set);
+        if((*database_query)->where != NULL)
+            mx_strdel(&(*database_query)->where);
+        if((*database_query)->list != NULL)
+            mx_del_list((*database_query)->list, mx_list_size((*database_query)->list));
         free(*database_query);
+    }
 }
+

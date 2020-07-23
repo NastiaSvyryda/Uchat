@@ -44,7 +44,7 @@ void mx_on_butAddchat(__attribute__((unused)) GtkWidget *button, gpointer data)
 { //создавать новое диалоговое окно
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
     char *json_str = NULL;
-    GtkWidget *addChat_Dialog;
+    //GtkWidget *addChat_Dialog;
     t_json_data json = {.user_id = mwo->user_id, .type = JS_GET_USERS};
     strcpy(json.token, mwo->token);
     json_str = mx_json_make_json(JS_GET_USERS, &json);
@@ -52,13 +52,13 @@ void mx_on_butAddchat(__attribute__((unused)) GtkWidget *button, gpointer data)
     SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
     mx_strdel(&json_str);
 
-    addChat_Dialog = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "dialog_add_chat"));
+    mwo->addChat_Dialog = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "dialog_add_chat"));
     mwo->entryChatName = GTK_ENTRY(gtk_builder_get_object(mwo->builder, "entry_chat_name"));
 
     mwo->usersList = gtk_list_box_new();
     gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->usersList), GTK_SELECTION_NONE);
     gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_window_chatUsers")), mwo->usersList);
     //обработать ответ от сервера с логинами в reciever
-    gtk_widget_show_all(GTK_WIDGET(addChat_Dialog));
+    gtk_widget_show_all(GTK_WIDGET(mwo->addChat_Dialog));
     //gtk_dialog_run(GTK_DIALOG(mwo->addChat_Dialog));
 }

@@ -121,13 +121,17 @@ typedef struct s_clients {
     SSL *ssl;
     int user_id;
     char *token;
-    t_wait *wait;
     struct s_clients *first;
     struct s_clients *next;
 }               t_clients;
 
+typedef struct s_main {
+    struct s_clients * client;
+    struct s_wait *wait;
+}               t_main;
+
 int main(int argc, char **argv);
-void mx_routes(t_json_data *json, t_clients *client, t_clients *cur_client);
+void mx_routes(t_json_data *json, t_main *main, t_clients *cur_client);
 ///Config
 char *mx_config_sqlite3_db_name(void);
 int mx_config_pagination(void);
@@ -167,10 +171,10 @@ char *mx_json_message_delete_out_response(t_json_data *data);
 char *mx_json_get_users_response(t_json_data *data);
 char *mx_json_message_history_response(t_json_data *data);
 //Response
-void mx_res_js_login_unauthorized(t_clients *client);
+void mx_res_js_login_unauthorized(t_main *main);
 void mx_res_js_login_incorrectly_filled_fields(t_clients *client);
-void mx_res_js_register_success(t_clients *client, t_json_data *json_data);
-void mx_res_js_register_incorrectly_filled_fields(t_clients *client);
+void mx_res_js_register_success(t_main *main, t_json_data *json_data);
+void mx_res_js_register_incorrectly_filled_fields(t_main *main);
 void mx_res_js_log_out_success(t_clients *cur_client);
 void mx_res_js_get_message_history(t_clients *client, t_list *list);
 void mx_res_js_get_users(t_clients *client, t_list *list);
@@ -178,18 +182,18 @@ void mx_res_js_get_users(t_clients *client, t_list *list);
 
 ///Controllers
 //Auth
-void mx_controller_login(t_json_data *json, t_clients *client);
-void mx_controller_register(t_json_data *json, t_clients *client);
-void mx_controller_log_out(t_json_data *json, t_clients *client, t_clients *cur_client);
+void mx_controller_login(t_json_data *json, t_main *main);
+void mx_controller_register(t_json_data *json, t_main *main);
+void mx_controller_log_out(t_json_data *json, t_main *main, t_clients *cur_client);
 //Messages
-void mx_controller_message(t_clients *client, t_json_data *json);
-void mx_controller_edit_message(t_json_data *json, t_clients *client);
+void mx_controller_message(t_main *main, t_json_data *json);
+void mx_controller_edit_message(t_json_data *json, t_main *main);
 void mx_controller_message_history(t_json_data *json, t_clients *client);
 t_list *mx_get_user_id_from_database_channels(int channel_id);
-void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *json, int type, int type_response);
+void mx_send_message_to_channel(t_list *data, t_main *main, t_json_data *json, int type, int type_response);
 void mx_controller_new_channel(t_json_data *json);
 void mx_controller_user_all(t_clients *client);
-void mx_controller_delete_message(t_json_data *json, t_clients *client);
+void mx_controller_delete_message(t_json_data *json, t_main *main);
 ///end controllers
 
 ///Models
@@ -231,9 +235,9 @@ t_database_query *mx_database_query_create();
 void mx_database_query_clean(t_database_query **database_query);
 void mx_logger(const char* tag, const char* message);
 t_clients *mx_create_client(void);
-void mx_delete_client(t_clients **clients, int key);
-struct sockaddr_in mx_accept_connections(t_clients *client, int listenfd);
-void mx_thread_create(t_clients *client, struct sockaddr_in cli);
+void mx_delete_client(t_main **main, int key);
+struct sockaddr_in mx_accept_connections(t_main *main, int listenfd);
+void mx_thread_create(t_main *main, struct sockaddr_in cli);
 //CRUD
 int mx_create_databases(char *database, char *table, char *fill_table, char *value_table);
 t_list *mx_read_database(char *database, char *table, char *fill_table, char *where);
