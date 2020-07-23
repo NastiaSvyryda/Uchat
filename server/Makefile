@@ -11,6 +11,8 @@ SRC_DIRS = src \
 			src/json \
 			src/json/auth \
 			src/json/message \
+			src/json/response/messages \
+			src/json/response/user \
 			src/migrations \
 			src/models \
 			src/system \

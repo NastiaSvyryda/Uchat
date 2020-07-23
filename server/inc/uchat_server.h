@@ -39,6 +39,14 @@
 #define MX_MAX_NAME_LEN 100
 #define MX_MAX_MESSAGE_LEN 4096
 
+typedef struct s_database_query {
+    char *fill_table;
+    char **model_fill_table;
+    char *value;
+    char *where;
+    t_list *list;
+}               t_database_query;
+
 typedef enum e_json_types {
     JS_REG,          // JSON Type - register
     JS_LOG_IN,       // JSON Type - log in
@@ -156,6 +164,9 @@ char *mx_json_message_delete_in_request(t_json_data *data);
 char *mx_json_message_delete_out_response(t_json_data *data);
 char *mx_json_get_users_response(t_json_data *data);
 char *mx_json_message_history_response(t_json_data *data);
+//Response
+void mx_res_js_get_message_history(t_clients *client, t_list *list);
+void mx_res_js_get_users(t_clients *client, t_list *list);
 ///end JSON
 
 ///Controllers
@@ -209,6 +220,8 @@ void mx_migration_delivery_user(bool status);
 ///System
 //Basic
 void mx_daemon(void);
+t_database_query *mx_database_query_create();
+void mx_database_query_clean(t_database_query **database_query);
 void mx_logger(const char* tag, const char* message);
 t_clients *mx_create_client(void);
 void mx_delete_client(t_clients **clients, int key);
