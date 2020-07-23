@@ -25,6 +25,16 @@ void mx_onBack_to_chats(__attribute__((unused)) GtkWidget *button, gpointer data
 //        free(mwo->curr_channel_info);
 //        mwo->curr_channel_info = NULL;
 //    }
+    mwo->channel_info = mwo->channel_info->first;
+    //if (mwo->channel_info != NULL) {
+    while (mwo->channel_info != NULL && mwo->channel_info->chat_button != NULL) {
+        if (mwo->channel_info->channel_data.channel_id ==
+                mwo->curr_channel_info->channel_data.channel_id) {
+            break;
+        }
+        mwo->channel_info = mwo->channel_info->next;
+    }
+    mwo->channel_info->messageList = g_object_ref(mwo->curr_channel_info->messageList);
     gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_channel_info->messageList);
     mx_set_component(mwo, mwo->mainWindow);
     //mx_set_chat_component(mwo);

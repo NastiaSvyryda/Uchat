@@ -60,6 +60,9 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
         mwo->channel_info->message = NULL;
         mwo->channel_info->messageList = gtk_list_box_new();
         gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->channel_info->messageList), GTK_SELECTION_NONE);
+//        gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_messageList);
+//        mwo->channel_info->messageList = g_object_ref(mwo->curr_messageList);
+//        gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_messageList);
 //        gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->channel_info->messageList);
         mwo->channel_info->chat_button = mx_create_chat(mwo->channel_info->channel_data.channel_name, mwo);
         gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, 0);
@@ -98,7 +101,7 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
         mwo->channel_info->message = NULL;
         mwo->channel_info->messageList = g_object_ref(mwo->curr_messageList);
         mwo->channel_info->chat_button = mx_create_chat(mwo->curr_chat, mwo); //change signal connectors
-        gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, -1);
+        gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, 0);
         mwo->channel_info->next = malloc(sizeof(t_channel_info));
         //mwo->channel_info->first = mwo->channel_info;
         mwo->channel_info->next->first = mwo->channel_info->first;
@@ -256,7 +259,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
             //mwo->channel_info->message = mwo->channel_info->message->next;
             mx_strdel(&temp);
         }
-        gtk_widget_show_all(GTK_WIDGET(mwo->channel_info->messageList));
+        gtk_widget_show_all(GTK_WIDGET(mwo->Window));
     }
     if (json->message.text != NULL) {
         mx_strdel(&json->message.text);

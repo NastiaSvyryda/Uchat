@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
+<!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkDialog" id="dialog_add_chat">
@@ -425,6 +425,12 @@
       </object>
     </child>
   </object>
+  <object class="GtkImage" id="image1">
+    <property name="name">plus</property>
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">plus.jpg</property>
+  </object>
   <object class="GtkWindow" id="main_window">
     <property name="name">Window</property>
     <property name="can_focus">False</property>
@@ -484,7 +490,7 @@
                     <property name="name">login_entry_field</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="max_length">39</property>
+                    <property name="max_length">21</property>
                     <property name="placeholder_text" translatable="yes">login</property>
                     <style>
                       <class name="entry"/>
@@ -618,7 +624,7 @@
                     <property name="name">reg_login_entry</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="max_length">39</property>
+                    <property name="max_length">20</property>
                     <property name="placeholder_text" translatable="yes">login</property>
                   </object>
                   <packing>
@@ -666,6 +672,7 @@
                     <property name="name">reg_name_entry</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="max_length">20</property>
                     <property name="placeholder_text" translatable="yes">name</property>
                     <property name="input_purpose">name</property>
                   </object>
@@ -680,6 +687,7 @@
                     <property name="name">reg_surname_entry</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="max_length">20</property>
                     <property name="placeholder_text" translatable="yes">surname</property>
                     <property name="input_purpose">name</property>
                     <signal name="activate" handler="mx_on_butRegistre_clicked" swapped="no"/>
@@ -742,6 +750,8 @@
                       <object class="GtkButton" id="info_button">
                         <property name="label">Info</property>
                         <property name="name">info_button</property>
+                        <property name="width_request">65</property>
+                        <property name="height_request">50</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -774,12 +784,13 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="add_chat_button">
-                        <property name="label">gtk-add</property>
                         <property name="name">add_chat_button</property>
+                        <property name="width_request">65</property>
+                        <property name="height_request">50</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="image">image1</property>
                         <signal name="clicked" handler="mx_on_butAddchat" swapped="no"/>
                       </object>
                       <packing>
@@ -903,13 +914,19 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkScrolledWindow" id="scrolled_window_chats">
+                      <object class="GtkScrolledWindow">
                         <property name="name">scrolled_window_chats</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="shadow_type">in</property>
                         <child>
-                          <placeholder/>
+                          <object class="GtkViewport" id="scrolled_window_chats">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
                         </child>
                       </object>
                       <packing>
@@ -959,12 +976,11 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkButton" id="back_to_chats">
-                        <property name="label">gtk-go-back</property>
+                        <property name="label">Back</property>
                         <property name="name">back_button</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="use_stock">True</property>
                         <signal name="clicked" handler="mx_onBack_to_chats" swapped="no"/>
                       </object>
                       <packing>
@@ -1026,13 +1042,19 @@
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkScrolledWindow" id="scrolled_chat">
+                  <object class="GtkScrolledWindow">
                     <property name="name">scrolled_chat</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <placeholder/>
+                      <object class="GtkViewport" id="scrolled_chat">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
                     </child>
                   </object>
                   <packing>
@@ -1051,7 +1073,11 @@
                         <property name="name">message_entry</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="margin_top">8</property>
                         <property name="wrap_mode">char</property>
+                        <style>
+                          <class name="message_entry"/>
+                        </style>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -1066,6 +1092,8 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="margin_left">8</property>
+                        <property name="margin_top">8</property>
                         <signal name="clicked" handler="mx_on_butSend_clicked" swapped="no"/>
                       </object>
                       <packing>

@@ -23,50 +23,43 @@ static void json_register_success(t_clients *client, t_json_data *json_data) {
     mx_strdel(&new_json);
 }
 
-static t_list *check_login (char **fill, t_json_data *json) {
+static t_list *check_login (char *model_fill_table, t_json_data *json) {
     char *where = NULL;
 
     asprintf(&where, "%s = '%s'",
-            fill[3],
+             model_fill_table,
             json->pers_info.login);
-    return mx_read_database(mx_model_user_database(), mx_model_user_name_table(), fill[3], where);
+    return mx_read_database(mx_model_user_database(), mx_model_user_name_table(), model_fill_table, where);
 }
 
 
 void mx_controller_register(t_json_data *json, t_clients *client) {
-    char *value_table = NULL;
-    char **fill = NULL;
-    char *fill_table = NULL;
-    t_list *data_check = NULL;
+    t_database_query *db = mx_database_query_create();
 
     if (mx_valid_register(json) == false) {
         json_register_incorrectly_filled_fields(client);
         return;
     }
-    fill = mx_model_user_fill_table();
-    asprintf(&fill_table, "%s, %s, %s, %s, %s",
-             fill[1],
-             fill[2],
-             fill[3],
-             fill[4],
-             fill[6]);
-    data_check = check_login(fill, json);
-    if (data_check == NULL) {
-        asprintf(&value_table, "\"%s\", \"%s\", \"%s\", \"%s\", %s",
+    db->model_fill_table = mx_model_user_fill_table();
+    asprintf(&db->fill_table, "%s, %s, %s, %s, %s",
+             db->model_fill_table[1],
+             db->model_fill_table[2],
+             db->model_fill_table[3],
+             db->model_fill_table[4],
+             db->model_fill_table[6]);
+    db->list = check_login(db->model_fill_table[3], json);
+    if (db->list == NULL) {
+        asprintf(&db->value, "\"%s\", \"%s\", \"%s\", \"%s\", %s",
                  json->pers_info.first_name,
                  json->pers_info.last_name,
                  json->pers_info.login,
                  mx_hmac_sha_256(json->pers_info.login, json->pers_info.password),
                  "datetime('now')");
-        client->user_id = mx_create_databases(mx_model_user_database(), mx_model_user_name_table(), fill_table, value_table);
-        client->token = mx_insert_token(fill, client->user_id);
+        client->user_id = mx_create_databases(mx_model_user_database(), mx_model_user_name_table(), db->fill_table, db->value);
+        client->token = mx_insert_token(db->model_fill_table, client->user_id);
         json_register_success(client, json);
         mx_strdel(&client->token);
-    } else {
+    } else
         json_register_incorrectly_filled_fields(client);
-    }
-    mx_strdel(&fill_table);
-    mx_del_strarr(&fill);
-    mx_strdel(&value_table);
-    mx_del_list(data_check, mx_list_size(data_check));
+    mx_database_query_clean(&db);
 }
