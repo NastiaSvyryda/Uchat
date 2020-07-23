@@ -24,10 +24,10 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 
-#define MX_JSON_TEMPLATE "./server/resources/server_type_%d.json"
-#define MX_JSON_TYPE_1_SUPPLY "./server/resources/server_type_1_channels_array_element.json"
-#define MX_JSON_TYPE_9_SUPPLY "./server/resources/server_type_9_user_ids_array_element.json"
-#define MX_JSON_TYPE_10_SUPPLY "./server/resources/server_type_10_messages_array_element.json"
+#define MX_JSON_TEMPLATE "./server/src/json/resources/server_type_%d.json"
+#define MX_JSON_TYPE_1_SUPPLY "./server/src/json/resources/server_type_1_channels_array_element.json"
+#define MX_JSON_TYPE_9_SUPPLY "./server/src/json/resources/server_type_9_user_ids_array_element.json"
+#define MX_JSON_TYPE_10_SUPPLY "./server/src/json/resources/server_type_10_messages_array_element.json"
 #define MX_JSON_TO_STR_FLAGS JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY
 
 #define MX_TOKEN_LEN 256
