@@ -7,7 +7,7 @@
     outline: 0;
     box-shadow: none;
 }
-#scrolled_chat > *{
+scrolledwindow > *{
     background: transparent;
     margin: 1px;
 }

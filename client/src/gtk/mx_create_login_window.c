@@ -21,13 +21,15 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects)
     }
     g_io_add_watch(g_io_channel_unix_new((gint)mainObjects->fd), G_IO_IN, (GIOFunc)mx_reciever, mainObjects);
     //
-//    GtkWidget *scrolled_window = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "chatScrolledWindow"));
-//
-//    //gtk_container_add(GTK_CONTAINER(viewPort), mwo->channel_info->messageList);
-//
-//    GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow *)scrolled_window);
-//    gtk_adjustment_set_value(adjustment, gtk_adjustment_get_upper(adjustment));
-//    gtk_scrolled_window_set_vadjustment((GtkScrolledWindow *)scrolled_window, (GtkAdjustment *)adjustment);
+    mainObjects->viewPort = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "scrolled_chat"));
+    GtkWidget *scrolled_window = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "chatScrolledWindow"));
+
+    //gtk_container_add(GTK_CONTAINER(mainObjects->viewPort), mwo->channel_info->messageList);
+
+    GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow *)scrolled_window);
+    gtk_adjustment_set_value(adjustment, gtk_adjustment_get_upper(adjustment));
+    gtk_scrolled_window_set_vadjustment((GtkScrolledWindow *)scrolled_window, (GtkAdjustment *)adjustment);
+
     //
     mainObjects->Window = GTK_WINDOW(gtk_builder_get_object(mainObjects->builder, "main_window"));
     mainObjects->loginWindow = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "login_box"));
@@ -51,6 +53,7 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects)
     mainObjects->entryMessage = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "message_entry"));
 
     mainObjects->chatList = gtk_list_box_new();
+//    gtk_widget_set_hexpand(mainObjects->chatList, TRUE);
     gtk_list_box_set_selection_mode(GTK_LIST_BOX(mainObjects->chatList), GTK_SELECTION_NONE);
     gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mainObjects->builder, "scrolled_window_chats")), mainObjects->chatList);
 

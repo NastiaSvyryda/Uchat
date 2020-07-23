@@ -49,18 +49,9 @@ void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
 //    gtk_widget_show_all(GTK_WIDGET(mwo->Window));
     //GtkWidget *viewPort = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "scrolled_chat"));
 
-//    GtkWidget *scrolled_window = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "chatScrolledWindow"));
-//
-//    //gtk_container_add(GTK_CONTAINER(viewPort), mwo->channel_info->messageList);
-//
-//    GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow *)scrolled_window);
-//    gtk_adjustment_set_value(adjustment, gtk_adjustment_get_upper(adjustment));
-//    gtk_scrolled_window_set_vadjustment((GtkScrolledWindow *)scrolled_window, (GtkAdjustment *)adjustment);
-
     //mx_set_component(mwo, mwo->chatWindow);
-    gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->channel_info->messageList);
+    gtk_container_add(GTK_CONTAINER(mwo->viewPort), mwo->channel_info->messageList);
     mx_set_component(mwo, mwo->chatWindow);
-    //gtk_widget_show_all(GTK_WIDGET(mwo->channel_info->messageList));
 }
 
 GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo)
@@ -70,6 +61,7 @@ GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo)
 
     chat_row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
     button = gtk_button_new_with_label(text);
+//    gtk_widget_set_hexpand(chat_row, TRUE);
     gtk_widget_set_hexpand(button, TRUE);
     gtk_widget_set_halign(button, GTK_ALIGN_CENTER);
     gtk_widget_set_valign(button, GTK_ALIGN_CENTER);
