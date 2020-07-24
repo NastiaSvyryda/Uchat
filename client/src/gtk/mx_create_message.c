@@ -26,8 +26,7 @@ void mx_on_message_clicked(__attribute__((unused)) GtkWidget *button, GdkEventBu
     free(json);
 }
 
-GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo, int align)
-{
+GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo, int align) {
     GtkWidget *button;
     GtkWidget *label;
 
@@ -36,9 +35,7 @@ GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo,
         gtk_widget_set_halign(mwo->mess_row, GTK_ALIGN_START);
     else
         gtk_widget_set_halign(mwo->mess_row, GTK_ALIGN_END);
-
     button = gtk_button_new();
-
     label = gtk_label_new(text);
     gtk_label_set_line_wrap((GtkLabel *)label, TRUE);
     gtk_label_set_line_wrap_mode((GtkLabel *)label, PANGO_WRAP_WORD_CHAR);

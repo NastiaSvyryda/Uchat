@@ -6,6 +6,7 @@ void mx_apply_add_chat(__attribute__((unused)) GtkWidget *button, gpointer data)
     int j = 0;
 
     if (mwo->ids_logins_arr) {
+        mwo->add_chat = 0;
         //gtk_dialog_response(GTK_DIALOG(mwo->addChat_Dialog), GTK_RESPONSE_DELETE_EVENT);
         mwo->curr_chat = (gchar *) mx_handle_user_input(
                 gtk_entry_get_text(mwo->entryChatName));
@@ -35,15 +36,18 @@ void mx_apply_add_chat(__attribute__((unused)) GtkWidget *button, gpointer data)
             mwo->ids_logins_arr = NULL;
         }
         mx_set_component(mwo, mwo->chatWindow);
+        gtk_widget_destroy(mwo->addChat_Dialog);
     }
 }
 
 void mx_cancel_add_chat(__attribute__((unused)) GtkWidget *button, __attribute__((unused)) gpointer data) {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
 
-    g_clear_object(&mwo->addChat_Dialog);
+    //g_clear_object(&mwo->addChat_Dialog);
     //g_clear_object(&mwo->entryChatName);
     //g_clear_object(&mwo->usersList);
-    if (mwo->ids_logins_arr)
-        free(mwo->ids_logins_arr);
+//    if (mwo->ids_logins_arr)
+//        free(mwo->ids_logins_arr);
+    mwo->add_chat = 0;
+    gtk_widget_destroy(mwo->addChat_Dialog);
 }

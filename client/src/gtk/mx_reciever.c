@@ -213,6 +213,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
         GtkWidget *row;
         GtkWidget *label;
         gchar *text;
+        //GtkWidget *usersList;
         char *temp = NULL;
         int k = 0;
         mwo->ids_logins_arr = malloc(sizeof(t_id_login) * (json->ids_logins_arr_size - 1));

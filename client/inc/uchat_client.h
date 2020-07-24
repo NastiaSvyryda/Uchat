@@ -181,6 +181,8 @@ typedef struct s_MainWindowObjects {//changed
     GtkCssProvider *provider;
 
     int visibility;
+    int add_chat;
+    int info;
 
     //int channel;
 
