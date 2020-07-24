@@ -201,6 +201,7 @@ typedef struct s_MainWindowObjects {//changed
 int mx_open_connection(const char *hostname, int port);
 SSL_CTX* mx_init_ctx(void);
 void mx_show_certs(SSL* ssl);
+void mx_SSL_read_to_str(SSL *ssl, char *buf, int len);
 ///end TLS
 
 gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);

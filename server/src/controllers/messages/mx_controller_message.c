@@ -66,7 +66,7 @@ void mx_send_message_to_channel(t_list *data, t_main *main, t_json_data *json, i
                     json->type = type;
                     json_str = mx_json_make_json(type, json);
                     mx_logger("JSON write:", json_str + 4);
-                    SSL_write(main->client->ssl, json_str, mx_strlen(json_str + 4) + 4);
+                    SSL_write(main->client->ssl, json_str, *(int *)json_str + 4);
                     break;
                 } else if (main->client->user_id == json->message.client1_id
                            && main->client->user_id == mx_atoi(data->data)) {
@@ -74,7 +74,7 @@ void mx_send_message_to_channel(t_list *data, t_main *main, t_json_data *json, i
                     json->status = 200;
                     json_str = mx_json_make_json(type_response, json);
                     mx_logger("JSON write:", json_str + 4);
-                    SSL_write(main->client->ssl, json_str, mx_strlen(json_str + 4) + 4);
+                    SSL_write(main->client->ssl, json_str, *(int *)json_str + 4);
                 }
 //                else if (client->user_id != json->message.client1_id
 //                         && client->user_id != mx_atoi(data->data)) {

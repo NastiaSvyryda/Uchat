@@ -89,7 +89,7 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
     if (SSL_connect(mwo->ssl) == -1) /* perform the connection */
         ERR_print_errors_fp(stderr);
     else
-        SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
+        SSL_write(mwo->ssl, json_str, *(int *)json_str + 4);
     mx_strdel(&json_str);
     mx_strdel(&json->message.text);
     free(json);

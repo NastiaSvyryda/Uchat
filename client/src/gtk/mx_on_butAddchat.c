@@ -49,7 +49,7 @@ void mx_on_butAddchat(__attribute__((unused)) GtkWidget *button, gpointer data)
     strcpy(json.token, mwo->token);
     json_str = mx_json_make_json(JS_GET_USERS, &json);
     mx_printstr(json_str + 4);
-    SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
+    SSL_write(mwo->ssl, json_str, *(int *)json_str + 4);
     mx_strdel(&json_str);
 
     mwo->addChat_Dialog = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "dialog_add_chat"));

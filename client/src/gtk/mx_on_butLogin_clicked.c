@@ -15,7 +15,7 @@ static void login_request(t_login *login, SSL *ssl)
     if (SSL_connect(ssl) == -1) /* perform the connection */
         ERR_print_errors_fp(stderr);
     else
-        SSL_write(ssl, json_str, mx_strlen(json_str + 4) + 4);
+        SSL_write(ssl, json_str, *(int *)json_str + 4);
 }
 
 void mx_on_butLogin_clicked(__attribute__((unused)) GtkWidget *button, gpointer data)
