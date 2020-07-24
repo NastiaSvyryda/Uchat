@@ -6,6 +6,7 @@
     color: aliceblue;
     outline: 0;
     box-shadow: none;
+    caret-color: #494d57;
 }
 scrolledwindow > *{
     background: transparent;
@@ -46,18 +47,31 @@ entry:focus {
     text-shadow: 0 .5px #494d57;
 }
 
-textview text{
+#scrolled_window_message {
     box-shadow: none;
-    border: .7px solid white;
-    color: #494d57;
+    background-color: aliceblue;
+
+}
+textview {
+    padding: 5px;
     font-weight: bold;
     background-color: aliceblue;
+    box-shadow: none;
+    border: .7px solid white;
+}
+textview text{
+    /*background-color: aliceblue;*/
+    background-color: transparent;
+    color: #494d57;
 }
 viewport {
     background-color: transparent;
 }
 #scrolled_window_chats box button{
     min-width: 28em;
+}
+notebook lable {
+    color: aliceblue;
 }
 
 

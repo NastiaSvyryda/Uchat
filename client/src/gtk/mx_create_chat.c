@@ -51,6 +51,7 @@ void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
 
     //mx_set_component(mwo, mwo->chatWindow);
 
+
     gtk_container_add(GTK_CONTAINER(mwo->viewPort), mwo->channel_info->messageList);
     GtkWidget *scrolled_window = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "chatScrolledWindow"));
 

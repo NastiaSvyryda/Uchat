@@ -39,6 +39,7 @@ button {
     box-shadow: none;
     border-width: 1px;
     background-color: #494d57;
+    text-shadow: 0 0 1px aliceblue;
     /*text-shadow: white 0 0 .5px;*/
 }
 #dialog label {
@@ -62,6 +63,42 @@ textview text{
     font-weight: bold;
     background-color: #494d57;
 }
+textview {
+    box-shadow: none;
+    border: .7px solid white;
+    color: aliceblue;
+    font-weight: bold;
+    background-color: #494d57;
+}
+textview text{
+    /*background-color: aliceblue;*/
+    background-color: transparent;
+    color: aliceblue;
+    border: none;
+}
+viewport {
+    border: none;
+    background-color: transparent;
+}
+dialog-notebook label {
+    background-color: #494d57;
+    color: black;
+}
+notebook stack{
+    background-color: red;
+}
+ notebook tab label{
+    color: #494d57;
+ }
+ notebook button label {
+     color: aliceblue;
+ }
+ #scrolled_chat button {
+     font-weight: 300;
+ }
 
+ scrolledwindow {
+    border-style: double;
+ }
 
 

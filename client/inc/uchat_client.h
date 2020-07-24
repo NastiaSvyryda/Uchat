@@ -226,6 +226,7 @@ _Bool mx_validate_message(char *str, void *window);
 _Bool mx_validate_user_name(char *str, void *window);
 _Bool mx_validate_user_surname(char *str, void *window);
 //gtk
+void mx_update_user_info(__attribute__((unused)) GtkWidget *button, gpointer data);
 
 
 void mx_str_to_file(const char *filepath, const char *data);
