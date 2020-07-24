@@ -170,8 +170,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     mx_printchar('\n');
     if (json->type == JS_REG)
     {
-        if (json->status == 200)
-        {
+        if (json->status == 200) {
             mwo->user_id = json->user_id;
             strcpy(mwo->login, json->pers_info.login);
             strcpy(mwo->first_name, json->pers_info.first_name);
