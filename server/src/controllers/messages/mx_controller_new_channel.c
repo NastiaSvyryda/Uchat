@@ -1,85 +1,69 @@
 #include "uchat_server.h"
 
 static bool check_channels (t_json_data *json) {
-    char *where = NULL;
-    char **fill = NULL;
-    t_list *data = NULL;
-    bool ret;
-    fill = mx_model_channel_fill_table();
-    asprintf(&where, "%s='%s' AND %s=%d",
-            fill[1],
+    t_database_query *db = mx_database_query_create();
+    bool status = true;
+
+    db->model_fill_table = mx_model_channel_fill_table();
+    asprintf(&db->fill_table, "%s", db->model_fill_table[0]);
+    asprintf(&db->where, "%s='%s' AND %s=%d",
+            db->model_fill_table[1],
             json->new_channel_data.channel_name,
-            fill[2],
+            db->model_fill_table[2],
             json->message.client1_id);
-    data = mx_read_database(mx_model_channel_database(), mx_model_channel_name_table(), "id", where);
-    if (data == NULL)
-        ret = false;
-    else
-        ret = true;
-    mx_strdel(&where);
-    mx_del_strarr(&fill);
-    mx_del_list(data, mx_list_size(data));
-    return ret;
+    db->list = mx_read_database(mx_model_channel_database(), mx_model_channel_name_table(), db->fill_table, db->where);
+    if (db->list == NULL)
+        status = false;
+    mx_database_query_clean(&db);
+    return status;
 }
 
 static bool check_users_in_channels (t_json_data *json, int index) {
-    char *where = NULL;
-    char **fill = NULL;
-    t_list *data = NULL;
-    bool ret;
+    t_database_query *db = mx_database_query_create();
+    bool status = true;
 
-    fill = mx_model_user_channel_fill_table();
-    asprintf(&where, "%s=%d AND %s=%d",
-             fill[1],
+    db->model_fill_table = mx_model_user_channel_fill_table();
+    asprintf(&db->fill_table, "%s", db->model_fill_table[0]);
+    asprintf(&db->where, "%s=%d AND %s=%d",
+             db->model_fill_table[1],
              json->new_channel_data.user_ids[index],
-             fill[2],
+             db->model_fill_table[2],
              json->new_channel_data.channel_id);
-    data = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), "id", where);
-    if (data == NULL)
-        ret = false;
-    else
-        ret = true;
-    mx_strdel(&where);
-    mx_del_strarr(&fill);
-    mx_del_list(data, mx_list_size(data));
-    return ret;
+    db->list = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), db->fill_table, db->where);
+    if (db->list == NULL)
+        status = false;
+    mx_database_query_clean(&db);
+    return status;
 }
 
 void mx_get_channel_id_from_database_channels(t_json_data *json) {
-    char *where = NULL;
-    char **fill = NULL;
-    t_list *data = NULL;
+    t_database_query *db = mx_database_query_create();
 
-    fill = mx_model_channel_fill_table();
-    asprintf(&where ,"%s='%s' AND %s=%d",
-             fill[1],
+    db->model_fill_table = mx_model_channel_fill_table();
+    asprintf(&db->fill_table, "%s", db->model_fill_table[0]);
+    asprintf(&db->where,"%s='%s' AND %s=%d",
+             db->model_fill_table[1],
              json->new_channel_data.channel_name,
-             fill[2],
+             db->model_fill_table[2],
              json->message.client1_id);
-    data = mx_read_database(mx_model_channel_database(), mx_model_channel_name_table(), "id", where);
-    json->new_channel_data.channel_id = mx_atoi(data->data);
-    mx_strdel(&where);
-    mx_del_strarr(&fill);
-    mx_del_list(data, mx_list_size(data));
+    db->list = mx_read_database(mx_model_channel_database(), mx_model_channel_name_table(), db->fill_table, db->where);
+    json->new_channel_data.channel_id = mx_atoi(db->list->data);
+    mx_database_query_clean(&db);
 }
 
 static void fill_database_channels(t_json_data *json) {
-    char *fill_str = NULL;
-    char **fill_table = NULL;
-    char *value_str = NULL;
+    t_database_query *db = mx_database_query_create();
 
     if (check_channels(json) == false) {
-        fill_table = mx_model_channel_fill_table();
-        asprintf(&fill_str, "%s, %s",
-                 fill_table[1],
-                 fill_table[2]);
-        asprintf(&value_str, "\"%s\", %d",
+        db->model_fill_table = mx_model_channel_fill_table();
+        asprintf(&db->fill_table, "%s, %s",
+                 db->model_fill_table[1],
+                 db->model_fill_table[2]);
+        asprintf(&db->value, "\"%s\", %d",
                  json->new_channel_data.channel_name,
                  json->message.client1_id);
-        json->new_channel_data.channel_id = mx_create_databases(mx_model_channel_database(), mx_model_channel_name_table(), fill_str, value_str);
-        mx_del_strarr(&fill_table);
-        mx_strdel(&value_str);
-        mx_strdel(&fill_str);
+        json->new_channel_data.channel_id = mx_create_databases(mx_model_channel_database(), mx_model_channel_name_table(), db->fill_table, db->value);
+        mx_database_query_clean(&db);
     }
     else
         mx_get_channel_id_from_database_channels(json);
@@ -88,28 +72,22 @@ static void fill_database_channels(t_json_data *json) {
 
 
 static void fill_database_user_channel(t_json_data *json) {
-    char *fill_str = NULL;
-    char **fill_table = NULL;
-    char *value_str = NULL;
+    t_database_query *db = NULL;
 
-
-    mx_printint(json->new_channel_data.user_ids_size);
     for (int i = 0; i < json->new_channel_data.user_ids_size; i++) {
         if (check_users_in_channels(json, i) == false) {
-            fill_table = mx_model_user_channel_fill_table();
-            asprintf(&fill_str, "%s, %s, %s",
-                     fill_table[1],
-                     fill_table[2],
-                     fill_table[3]);
-            asprintf(&value_str, "%d, %d, %s",
+            db = mx_database_query_create();
+            db->model_fill_table = mx_model_user_channel_fill_table();
+            asprintf(&db->fill_table, "%s, %s, %s",
+                     db->model_fill_table[1],
+                     db->model_fill_table[2],
+                     db->model_fill_table[3]);
+            asprintf(&db->value, "%d, %d, %s",
                      json->new_channel_data.user_ids[i],
                      json->new_channel_data.channel_id,
                      "datetime('now')");
-            mx_create_databases(mx_model_user_channel_database(), mx_model_user_channel_name_table(), fill_str,
-                                value_str);
-            mx_del_strarr(&fill_table);
-            mx_strdel(&value_str);
-            mx_strdel(&fill_str);
+            mx_create_databases(mx_model_user_channel_database(), mx_model_user_channel_name_table(), db->fill_table, db->value);
+            mx_database_query_clean(&db);
         }
     }
 }

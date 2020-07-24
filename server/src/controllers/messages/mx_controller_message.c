@@ -1,65 +1,57 @@
 #include "uchat_server.h"
 
 static void fill_database_message(t_json_data *json) {
-    char *fill_str = NULL;
-    char **fill_table = NULL;
-    char *value_str = NULL;
-    fill_table = mx_model_message_fill_table();
-    asprintf(&fill_str, "%s, %s, %s, %s",
-             fill_table[1],
-             fill_table[2],
-             fill_table[3],
-             fill_table[4]);
-    asprintf(&value_str, "\"%d\", \"%s\", %s, \"%d\"",
+    t_database_query *db = mx_database_query_create();
+
+    db->model_fill_table = mx_model_message_fill_table();
+    asprintf(&db->fill_table, "%s, %s, %s, %s",
+             db->model_fill_table[1],
+             db->model_fill_table[2],
+             db->model_fill_table[3],
+             db->model_fill_table[4]);
+    asprintf(&db->value, "\"%d\", \"%s\", %s, \"%d\"",
              json->message.client1_id,
              json->message.text,
              "datetime('now')",
              json->message.channel_id);
-    mx_create_databases(mx_model_message_database(), mx_model_message_name_table(), fill_str, value_str);
-    mx_del_strarr(&fill_table);
-    mx_strdel(&value_str);
-    mx_strdel(&fill_str);
+    mx_create_databases(mx_model_message_database(), mx_model_message_name_table(), db->fill_table, db->value);
+    mx_database_query_clean(&db);
 }
 
 static void get_message_id_from_database(t_json_data *json) {
-    char *where = NULL;
-    char **fill = NULL;
-    t_list *data = NULL;
-    char *user_id = mx_itoa(json->message.channel_id);
+    t_database_query *db = mx_database_query_create();
 
-    fill = mx_model_message_fill_table();
-    asprintf(&where, "%s=%d AND %s='%s' AND %s=%d",
-             fill[1],
+    db->model_fill_table = mx_model_message_fill_table();
+    asprintf(&db->fill_table, "%s, %s",
+             db->model_fill_table[0],
+             db->model_fill_table[3]);
+    asprintf(&db->where, "%s=%d AND %s='%s' AND %s=%d",
+             db->model_fill_table[1],
              json->message.client1_id,
-             fill[2],
+             db->model_fill_table[2],
              json->message.text,
-             fill[4],
+             db->model_fill_table[4],
              json->message.channel_id);
-    data = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), fill[0], where);
-    json->message.message_id = mx_atoi(data->data);
-    mx_del_list(data, mx_list_size(data));
-    data = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), fill[3], where);
-    json->message.delivery_time = (long)data->data;
-    mx_strdel(&user_id);
-    mx_strdel(&where);
-    mx_del_strarr(&fill);
-    mx_del_list(data, mx_list_size(data));
+    db->list = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), db->fill_table, db->where);
+    json->message.message_id = mx_atoi(db->list->data);
+    json->message.delivery_time = (long)db->list->next->data;
+    mx_database_query_clean(&db);
 }
 
 t_list *mx_get_user_id_from_database_channels(int channel_id) {
-    char *where = NULL;
-    char **fill = NULL;
-    t_list *data = NULL;
+    t_database_query *db = mx_database_query_create();
+    t_list *list = NULL;
 
-    fill = mx_model_user_channel_fill_table();
-    asprintf(&where ,"%s=%d",
-            fill[2],
+    db->model_fill_table = mx_model_user_channel_fill_table();
+    asprintf(&db->fill_table ,"%s", db->model_fill_table[1]);
+    asprintf(&db->where ,"%s=%d",
+            db->model_fill_table[2],
             channel_id);
-    data = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), "user_id", where);
-    mx_strdel(&where);
-    mx_del_strarr(&fill);
-    return data;
+    list = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), db->fill_table, db->where);
+    mx_database_query_clean(&db);
+    return list;
 }
+
 void mx_send_message_to_channel(t_list *data, t_main *main, t_json_data *json, int type, int type_response) {
     t_list *tmp = data;
     char *json_str = NULL;
@@ -112,10 +104,10 @@ void mx_send_message_to_channel(t_list *data, t_main *main, t_json_data *json, i
 
 void mx_controller_message(t_main *main, t_json_data *json) {
     t_list *data = NULL;
+
     main->client = main->client->first;
-    if (json->new_channel == true) {
+    if (json->new_channel == true)
         mx_controller_new_channel(json);
-    }
     fill_database_message(json);
     data = mx_get_user_id_from_database_channels(json->message.channel_id);
     get_message_id_from_database(json);
