@@ -238,8 +238,10 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
         GtkWidget *mess_row;
         gchar *text_t;
         char *temp = NULL;
+
+        //mwo->channel = 1;
         mwo->channel_info = mwo->channel_info->first;
-        while (mwo->channel_info != NULL) {
+        while (mwo->channel_info != NULL && mwo->channel_info->chat_button != NULL) {
             if (mwo->channel_info->channel_data.channel_id ==
                 json->message.channel_id)
                 break;

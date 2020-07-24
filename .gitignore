@@ -16,3 +16,4 @@ server/src/*.cc
 ./*.json
 log.txt
 database.db
+client_unit_tests/

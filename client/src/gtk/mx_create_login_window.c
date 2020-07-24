@@ -22,15 +22,6 @@ void mx_create_login_window(t_mainWindowObjects *mainObjects)
     g_io_add_watch(g_io_channel_unix_new((gint)mainObjects->fd), G_IO_IN, (GIOFunc)mx_reciever, mainObjects);
     //
     mainObjects->viewPort = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "scrolled_chat"));
-    GtkWidget *scrolled_window = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "chatScrolledWindow"));
-
-    //gtk_container_add(GTK_CONTAINER(mainObjects->viewPort), mwo->channel_info->messageList);
-
-    GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow *)scrolled_window);
-    gtk_adjustment_set_value(adjustment, gtk_adjustment_get_upper(adjustment));
-    gtk_scrolled_window_set_vadjustment((GtkScrolledWindow *)scrolled_window, (GtkAdjustment *)adjustment);
-
-    //
     mainObjects->Window = GTK_WINDOW(gtk_builder_get_object(mainObjects->builder, "main_window"));
     mainObjects->loginWindow = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "login_box"));
     mainObjects->mainWindow = GTK_WIDGET(gtk_builder_get_object(mainObjects->builder, "chats_box"));
