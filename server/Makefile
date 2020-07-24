@@ -9,6 +9,7 @@ SRC_DIRS = src \
 			src/controllers/messages \
 			src/controllers/user \
 			src/json \
+			src/json/user \
 			src/json/auth \
 			src/json/message \
 			src/json/response/auth \
@@ -22,6 +23,7 @@ SRC_DIRS = src \
 			src/validations \
 			src/validations/auth \
 			src/system/security
+
 SRC_DIR = src
 
 INC_DIR = inc

@@ -60,6 +60,7 @@ typedef enum e_json_types {
     JS_MES_OUT,      // JSON Type - output message
     JS_GET_USERS,    // JSON Type - get all the users logins and ids
     JS_MES_HIST,     // JSON Type - load channel messages history
+    JS_PERS_INFO_UPD,  // JSON Type - personal info update 
     JS_NUM           // JSON types number
 }            t_json_types;
 
@@ -161,6 +162,7 @@ char *mx_json_make_json(enum e_json_types type, t_json_data *data);
 char *mx_json_log_in_response(t_json_data *data);
 char *mx_json_log_out_response(t_json_data *data);
 char *mx_json_register_response(t_json_data *data);
+char *mx_json_personal_info_upd_response(t_json_data *data);
 //Message
 char *mx_json_message_in_request(t_json_data *data);
 char *mx_json_message_out_response(t_json_data *data);

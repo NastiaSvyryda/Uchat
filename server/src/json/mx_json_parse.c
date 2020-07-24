@@ -19,7 +19,8 @@ static bool is_valid_json_data(t_json_data *data) {
         || (data->type == JS_MES_OUT && data->message.client1_id
             && data->message.channel_id && *data->message.text)
         || (data->type == JS_GET_USERS)
-        || (data->type == JS_MES_HIST))
+        || (data->type == JS_MES_HIST)
+        || (data->type == JS_PERS_INFO_UPD))
         return true;
     return false;
 }
@@ -53,10 +54,12 @@ t_json_data *mx_json_parse(char *s) {
         return parse_failed(jo, json, "str: json_tokener_parse error");
     if ((json->type = json_object_get_int(buf)) == 0 && errno == EINVAL)
         return parse_failed(jo, json, "format of TYPE field");
-    if (json->type != JS_LOG_IN && json->type != JS_REG && (!(buf = json_object_object_get(jo, "user_id"))
+    if (json->type != JS_LOG_IN && json->type != JS_REG
+        && (!(buf = json_object_object_get(jo, "user_id"))
         || (json->user_id = json_object_get_int(buf)) == 0))
         return parse_failed(jo, json, "or missing user_id field");
-    if (json->type != JS_LOG_IN && json->type != JS_REG && (!(buf = json_object_object_get(jo, "token"))
+    if (json->type != JS_LOG_IN && json->type != JS_REG
+        && (!(buf = json_object_object_get(jo, "token"))
         || !*json_object_get_string(buf)))
         return parse_failed(jo, json, "or missing TOKEN field");
     else
