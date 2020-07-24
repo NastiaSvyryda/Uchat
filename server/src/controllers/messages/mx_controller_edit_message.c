@@ -12,7 +12,7 @@ static void change_message_database(t_json_data *json) {
             json->message.message_id,
             db->model_fill_table[1],
             json->message.client1_id);
-    mx_update_database(mx_model_message_database(), mx_model_message_name_table(), db->set, db->where);
+    mx_update_database(mx_model_message_database(), mx_model_message_name_table(), db);
     mx_database_query_clean(&db);
 }
 
@@ -26,7 +26,7 @@ static void get_channel_id_from_database(t_json_data *json, t_json_data *json_re
              json->message.message_id,
              db->model_fill_table[1],
              json->message.client1_id);
-    db->list = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), db->fill_table, db->where);
+    db->list = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), db);
     json_response->message.channel_id = mx_atoi(db->list->data);
     mx_database_query_clean(&db);
 }

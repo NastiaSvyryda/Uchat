@@ -21,7 +21,7 @@ void mx_controller_register(t_json_data *json, t_main *main) {
                  json->pers_info.login,
                  mx_hmac_sha_256(json->pers_info.login, json->pers_info.password),
                  "datetime('now')");
-        main->client->user_id = mx_create_databases(mx_model_user_database(), mx_model_user_name_table(), db->fill_table, db->value);
+        main->client->user_id = mx_create_databases(mx_model_user_database(), mx_model_user_name_table(), db);
         main->client->token = mx_insert_token(db->model_fill_table, main->client->user_id);
         mx_res_js_register_success(main, json);
         mx_strdel(&main->client->token);

@@ -14,7 +14,7 @@ static void fill_database_message(t_json_data *json) {
              json->message.text,
              "datetime('now')",
              json->message.channel_id);
-    mx_create_databases(mx_model_message_database(), mx_model_message_name_table(), db->fill_table, db->value);
+    mx_create_databases(mx_model_message_database(), mx_model_message_name_table(), db);
     mx_database_query_clean(&db);
 }
 
@@ -32,7 +32,7 @@ static void get_message_id_from_database(t_json_data *json) {
              json->message.text,
              db->model_fill_table[4],
              json->message.channel_id);
-    db->list = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), db->fill_table, db->where);
+    db->list = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), db);
     json->message.message_id = mx_atoi(db->list->data);
     json->message.delivery_time = (long)db->list->next->data;
     mx_database_query_clean(&db);
@@ -47,7 +47,7 @@ t_list *mx_get_user_id_from_database_channels(int channel_id) {
     asprintf(&db->where ,"%s=%d",
             db->model_fill_table[2],
             channel_id);
-    list = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), db->fill_table, db->where);
+    list = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), db);
     mx_database_query_clean(&db);
     return list;
 }

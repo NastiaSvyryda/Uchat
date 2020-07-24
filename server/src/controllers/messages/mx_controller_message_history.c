@@ -19,7 +19,7 @@ void mx_controller_message_history(t_json_data *json, t_clients *client) {
                  json->message.last_message_id,
                  json->message.last_message_id + mx_config_pagination() );
     }
-    db->list = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), db->fill_table, db->where);
+    db->list = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), db);
     mx_res_js_get_message_history(client, db->list);
     mx_database_query_clean(&db);
 }

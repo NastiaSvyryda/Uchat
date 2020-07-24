@@ -1,32 +1,31 @@
 #include "uchat_server.h"
 
 static void mx_get_channel_name_from_database_channels(t_json_data *json, int index) {
-    char *where = NULL;
-    char **fill = NULL;
-    t_list *data = NULL;
+    t_database_query *db = mx_database_query_create();
 
-    fill = mx_model_channel_fill_table();
-    asprintf(&where, "%s=%d",
-             fill[0],
+    db->model_fill_table = mx_model_channel_fill_table();
+    asprintf(&db->fill_table, "%s", db->model_fill_table[1]);
+    asprintf(&db->where, "%s=%d",
+             db->model_fill_table[0],
              json->channels_arr[index].channel_id);
-    data = mx_read_database(mx_model_channel_database(), mx_model_channel_name_table(), "name", where);
-    strcpy(json->channels_arr[index].channel_name, data->data);
-    mx_strdel(&where);
-    mx_del_strarr(&fill);
+    db->list = mx_read_database(mx_model_channel_database(), mx_model_channel_name_table(), db);
+    strcpy(json->channels_arr[index].channel_name, db->list->data);
+    mx_database_query_clean(&db);
 }
 
 static void mx_fill_channels(t_json_data *json) {
-    char *where = NULL;
-    char **fill = NULL;
+    t_database_query *db = mx_database_query_create();
+
     t_list *channel_id = NULL;
     t_list *user_id = NULL;
     int k = 0;
     int j = 0;
-    fill = mx_model_user_channel_fill_table();
-    asprintf(&where ,"%s=%d",
-             fill[1],
+    db->model_fill_table = mx_model_user_channel_fill_table();
+    asprintf(&db->fill_table ,"%s", "channel_id");
+    asprintf(&db->where ,"%s=%d",
+             db->model_fill_table[1],
              json->user_id);
-    channel_id = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), "channel_id", where);
+    channel_id = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), db);
     json->channels_arr_size = mx_list_size(channel_id);
     json->channels_arr = malloc(sizeof(t_channel) * json->channels_arr_size);
     while (channel_id != NULL) {
@@ -47,8 +46,7 @@ static void mx_fill_channels(t_json_data *json) {
          k++;
     }
     mx_del_list(channel_id, json->channels_arr_size);
-    mx_strdel(&where);
-    mx_del_strarr(&fill);
+    mx_database_query_clean(&db);
 }
 
 static void json_login_success(t_list *data, t_main *main) {
@@ -97,7 +95,7 @@ void mx_controller_login(t_json_data *json, t_main *main) {
              json->pers_info.login,
              db->model_fill_table[4],
              mx_hmac_sha_256(json->pers_info.login, json->pers_info.password));
-    db->list = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), db->fill_table, db->where);
+    db->list = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), db);
     if (db->list != NULL) {
         main->client->user_id = mx_atoi(db->list->data);
         main->client->token =  mx_insert_token(db->model_fill_table, main->client->user_id);

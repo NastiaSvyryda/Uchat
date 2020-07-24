@@ -10,7 +10,7 @@ void mx_controller_log_out(t_json_data *json, t_main *main, t_clients *cur_clien
     asprintf(&db->where, "%s = %i",
              db->model_fill_table[0],
              json->user_id);
-    mx_update_database(mx_model_user_database(), mx_model_user_name_table(), db->set, db->where);
+    mx_update_database(mx_model_user_database(), mx_model_user_name_table(), db);
     mx_res_js_log_out_success(cur_client);
     mx_delete_client(&main, cur_client->fd);
     mx_database_query_clean(&db);

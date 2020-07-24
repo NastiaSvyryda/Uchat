@@ -11,7 +11,7 @@ static int callback(void *data, int argc, char **argv, char **azColName) {
     return 0;
 }
 
-t_list *sqlite3_database__read(char *table, char *fill_table, char *where) {
+t_list *sqlite3_database__read(char *table, t_database_query *database_query) {
     sqlite3 *db;
     char *err_msg = 0;
     int rc = sqlite3_open(mx_config_sqlite3_db_name(), &db);
@@ -19,10 +19,15 @@ t_list *sqlite3_database__read(char *table, char *fill_table, char *where) {
     t_list *list = NULL;
 
     mx_valid_sqlite3_open_db(rc, db);
-    if (where == NULL)
-        asprintf(&sql, "SELECT %s FROM %s;", fill_table, table);
+    if (database_query->where == NULL)
+        asprintf(&sql, "SELECT %s FROM %s;",
+                database_query->fill_table,
+                table);
     else
-        asprintf(&sql, "SELECT %s FROM %s WHERE %s;", fill_table, table, where);
+        asprintf(&sql, "SELECT %s FROM %s WHERE %s;",
+                database_query->fill_table,
+                table,
+                database_query->where);
     mx_logger("read_database sql", sql);
     rc = sqlite3_exec(db, sql, callback, &list, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);
@@ -31,10 +36,10 @@ t_list *sqlite3_database__read(char *table, char *fill_table, char *where) {
     return list;
 }
 
-t_list *mx_read_database(char *database, char *table, char *fill_table, char *where) {
+t_list *mx_read_database(char *database, char *table, t_database_query *database_query) {
     t_list *data = NULL;
 
     if (strcmp(database, "sqlite3") == 0)
-        data =  sqlite3_database__read(table, fill_table, where);
+        data =  sqlite3_database__read(table, database_query);
     return data;
 }
