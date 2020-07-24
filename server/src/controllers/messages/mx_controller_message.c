@@ -64,7 +64,8 @@ void mx_send_message_to_channel(t_list *data, t_main *main, t_json_data *json, i
     t_list *tmp = data;
     char *json_str = NULL;
     int i = 0;
-
+    bool user = false;
+    t_clients *temp = main->client->first;
         while (main->client != NULL) {
             data = tmp;
             while (data != NULL) {
@@ -82,24 +83,37 @@ void mx_send_message_to_channel(t_list *data, t_main *main, t_json_data *json, i
                     json_str = mx_json_make_json(type_response, json);
                     mx_logger("JSON write:", json_str + 4);
                     SSL_write(main->client->ssl, json_str, mx_strlen(json_str + 4) + 4);
-                    i++;
                 }
 //                else if (client->user_id != json->message.client1_id
 //                         && client->user_id != mx_atoi(data->data)) {
-                    else if (mx_atoi(data->data) != json->message.client1_id && main->client->user_id != mx_atoi(data->data) &&  i < mx_list_size(data) ){
-                    json->type = type;
-                    main->wait->json_str = mx_json_make_json(type, json);
-                    mx_printstr("wait:\n");
-                    mx_printint(mx_atoi(data->data));
-                    mx_printstr(main->wait->json_str+4);
-                    main->wait->user_id = mx_atoi(data->data);
-//                    client->first->wait->first = client->first->wait;
-                    main->wait->next = malloc(sizeof(t_wait));
-                    main->wait->next->json_str = NULL;
-                    main->wait->next->first = main->wait->first;
-                    main->wait = main->wait->next;
-                    main->wait->next = NULL;
-                    i++;
+                    else if (i < mx_list_size(data) ){
+                        mx_printstr("GAVNO_IF");
+                        while (temp != NULL) {
+                            if (temp->user_id == mx_atoi(data->data)) {
+                                user = true;
+                                mx_printstr("GAVNO");
+                                break;
+                            }
+                            temp = temp->next;
+                        }
+                        temp = main->client->first;
+                        if (user == false) {
+                            json->type = type;
+                            main->wait->json_str = mx_json_make_json(type, json);
+                            mx_printstr("wait:\n");
+                            mx_printint(mx_atoi(data->data));
+                            mx_printstr(main->wait->json_str + 4);
+                            main->wait->user_id = mx_atoi(data->data);
+//                        client->first->wait->first = client->first->wait;
+                            main->wait->next = malloc(sizeof(t_wait));
+                            main->wait->next->json_str = NULL;
+                            main->wait->next->first = main->wait->first;
+                            main->wait = main->wait->next;
+                            main->wait->next = NULL;
+                        }
+                        else
+                            user = false;
+                        i++;
                 }
                 data = data->next;
             }
