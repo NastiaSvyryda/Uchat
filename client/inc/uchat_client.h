@@ -182,6 +182,8 @@ typedef struct s_MainWindowObjects {//changed
 
     int visibility;
 
+    //int channel;
+
     t_id_login *ids_logins_arr;
     int ids_logins_arr_size;
 
