@@ -82,12 +82,12 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
 
     mwo->channel_info = mwo->channel_info->first;
     //if (mwo->channel_info != NULL) {
-        while (mwo->channel_info != NULL && mwo->channel_info->chat_button != NULL) {
-            if (mwo->channel_info->channel_data.channel_id ==
-                json->message.channel_id)
-                break;
-            mwo->channel_info = mwo->channel_info->next;
-        }
+    while (mwo->channel_info != NULL && mwo->channel_info->chat_button != NULL) {
+        if (mwo->channel_info->channel_data.channel_id ==
+            json->message.channel_id)
+            break;
+        mwo->channel_info = mwo->channel_info->next;
+    }
     //}
     if (mwo->curr_chat_users != NULL && mwo->curr_chat != NULL) {
         strcpy(mwo->channel_info->channel_data.channel_name, mwo->curr_chat);
@@ -155,8 +155,9 @@ static void push_front_message_list(t_message_list **list, t_json_data *json, in
     }
 }
 
-gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data) {
-    t_mainWindowObjects *mwo = (t_mainWindowObjects *) data;
+gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data)
+{
+    t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
     char *json_str = NULL;
     int length = 0;
     t_json_data *json = NULL;
@@ -228,8 +229,10 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
             GtkWidget *mess_row;
             gchar *text_t;
             char *temp = NULL;
+
+            //mwo->channel = 1;
             mwo->channel_info = mwo->channel_info->first;
-            while (mwo->channel_info != NULL) {
+            while (mwo->channel_info != NULL && mwo->channel_info->chat_button != NULL) {
                 if (mwo->channel_info->channel_data.channel_id ==
                     json->message.channel_id)
                     break;
@@ -254,6 +257,5 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
             mx_strdel(&json->message.text);
         }
     }
-
     return TRUE;
 }

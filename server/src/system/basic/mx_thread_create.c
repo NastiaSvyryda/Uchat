@@ -6,7 +6,7 @@ void *main_cycle(void *newfd) {
     t_clients *cur_client = main->client;
     int len = 0;
     char *json_str = NULL;
-
+    puts("hello");
     if (SSL_accept(main->client->ssl) == -1) {
         mx_logger("Connection", "The connection is not secure");
     } else {
