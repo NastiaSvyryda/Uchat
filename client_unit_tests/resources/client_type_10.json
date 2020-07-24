@@ -1,0 +1,7 @@
+{
+    "type": %d,
+    "channel_id": %d,
+    "last_message_id": %d,
+    "user_id": %d,
+    "token": "%s"
+}

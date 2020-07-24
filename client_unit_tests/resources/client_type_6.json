@@ -1,0 +1,8 @@
+{
+    "type": %d,
+    "message_id": %d,
+    "new_message": "%s",
+    "client1_id": %d,
+    "user_id": %d,
+    "token": "%s"
+}

@@ -3,7 +3,5 @@
     "login": "%s",
     "password": "%s",
     "first_name": "%s",
-    "last_name": "%s",
-    "user_id": %d,
-    "token": "%s"
+    "last_name": "%s"
 }
