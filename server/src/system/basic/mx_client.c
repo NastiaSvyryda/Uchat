@@ -45,6 +45,7 @@ void mx_delete_client(t_main **main, int key) {
     // Unlink the node from linked list
     prev->next = temp->next;
     free(temp); // Free memory
+    temp = NULL;
 }
 
 void mx_print_client(t_clients *clients) {

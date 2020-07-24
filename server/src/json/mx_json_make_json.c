@@ -71,7 +71,8 @@ char *mx_json_make_json(enum e_json_types type, t_json_data *data) {
         mx_json_message_in_request,
         mx_json_message_out_response,
         mx_json_get_users_response,
-        mx_json_message_history_response };
+        mx_json_message_history_response,
+        mx_json_personal_info_upd_response };
 
     return fn_p[type](data);
 }

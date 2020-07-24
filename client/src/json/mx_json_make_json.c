@@ -39,7 +39,8 @@ char *mx_json_make_json(enum e_json_types type, t_json_data *data) {
                                             mx_json_message_in_response,
                                             mx_json_message_out_request, 
                                             mx_json_get_users_request,
-                                            mx_json_message_history_request};
+                                            mx_json_message_history_request,
+                                            mx_json_personal_info_upd_request};
 
     return data ? fn_p[type](data) : NULL;
 }

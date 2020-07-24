@@ -10,7 +10,10 @@ char *mx_insert_token(char **fill, int id) {
     asprintf(&db->where, "%s = %i",
              fill[0],
              id);
-    mx_update_database(mx_model_user_database(), mx_model_user_name_table(), db->set, db->where);
+    mx_update_database(mx_model_user_database(), 
+                        mx_model_user_name_table(), 
+                        db->set, 
+                        db->where);
     mx_database_query_clean(&db);
     return token;
 }
