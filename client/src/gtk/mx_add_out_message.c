@@ -15,7 +15,6 @@ static char *strtrim(const char *str) {
 
 void mx_add_out_message(t_mainWindowObjects *mwo, t_json_data *json)
 {//change :find list by channel_id
-    GtkWidget *row;
     gchar *text = NULL;
     char *temp_str = NULL;
     t_message_list *temp_mess = NULL;
@@ -60,15 +59,15 @@ void mx_add_out_message(t_mainWindowObjects *mwo, t_json_data *json)
         mx_strdel(&temp_str);
     }
     if (flag == 0 || mwo->channel_info->message != NULL) {
-        text = g_strdup_printf("%s", json->message.text);
-        row = mx_create_message(text, mwo, 1); //change signal connectors
-        gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), row,
-                            -1);
         temp_mess = malloc(sizeof(t_message_list));
+        text = g_strdup_printf("%s", json->message.text);
         temp_mess->channel_id = json->message.channel_id;
         temp_mess->message_id = json->message.message_id;
         temp_mess->delivery_time = json->message.delivery_time;
         temp_mess->next = NULL;
+        temp_mess->mess_row = mx_create_message(text, mwo, 1); //change signal connectors
+        gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), temp_mess->mess_row,
+                            -1);
         if (mwo->channel_info->message == NULL) {
             mwo->channel_info->message = temp_mess;
             mwo->channel_info->message->first = mwo->channel_info->message;

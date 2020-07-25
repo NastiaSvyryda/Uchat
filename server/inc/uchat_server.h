@@ -145,7 +145,6 @@ void mx_valid_sqlite3_open_db(int rc, sqlite3 *db);
 void mx_valid_sqlite3_failed_data(int rc, sqlite3 *db, char *err_msg);
 int mx_valid_str_isalpha(char *str);
 int mx_valid_register(t_json_data *json);
-bool mx_valid_login_auth(t_list *list);
 bool mx_valid_login(t_json_data *json);
 bool mx_valid_token(int id, char *token);
 bool mx_valid_is_login(char *model_fill_table, t_json_data *json);
@@ -155,7 +154,6 @@ bool mx_valid_is_login(char *model_fill_table, t_json_data *json);
 //Basic
 void mx_str_to_file(const char *filepath, const char *data);
 int mx_parse_new_channel(struct json_object *jo, t_json_data *json);
-void mx_SSL_read_to_str(SSL *ssl, char *buf, int len);
 t_json_data *mx_json_parse(char *s);
 char *mx_get_json_format_template(enum e_json_types type);
 char *mx_get_json_format_supply_template(enum e_json_types type);
@@ -175,7 +173,6 @@ char *mx_json_message_delete_out_response(t_json_data *data);
 char *mx_json_get_users_response(t_json_data *data);
 char *mx_json_message_history_response(t_json_data *data);
 //Response
-void mx_res_js_login_auth(t_main *main);
 void mx_res_js_login_unauthorized(t_main *main);
 void mx_res_js_login_incorrectly_filled_fields(t_clients *client);
 void mx_res_js_register_success(t_main *main, t_json_data *json_data);

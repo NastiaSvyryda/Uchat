@@ -107,6 +107,7 @@ typedef struct s_message_list {
     time_t delivery_time;
     char *text;
     int channel_id;
+    GtkWidget *mess_row;
 //    int last_message_id;
     struct s_message_list *first;
     struct s_message_list *next;
@@ -168,15 +169,15 @@ typedef struct s_MainWindowObjects {//changed
     GtkWidget *label_login;
     GtkWidget *label_chat;
 
-    GtkWidget *mess_row;
     GtkWidget *chatList;
-    GtkWidget *messageList;
     GtkWidget *usersList;
 
     gchar *curr_chat;
     char **curr_chat_users;
     int *user_ids;
     GtkWidget *curr_messageList;
+    GtkWidget *curr_mess_row;
+    char *curr_message;
 
     GtkCssProvider *provider;
 

@@ -14,7 +14,6 @@ static char *get_text_of_textview(GtkWidget *text_view)
 void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer data)
 {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
-    GtkWidget *mess_row;
     char *message = mx_handle_user_input(get_text_of_textview(mwo->entryMessage));
     if (!mx_validate_message(message, mwo->Window))
         return;
@@ -22,7 +21,7 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
     t_json_data *json = calloc(1, sizeof(t_json_data));
 
     ///
-
+    mwo->curr_message = mx_strdup(message);
     if (mwo->curr_chat_users != NULL && mwo->curr_chat != NULL) {
         t_channel channels[1] = {{
                         .channel_id = -1,
@@ -32,41 +31,12 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
         channels->user_ids = malloc(sizeof(int) * channels->user_ids_size);
         for (int i = 0; i < channels->user_ids_size; i++) {
             channels->user_ids[i] = mwo->user_ids[i];
-//            puts("\n\n\nonbutsend");
-//            mx_printint(channels->user_ids[i]);
-//            puts("\n\n\n");
+            puts("\nuser   ");
+            mx_printint(channels->user_ids[i]);
         }
         json->message.channel_id = -1;
         json->new_channel_data = channels[0];
         json->new_channel = true;
-//        mwo->channel_info = mwo->channel_info->first;
-//        while (mwo->channel_info->next != NULL) {
-//            mwo->channel_info = mwo->channel_info->next;
-//        }
-//        GList *children, *iter;
-//
-//        children = gtk_container_get_children(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")));
-//        for (iter = children; iter != NULL; iter = g_list_next(iter)) {
-//            gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), GTK_WIDGET(iter->data));
-//        }
-////    gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(mwo->builder, "gtkbox")), gtk_component, TRUE, TRUE, 5);
-//        gtk_widget_show_all(GTK_WIDGET(mwo->Window));
-        mwo->curr_messageList = gtk_list_box_new();
-        gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->curr_messageList), GTK_SELECTION_NONE);
-        gtk_container_add(GTK_CONTAINER(mwo->viewPort), mwo->curr_messageList);
-        mess_row = mx_create_message(message, mwo, 0); //change signal connectors
-        gtk_list_box_insert(GTK_LIST_BOX(mwo->curr_messageList), mess_row, -1);
-        //gtk_widget_show_all(GTK_WIDGET(mwo->curr_messageList));
-        //mx_set_chat_component(mwo, mwo->curr_messageList);
-        //gtk_widget_show_all(GTK_WIDGET(mwo->chatWindow));
-        GtkWidget *scrolled_window = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "chatScrolledWindow"));
-
-        //gtk_container_add(GTK_CONTAINER(mainObjects->viewPort), mwo->channel_info->messageList);
-
-        GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow *)scrolled_window);
-        gtk_adjustment_set_value(adjustment, gtk_adjustment_get_upper(adjustment));
-        gtk_scrolled_window_set_vadjustment((GtkScrolledWindow *)scrolled_window, (GtkAdjustment *)adjustment);
-        gtk_widget_show_all(GTK_WIDGET(mwo->Window));
     }
     else {
         mwo->channel_info = mwo->channel_info->first;
@@ -78,17 +48,6 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
                 mwo->channel_info = mwo->channel_info->next;
             }
         }
-        mess_row = mx_create_message(message, mwo, 0); //change signal connectors
-        gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), mess_row, -1);
-        GtkWidget *scrolled_window = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "chatScrolledWindow"));
-
-        //gtk_container_add(GTK_CONTAINER(mainObjects->viewPort), mwo->channel_info->messageList);
-
-        GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow *)scrolled_window);
-        gtk_adjustment_set_value(adjustment, gtk_adjustment_get_upper(adjustment));
-        gtk_scrolled_window_set_vadjustment((GtkScrolledWindow *)scrolled_window, (GtkAdjustment *)adjustment);
-        gtk_widget_show_all(GTK_WIDGET(mwo->Window));
-//        gtk_widget_show(GTK_WIDGET(mwo->curr_channel_info->messageList));
         json->message.channel_id = mwo->channel_info->channel_data.channel_id;
     }
     json->type = JS_MES_OUT;

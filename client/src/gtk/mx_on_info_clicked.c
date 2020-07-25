@@ -67,9 +67,9 @@ void mx_on_info_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
         }
         mwo->infoDialog = GTK_WIDGET(
                  gtk_builder_get_object(builder, "dialog_info"));
-        gtk_entry_set_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "login"), mwo->login);
-        gtk_entry_set_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "first_name"), mwo->first_name);
-        gtk_entry_set_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "last_name"), mwo->last_name);
+        gtk_entry_set_text((GtkEntry *)gtk_builder_get_object(builder, "login"), mwo->login);
+        gtk_entry_set_text((GtkEntry *)gtk_builder_get_object(builder, "first_name"), mwo->first_name);
+        gtk_entry_set_text((GtkEntry *)gtk_builder_get_object(builder, "last_name"), mwo->last_name);
         gtk_builder_connect_signals(builder, mwo);
         gtk_window_set_transient_for(GTK_WINDOW(mwo->infoDialog),
                                       mwo->Window);

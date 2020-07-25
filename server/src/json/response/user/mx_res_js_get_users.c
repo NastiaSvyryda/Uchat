@@ -15,7 +15,7 @@ void mx_res_js_get_users(t_clients *client, t_list *list) {
     new_json = mx_json_make_json(JS_GET_USERS, &json);
     mx_logger("JSON write:",  new_json + 4);
     mx_printstr(new_json + 4);
-    SSL_write(client->ssl, new_json, *(int *)new_json + 4);
+    SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
     free(json.ids_logins_arr);
     mx_strdel(&new_json);
 }

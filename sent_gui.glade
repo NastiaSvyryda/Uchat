@@ -258,10 +258,24 @@
                 <property name="position">0</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkButton" id="logout_button1">
+                <property name="label" translatable="yes">Logout</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="mx_on_logout_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -270,6 +284,7 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
+            <property name="spacing">20</property>
             <child>
               <object class="GtkHeaderBar">
                 <property name="visible">True</property>
@@ -287,16 +302,26 @@
               <object class="GtkNotebook" id="notebook_auth">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="margin_left">15</property>
+                <property name="margin_right">15</property>
+                <property name="margin_top">15</property>
+                <property name="margin_bottom">15</property>
                 <child>
                   <object class="GtkBox" id="box_profile">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_left">15</property>
+                    <property name="margin_right">15</property>
+                    <property name="margin_top">15</property>
+                    <property name="margin_bottom">15</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">15</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="spacing">2</property>
+                        <property name="homogeneous">True</property>
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
@@ -313,6 +338,7 @@
                           <object class="GtkEntry" id="login">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="margin_right">15</property>
                             <property name="placeholder_text" translatable="yes">login</property>
                           </object>
                           <packing>
@@ -332,6 +358,7 @@
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="homogeneous">True</property>
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
@@ -348,6 +375,7 @@
                           <object class="GtkEntry" id="first_name">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="margin_right">15</property>
                             <property name="placeholder_text" translatable="yes">first_name</property>
                           </object>
                           <packing>
@@ -367,6 +395,7 @@
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="homogeneous">True</property>
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
@@ -383,6 +412,7 @@
                           <object class="GtkEntry" id="last_name">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="margin_right">15</property>
                             <property name="placeholder_text" translatable="yes">last_name</property>
                           </object>
                           <packing>
@@ -402,11 +432,12 @@
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="homogeneous">True</property>
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Status:</property>
+                            <property name="label" translatable="yes">New password:</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -415,10 +446,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="status">
+                          <object class="GtkEntry" id="update_password">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="placeholder_text" translatable="yes">status</property>
+                            <property name="margin_right">15</property>
+                            <property name="placeholder_text" translatable="yes">password</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -434,15 +466,38 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="logout_button">
-                        <property name="label" translatable="yes">LOGOUT</property>
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <signal name="clicked" handler="mx_on_logout_clicked" swapped="no"/>
+                        <property name="can_focus">False</property>
+                        <property name="homogeneous">True</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">New password:</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="update_password1">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="margin_right">15</property>
+                            <property name="placeholder_text" translatable="yes">password</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">4</property>
                       </packing>

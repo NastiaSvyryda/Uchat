@@ -55,6 +55,7 @@ void mx_on_butAddchat(__attribute__((unused)) GtkWidget *button, gpointer data)
         mx_printstr(json_str + 4);
         SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
         mx_strdel(&json_str);
+        puts("GET_USERS");
 
         builder = gtk_builder_new();
 //    gtk_style_context_add_provider_for_screen (gdk_screen_get_default(),
@@ -67,6 +68,7 @@ void mx_on_butAddchat(__attribute__((unused)) GtkWidget *button, gpointer data)
                 gtk_builder_get_object(builder, "dialog_add_chat"));
         mwo->entryChatName = GTK_ENTRY(
                 gtk_builder_get_object(builder, "entry_chat_name"));
+        mwo->entryChatUsers = GTK_ENTRY(gtk_builder_get_object(builder, "entry_user_chat"));
 
         mwo->usersList = gtk_list_box_new();
         gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->usersList),

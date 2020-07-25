@@ -17,7 +17,7 @@ void mx_res_js_get_message_history(t_clients *client, t_list *list) {
     json.messages_arr_size = len / 5;
     new_json = mx_json_make_json(JS_MES_HIST, &json);
     mx_logger("JSON write:",  new_json + 4);
-    SSL_write(client->ssl, new_json, *(int *)new_json + 4);
+    SSL_write(client->ssl, new_json, mx_strlen(new_json + 4) + 4);
     if(json.messages_arr != NULL)
         free(json.messages_arr);
     mx_strdel(&new_json);
