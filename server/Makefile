@@ -41,9 +41,6 @@ LIBMX = $(LIBMX_DIR)/libmx.a
 JSONC_DIR = $(LIBS_DIR)/json-c
 JSONC = $(JSONC_DIR)/libjson-c.a
 
-SQLITE3_DIR = $(LIBS_DIR)/sqlite3
-SQLITE3 = $(SQLITE3_DIR)/libsqlite3.a
-
 SSL_DIR = /usr/local/opt/openssl/lib/
 SSL_INC = /usr/local/opt/openssl/include/
  
@@ -52,12 +49,12 @@ GTK_LINK_FLAGS = `pkg-config --cflags  --libs gtk+-3.0`
 GTK_INC_FLAGS = `pkg-config --cflags gtk+-3.0`
 
 LIBS_FLAGS := $(addprefix -L, $(SSL_DIR) \
-	$(addprefix $(LIBS_DIR)/, json-c libmx sqlite3)) \
+	$(addprefix $(LIBS_DIR)/, json-c libmx)) \
 	$(addprefix -l, ssl crypto sqlite3 json-c mx) $(GTK_LINK_FLAGS)
-LIBS_INCS := $(addprefix -I, $(addprefix $(LIBS_DIR)/, json-c libmx/inc sqlite3) \
+LIBS_INCS := $(addprefix -I, $(addprefix $(LIBS_DIR)/, json-c libmx/inc) \
 	$(INC_DIR) $(SSL_INC)) $(GTK_INC_FLAGS)
 
-LIBS = $(LIBMX) $(JSONC) $(SQLITE3)
+LIBS = $(LIBMX) $(JSONC)
 
 EMPTY =
 SPACE = $(EMPTY) $(EMPTY)
@@ -85,9 +82,6 @@ $(LIBMX):
 $(JSONC):
 	@make -sC $(JSONC_DIR)
 
-$(SQLITE3):
-	@make -sC $(SQLITE3_DIR)
-
 out: $(NAME_ROOT)
 
 $(NAME_ROOT): $(NAME)
@@ -97,14 +91,12 @@ $(NAME_ROOT): $(NAME)
 clean:
 	@make -sC $(LIBMX_DIR) $@
 	@make -sC $(JSONC_DIR) $@
-	@make -sC $(SQLITE3_DIR) $@
 	@rm -rf $(OBJ_DIR)
 	@printf "$(OBJ_DIR)\t   \033[31;1mdeleted\033[0m\n"
 
 uninstall: clean
 	@make -sC $(LIBMX_DIR) $@
 	@make -sC $(JSONC_DIR) $@
-	@make -sC $(SQLITE3_DIR) $@
 	@rm -rf $(NAME)
 	@printf "$(NAME) \033[31;1muninstalled\033[0m\n"
 

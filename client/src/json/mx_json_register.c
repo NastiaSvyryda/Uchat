@@ -5,6 +5,6 @@ char *mx_json_register_request(t_json_data *data) {
 
     *(int *)s = asprintf(&s, mx_get_json_format_template(JS_REG), JS_REG,
         data->pers_info.login, data->pers_info.password,
-        data->pers_info.first_name, data->pers_info.last_name);
+        data->pers_info.first_name, data->pers_info.last_name) - 4;
     return s;
 }

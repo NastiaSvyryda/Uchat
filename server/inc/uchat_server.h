@@ -240,6 +240,8 @@ t_clients *mx_create_client(void);
 void mx_delete_client(t_main **main, int key);
 struct sockaddr_in mx_accept_connections(t_main *main, int listenfd);
 void mx_thread_create(t_main *main, struct sockaddr_in cli);
+void mx_SSL_read_to_str(SSL *ssl, char *buf, int len);
+
 //CRUD
 int mx_create_databases(char *database, char *table, t_database_query *database_query);
 t_list *mx_read_database(char *database, char *table, t_database_query *database_query);

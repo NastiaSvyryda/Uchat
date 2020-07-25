@@ -15,7 +15,7 @@ void mx_on_logout_clicked(__attribute__((unused)) GtkWidget *button, gpointer da
     if (SSL_connect(mwo->ssl) == -1) /* perform the connection */
         ERR_print_errors_fp(stderr);
     else
-        SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
+        SSL_write(mwo->ssl, json_str, *(int *)json_str + 4);
     mwo->info = 0;
     gtk_widget_destroy(mwo->infoDialog);
     mx_set_component(mwo, mwo->loginWindow);
@@ -45,7 +45,7 @@ void mx_update_user_info(__attribute__((unused)) GtkWidget *button, gpointer dat
     if (SSL_connect(mwo->ssl) == -1) /* perform the connection */
         ERR_print_errors_fp(stderr);
     else
-        SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
+        SSL_write(mwo->ssl, json_str, *(int *)json_str + 4);
     mwo->info = 0;
     gtk_widget_destroy(mwo->infoDialog);
 }
