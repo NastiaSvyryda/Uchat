@@ -1,5 +1,17 @@
 #include "uchat_server.h"
+void mx_delete_token(t_clients *client) {
+    t_database_query *db = mx_database_query_create();
 
+    db->model_fill_table = mx_model_user_fill_table();
+    asprintf(&db->set, "%s = %s",
+             db->model_fill_table[5],
+             "NULL");
+    asprintf(&db->where, "%s = %i",
+             db->model_fill_table[0],
+             client->user_id);
+    mx_update_database(mx_model_user_database(), mx_model_user_name_table(), db);
+    mx_database_query_clean(&db);
+}
 void *main_cycle(void *newfd) {
     t_json_data *json = NULL;
     t_main *main = (t_main *)newfd;
@@ -15,6 +27,7 @@ void *main_cycle(void *newfd) {
             main->client = main->client->first;
             SSL_read(cur_client->ssl, &len, 4);
             if (len == 0) {
+                mx_delete_token(cur_client);
                 mx_delete_client(&main, cur_client->fd);
                 break;
             }
