@@ -97,7 +97,7 @@ void mx_controller_login(t_json_data *json, t_main *main) {
              mx_hmac_sha_256(json->pers_info.login, json->pers_info.password));
     db->list = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), db);
     if (db->list != NULL) {
-        if(mx_valid_login_auth(db->list) == false) {
+        if(mx_valid_login_auth(db->list) == true) {
             mx_res_js_login_auth(main);
             return;
         }
