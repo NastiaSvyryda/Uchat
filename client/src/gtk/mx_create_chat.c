@@ -34,7 +34,7 @@ void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
         if (SSL_connect(mwo->ssl) == -1) /* perform the connection */
             ERR_print_errors_fp(stderr);
         else
-            SSL_write(mwo->ssl, json_str, mx_strlen(json_str + 4) + 4);
+            SSL_write(mwo->ssl, json_str, *(int *)json_str + 4);
 //    mwo->curr_channel_info->messageList = gtk_list_box_new();
 //    gtk_list_box_set_selection_mode(GTK_LIST_BOX(mwo->curr_channel_info->messageList), GTK_SELECTION_NONE);
 //    gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(mwo->builder, "scrolled_chat")), mwo->curr_channel_info->messageList);

@@ -62,13 +62,13 @@ static void json_login_success(t_list *data, t_main *main) {
     mx_fill_channels(&json);
     new_json = mx_json_make_json(JS_LOG_IN, &json);
     mx_logger("JSON write",  new_json + 4);
-    SSL_write(main->client->ssl, new_json , strlen(new_json + 4) + 4);
+    SSL_write(main->client->ssl, new_json , *(int *)new_json + 4);
     main->wait = main->wait->first;
     if (main->wait != NULL) {
         while (main->wait->json_str != NULL) {
             if (main->wait->user_id == json.user_id) {
                 mx_printstr(main->wait->json_str + 4);
-                SSL_write(main->client->ssl, main->wait->json_str, strlen(main->wait->json_str + 4) + 4);
+                SSL_write(main->client->ssl, main->wait->json_str, *(int *)main->wait->json_str + 4);
             }
             main->wait = main->wait->next;
         }

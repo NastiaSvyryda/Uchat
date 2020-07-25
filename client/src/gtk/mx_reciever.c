@@ -163,7 +163,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     t_json_data *json = NULL;
     SSL_read(mwo->ssl, &length, 4);
     json_str = mx_strnew(length);
-    SSL_read(mwo->ssl, json_str, length);
+    mx_SSL_read_to_str(mwo->ssl, json_str, length);
     json = mx_json_parse(json_str);
     mx_printstr("Response recieved:\n");
     mx_printstr(json_str);
