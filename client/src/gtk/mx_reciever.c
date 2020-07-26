@@ -72,6 +72,7 @@ static void fill_channel_info(t_mainWindowObjects *mwo, t_json_data *json) {
         mwo->channel_info->next->first = mwo->channel_info->first;//????
         mwo->channel_info = mwo->channel_info->next;
         mwo->channel_info->next = NULL;
+        mwo->channel_info->message = NULL;
     }
     gtk_widget_show_all(mwo->mainWindow);
 }
@@ -82,7 +83,7 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
 
     mwo->channel_info = mwo->channel_info->first;
     //if (mwo->channel_info != NULL) {
-    while (mwo->channel_info != NULL && mwo->channel_info->chat_button != NULL) {
+    while (mwo->channel_info->next != NULL) {
         if (mwo->channel_info->channel_data.channel_id ==
             json->message.channel_id)
             break;
@@ -106,6 +107,8 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
         //mwo->channel_info->first = mwo->channel_info;
         mwo->channel_info->next->first = mwo->channel_info->first;
         mwo->channel_info->next->chat_button = NULL;
+        mwo->channel_info->next->next = NULL;
+        mwo->channel_info->next->message = NULL;
         mwo->channel_info->chat_button = mx_create_chat(mwo->curr_chat, mwo); //change signal connectors
         gtk_list_box_insert(GTK_LIST_BOX(mwo->chatList), mwo->channel_info->chat_button, 0);
         free(mwo->user_ids);
@@ -116,17 +119,20 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
     temp_mess->channel_id = json->message.channel_id;
     temp_mess->message_id = json->message.message_id;
     temp_mess->delivery_time = json->message.delivery_time;
+    temp_mess->text = mx_strdup(mwo->curr_message);
     temp_mess->next = NULL;
-    temp_mess->mess_row = mx_create_message(mwo->curr_message, mwo, 0); //change signal connectors
-    gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), temp_mess->mess_row, -1);
     if (mwo->channel_info->message == NULL) {
         mwo->channel_info->message = temp_mess;
         mwo->channel_info->message->first = mwo->channel_info->message;
+        mwo->channel_info->message->mess_row = mx_create_message(mwo->curr_message, mwo, 0); //change signal connectors
+        gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), mwo->channel_info->message->mess_row, -1);
     }
     else {
         temp = mwo->channel_info->message;
         mwo->channel_info->message = temp_mess;
         temp_mess->next = temp;
+        mwo->channel_info->message->mess_row = mx_create_message(mwo->curr_message, mwo, 0); //change signal connectors
+        gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), mwo->channel_info->message->mess_row, -1);
     }
     mwo->curr_channel_info = mwo->channel_info;
     mx_strdel(&mwo->curr_message);
@@ -141,19 +147,27 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
 
 }
 
-static void push_front_message_list(t_message_list **list, t_json_data *json, int index) {
+static void push_front_message_list(t_message_list **list, t_json_data *json, int index, t_mainWindowObjects *mwo) {
     t_message_list *front_list = NULL;
     t_message_list *temp = NULL;
+    char *temp_mess = NULL;
 
     front_list = malloc(sizeof(t_message_list));
     front_list->channel_id = json->message.channel_id;
     front_list->message_id = json->messages_arr[index].message_id;
     front_list->delivery_time = json->messages_arr[index].delivery_time;
     //front_list->text = mx_strdup(json->messages_arr[index].text);
+    temp_mess = strtrim(json->messages_arr[index].text);
+    front_list->text = mx_strdup(temp_mess);
+//    if (json->messages_arr[index].client1_id == mwo->user_id)
+//        front_list->mess_row = mx_create_message(front_list->text, mwo, 0); //change signal connectors
+//    else
+//        front_list->mess_row = mx_create_message(front_list->text, mwo, 1);
+//    gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), front_list->mess_row, 0);
     front_list->next = NULL;
     front_list->first = front_list;
     if (list == NULL)
-        *list = front_list;
+        mwo->channel_info->message = front_list;
     else {
         temp = *list;
         front_list->next = temp;
@@ -165,6 +179,7 @@ static void push_front_message_list(t_message_list **list, t_json_data *json, in
         (*list)->first = front_list;
         (*list) = front_list;
     }
+    mx_strdel(&temp_mess);
 }
 
 gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data)
@@ -174,110 +189,125 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
     int length = 0;
     t_json_data *json = NULL;
     SSL_read(mwo->ssl, &length, 4);
-    json_str = mx_strnew(length);
-    mx_SSL_read_to_str(mwo->ssl, json_str, length);
-    json = mx_json_parse(json_str);
-    mx_printstr("Response recieved:\n");
-    mx_printstr(json_str);
-    mx_printchar('\n');
-    if (json != NULL) {
-        if (json->type == JS_REG) {
-            if (json->status == 200) {
-                mwo->user_id = json->user_id;
-                strcpy(mwo->login, json->pers_info.login);
-                strcpy(mwo->first_name, json->pers_info.first_name);
-                strcpy(mwo->last_name, json->pers_info.last_name);
-                strcpy(mwo->token, json->token);
-                gtk_label_set_text(GTK_LABEL(mwo->label_login), (const gchar *) mwo->login);
-                mx_set_component(mwo, mwo->mainWindow);
-            }
-            if (json->status == 412) {
-                mx_show_popup(mwo->Window, "Such user already exist!");
-            }
-        }
-        else if (json->type == JS_LOG_IN) {
-            if (json->status == 200) {
-                mwo->user_id = json->user_id;
-                strcpy(mwo->login, json->pers_info.login);
-                strcpy(mwo->first_name, json->pers_info.first_name);
-                strcpy(mwo->last_name, json->pers_info.last_name);
-                strcpy(mwo->token, json->token);
-                gtk_label_set_text(GTK_LABEL(mwo->label_login), (const gchar *) mwo->login);//change label
-                fill_channel_info(mwo, json);
-                mx_set_component(mwo, mwo->mainWindow);
-            }
-            if (json->status == 401) {
-                mx_show_popup(mwo->Window, "Invalid user or password!");
-            }
-        }
-        else if (json->type == JS_MES_IN) {
-            mx_add_out_message(mwo, json);
-        }
-        else if (json->type == JS_MES_OUT) {
-            fill_message_info_(mwo, json);
-        }
-        else if (json->type == JS_GET_USERS) {//для добавления юзеров
-            puts("GET_USERS reciever");
-            GtkWidget *row;
-            GtkWidget *label;
-            gchar *text;
-            char *temp = NULL;
-            int k = 0;
-            mwo->ids_logins_arr = malloc(sizeof(t_id_login) * (json->ids_logins_arr_size - 1));
-            mwo->ids_logins_arr_size = json->ids_logins_arr_size - 1;
-            for (int i = 0; i < json->ids_logins_arr_size; i++) {
-                if (mwo->user_id != json->ids_logins_arr[i].user_id) {
-                    temp = strtrim(json->ids_logins_arr[i].login);
-                    strcpy(mwo->ids_logins_arr[k].login, temp);
-                    mwo->ids_logins_arr[k].user_id = json->ids_logins_arr[i].user_id;
-                    text = g_strdup_printf("%s", mwo->ids_logins_arr[k].login);
-                    row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
-                    label = gtk_label_new(text);
-                    gtk_container_add(GTK_CONTAINER(row), label);
-                    gtk_list_box_insert(GTK_LIST_BOX(mwo->usersList), row, 0);
-                    free(text);
-                    mx_strdel(&temp);
-                    k++;
+    if ( length > 0) {
+        json_str = mx_strnew(length);
+        mx_SSL_read_to_str(mwo->ssl, json_str, length);
+        json = mx_json_parse(json_str);
+        mx_printstr("Response recieved:\n");
+        mx_printstr(json_str);
+        mx_printchar('\n');
+        if (json != NULL) {
+            if (json->type == JS_REG) {
+                if (json->status == 200) {
+                    mwo->user_id = json->user_id;
+                    strcpy(mwo->login, json->pers_info.login);
+                    strcpy(mwo->first_name, json->pers_info.first_name);
+                    strcpy(mwo->last_name, json->pers_info.last_name);
+                    strcpy(mwo->token, json->token);
+                    gtk_label_set_text(GTK_LABEL(mwo->label_login),
+                                       (const gchar *) mwo->login);
+                    mx_set_component(mwo, mwo->mainWindow);
                 }
-            }
-            gtk_widget_show_all(mwo->addChat_Dialog);
-        }
-        else if (json->type == JS_MES_HIST) {//доюавить листы смс + mess_in тоже апись в смс лист
-            gchar *text_t;
-            char *temp = NULL;
+                if (json->status == 412) {
+                    mx_show_popup(mwo->Window, "Such user already exist!");
+                }
+            } else if (json->type == JS_LOG_IN) {
+                if (json->status == 200) {
+                    mwo->user_id = json->user_id;
+                    strcpy(mwo->login, json->pers_info.login);
+                    strcpy(mwo->first_name, json->pers_info.first_name);
+                    strcpy(mwo->last_name, json->pers_info.last_name);
+                    strcpy(mwo->token, json->token);
+                    gtk_label_set_text(GTK_LABEL(mwo->label_login),
+                                       (const gchar *) mwo->login);//change label
+                    fill_channel_info(mwo, json);
+                    mx_set_component(mwo, mwo->mainWindow);
+                }
+                if (json->status == 401) {
+                    mx_show_popup(mwo->Window, "Invalid user or password!");
+                }
+            } else if (json->type == JS_MES_IN) {
+                mx_add_out_message(mwo, json);
+            } else if (json->type == JS_MES_OUT) {
+                fill_message_info_(mwo, json);
+            } else if (json->type == JS_GET_USERS) {//для добавления юзеров
+                puts("GET_USERS reciever");
+                GtkWidget *row;
+                GtkWidget *label;
+                gchar *text;
+                char *temp = NULL;
+                int k = 0;
+                mwo->ids_logins_arr = malloc(
+                        sizeof(t_id_login) * (json->ids_logins_arr_size - 1));
+                mwo->ids_logins_arr_size = json->ids_logins_arr_size - 1;
+                for (int i = 0; i < json->ids_logins_arr_size; i++) {
+                    if (mwo->user_id != json->ids_logins_arr[i].user_id) {
+                        temp = strtrim(json->ids_logins_arr[i].login);
+                        strcpy(mwo->ids_logins_arr[k].login, temp);
+                        mwo->ids_logins_arr[k].user_id = json->ids_logins_arr[i].user_id;
+                        text = g_strdup_printf("%s",
+                                               mwo->ids_logins_arr[k].login);
+                        row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+                        label = gtk_label_new(text);
+                        gtk_container_add(GTK_CONTAINER(row), label);
+                        gtk_list_box_insert(GTK_LIST_BOX(mwo->usersList), row,
+                                            0);
+                        free(text);
+                        mx_strdel(&temp);
+                        k++;
+                    }
+                }
+                gtk_widget_show_all(mwo->addChat_Dialog);
+            } else if (json->type ==
+                       JS_MES_HIST) {//доюавить листы смс + mess_in тоже апись в смс лист
 
-            //mwo->channel = 1;
-            mwo->channel_info = mwo->channel_info->first;
-            while (mwo->channel_info != NULL && mwo->channel_info->chat_button != NULL) {
-                if (mwo->channel_info->channel_data.channel_id ==
-                    json->message.channel_id)
-                    break;
-                mwo->channel_info = mwo->channel_info->next;
-            }
-            for (int i = 0; i < json->messages_arr_size; i++) {
-                push_front_message_list(&mwo->channel_info->message, json, i);
-                temp = strtrim(json->messages_arr[i].text);
-                text_t = g_strdup_printf("%s", temp);
-                if (json->messages_arr[i].client1_id == mwo->user_id)
-                    mwo->channel_info->message->mess_row = mx_create_message(text_t, mwo, 0); //change signal connectors
-                else
-                    mwo->channel_info->message->mess_row = mx_create_message(text_t, mwo, 1);
-                gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), mwo->channel_info->message->mess_row, 0);
-                //mx_add_out_message(mwo, mwo->channel_info->message->text);
-                //mwo->channel_info->message = mwo->channel_info->message->next;
-                mx_strdel(&temp);
-            }
-            GtkWidget *scrolled_window = GTK_WIDGET(gtk_builder_get_object(mwo->builder, "chatScrolledWindow"));
+                //mwo->channel = 1;
+                mwo->channel_info = mwo->channel_info->first;
+                while (mwo->channel_info->next != NULL) {
+                    if (mwo->channel_info->channel_data.channel_id ==
+                        json->message.channel_id)
+                        break;
+                    mwo->channel_info = mwo->channel_info->next;
+                }
+                for (int i = 0; i < json->messages_arr_size; i++) {
+                    if (mwo->channel_info->message == NULL)
+                        push_front_message_list(NULL, json, i,mwo);
+                    else
+                        push_front_message_list(&mwo->channel_info->message,
+                                                json, i, mwo);
+                    if (json->messages_arr[i].client1_id == mwo->user_id)
+                        mwo->channel_info->message->mess_row = mx_create_message(
+                                mwo->channel_info->message->text, mwo,
+                                0); //change signal connectors
+                    else
+                        mwo->channel_info->message->mess_row = mx_create_message(
+                                mwo->channel_info->message->text, mwo, 1);
+                    gtk_list_box_insert(
+                            GTK_LIST_BOX(mwo->channel_info->messageList),
+                            mwo->channel_info->message->mess_row, 0);
+                }
+                GtkWidget *scrolled_window = GTK_WIDGET(
+                        gtk_builder_get_object(mwo->builder,
+                                               "chatScrolledWindow"));
 
-            //gtk_container_add(GTK_CONTAINER(mainObjects->viewPort), mwo->channel_info->messageList);
+                //gtk_container_add(GTK_CONTAINER(mainObjects->viewPort), mwo->channel_info->messageList);
 
-            GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow *)scrolled_window);
-            gtk_adjustment_set_value(adjustment, gtk_adjustment_get_upper(adjustment));
-            gtk_scrolled_window_set_vadjustment((GtkScrolledWindow *)scrolled_window, (GtkAdjustment *)adjustment);
-            gtk_widget_show_all(GTK_WIDGET(mwo->Window));
-        }
-        if (json->message.text != NULL) {
-            mx_strdel(&json->message.text);
+                GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment(
+                        (GtkScrolledWindow *) scrolled_window);
+                gtk_adjustment_set_value(adjustment,
+                                         gtk_adjustment_get_upper(adjustment));
+                gtk_scrolled_window_set_vadjustment(
+                        (GtkScrolledWindow *) scrolled_window,
+                        (GtkAdjustment *) adjustment);
+                gtk_widget_show_all(GTK_WIDGET(mwo->Window));
+                mwo->curr_channel_info = mwo->channel_info;
+            }
+//        else if (json->type == JS_MES_DEL_IN) {
+//
+//        }
+            if (json->message.text != NULL) {
+                mx_strdel(&json->message.text);
+            }
         }
     }
     return TRUE;

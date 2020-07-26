@@ -151,6 +151,7 @@ typedef struct s_MainWindowObjects {//changed
 
     GtkWidget *infoDialog;
     GtkWidget *addChat_Dialog;
+    GtkWidget *change_mess_Dialog;
 
     GtkEntry *entryLogin_l;
     GtkEntry *entryPass_l;
@@ -165,6 +166,8 @@ typedef struct s_MainWindowObjects {//changed
     GtkEntry *entryChatUsers;
 
     GtkWidget *entryMessage;
+
+    GtkWidget *entry_edit_message;
 
     GtkWidget *label_login;
     GtkWidget *label_chat;
@@ -197,6 +200,7 @@ typedef struct s_MainWindowObjects {//changed
     char last_name[MX_MAX_NAME_LEN + 1];
     char token[MX_TOKEN_LEN + 1];
     SSL *ssl;
+    t_message_list *curr_message_info;
     t_channel_info *channel_info;
     t_channel_info *curr_channel_info;
 } t_mainWindowObjects;
@@ -215,6 +219,8 @@ void mx_add_out_message(t_mainWindowObjects *mwo, t_json_data *json);
 GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo);
 GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo, int align);
 void mx_create_login_window(t_mainWindowObjects *main);
+
+char *mx_get_text_of_textview(GtkWidget *text_view);
 
 void mx_set_component(t_mainWindowObjects *mwo, GtkWidget *gtk_component);
 void mx_set_chat_component(t_mainWindowObjects *mwo);

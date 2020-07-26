@@ -3,21 +3,19 @@
 void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data)
 { // почистить при выходе из чата
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
-    t_channel_info *curr_channel_info = malloc(sizeof(t_channel_info));
 //    int channel_id = 0;
-    curr_channel_info = g_object_get_data(G_OBJECT(button),(gchar *)"channel_info");
+    int *channel_id = (int *)g_object_get_data(G_OBJECT(button),(gchar *)"channel_id");
     mwo->channel_info = mwo->channel_info->first;
     if (mwo->channel_info) {
         while (mwo->channel_info->next != NULL) {
             if (mwo->channel_info->channel_data.channel_id ==
-                curr_channel_info->channel_data.channel_id)
+                *channel_id)
                 break;
             mwo->channel_info = mwo->channel_info->next;
         }
     }
     else
        puts("ERR mx_on_chat_clicked");
-    mwo->curr_channel_info = mwo->channel_info;
     //gtk_label_set_text(GTK_LABEL(mwo->label_chat),);
     if (mwo->channel_info->message == NULL) {
         char *json_str = NULL;
@@ -78,6 +76,6 @@ GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo)
     g_signal_connect(button, "clicked", G_CALLBACK(mx_on_chat_clicked), mwo);
 //    mx_printint(mwo->channel_info->channel_data.channel_id);
 //    puts("\n");
-    g_object_set_data(G_OBJECT(button), (gchar *)"channel_info",mwo->channel_info);
+    g_object_set_data(G_OBJECT(button), (gchar *)"channel_id",&mwo->channel_info->channel_data.channel_id);
     return chat_row;
 }

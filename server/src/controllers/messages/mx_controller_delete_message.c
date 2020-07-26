@@ -14,13 +14,13 @@ static void delete_message_database(t_json_data *json) {
 
 }
 
-void mx_controller_delete_message(t_json_data *json, t_main *main) {
+void mx_controller_delete_message(t_json_data *json, t_clients *client) {
     t_list *data = NULL;
 
-    main->client->user_id = json->user_id;
+    //client->user_id = json->user_id;
     json->message.client1_id = json->user_id;
     delete_message_database(json);
     data = mx_get_user_id_from_database_channels(json->message.channel_id);
-    mx_send_message_to_channel(data ,main, json, JS_MES_DEL_IN, JS_MES_DEL_OUT);
+    mx_send_message_to_channel(data , client, json, JS_MES_DEL_IN, JS_MES_DEL_OUT);
     mx_del_list(data, mx_list_size(data));
 }

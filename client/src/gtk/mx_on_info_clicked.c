@@ -25,9 +25,9 @@ void mx_update_user_info(__attribute__((unused)) GtkWidget *button, gpointer dat
 {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
 
-    const gchar *login = gtk_entry_get_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "login"));
-    const gchar *first_name = gtk_entry_get_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "first_name"));
-    const gchar *last_name = gtk_entry_get_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "last_name"));
+//    const gchar *login = gtk_entry_get_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "login"));
+//    const gchar *first_name = gtk_entry_get_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "first_name"));
+//    const gchar *last_name = gtk_entry_get_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "last_name"));
 
     char *json_str = NULL;
     t_json_data *json = calloc(1, sizeof(t_json_data));
@@ -36,9 +36,9 @@ void mx_update_user_info(__attribute__((unused)) GtkWidget *button, gpointer dat
     json->user_id = mwo->user_id;
     strcpy(json->token, mwo->token);
 
-    strcpy(json->pers_info.login, login);
-    strcpy(json->pers_info.first_name, first_name);
-    strcpy(json->pers_info.last_name, last_name);
+    strcpy(json->pers_info.login, "SLAVA");
+    strcpy(json->pers_info.first_name, "GAVNIUK");
+    strcpy(json->pers_info.last_name, "DAVAI RABOTAI");
 
     json_str = mx_json_make_json(JS_PERS_INFO_UPD, json);
 

@@ -1,13 +1,8 @@
 #include "uchat_server.h"
 
 int main(int argc, char **argv) {
-    t_main main;
-    main.client = mx_create_client();
-    main.client->first = main.client;
-    main.wait = malloc(sizeof(t_wait));
-    main.wait->next = NULL;
-    main.wait->json_str = NULL;
-    main.wait->first = main.wait;
+    t_clients *client = mx_create_client();
+    client->first = client;
     int listenfd = 0;
     struct sockaddr_in cli;
     SSL_CTX *ctx;
@@ -20,13 +15,13 @@ int main(int argc, char **argv) {
     mx_load_certificates(ctx, mx_config_ssl_file_name(), mx_config_ssl_file_name()); /* load certs */
     listenfd = mx_open_listener(atoi(argv[1]));
     while (true) {
-        cli = mx_accept_connections(&main, listenfd);
-        main.client->ssl = SSL_new(ctx);/* get new SSL state with context */
-        SSL_set_fd(main.client->ssl, main.client->fd);/* set connection socket to SSL state */
-        mx_thread_create(&main, cli);
-        main.client->next = mx_create_client();
-        main.client->next->first = main.client->first;
-        main.client = main.client->next;
+        cli = mx_accept_connections(client, listenfd);
+        client->ssl = SSL_new(ctx);/* get new SSL state with context */
+        SSL_set_fd(client->ssl, client->fd);/* set connection socket to SSL state */
+        mx_thread_create(client, cli);
+        client->next = mx_create_client();
+        client->next->first = client->first;
+        client = client->next;
     }
     close(listenfd);
     return 0;
