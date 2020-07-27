@@ -9,6 +9,7 @@ void mx_res_js_get_message_history(t_clients *client, t_list *list) {
     for (int i = 0; list != NULL; i++) {
         json.messages_arr[i].message_id = mx_atoi(list->data);
         json.messages_arr[i].client1_id = mx_atoi(list->next->data);
+        mx_fill_login(&json, json.messages_arr[i].client1_id, i, 1);
         json.messages_arr[i].text = mx_strdup((list->next->next->data));
         json.messages_arr[i].delivery_time = mx_atoi(list->next->next->next->data);
         json.message.channel_id = mx_atoi(list->next->next->next->next->data);

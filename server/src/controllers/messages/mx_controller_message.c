@@ -52,6 +52,27 @@ t_list *mx_get_user_id_from_database_channels(int channel_id) {
     return list;
 }
 
+void mx_fill_login(t_json_data *json, int user_id, int i, int flag) {
+    t_database_query *db = mx_database_query_create();
+    t_list *list = NULL;
+
+    db->model_fill_table = mx_model_user_fill_table();
+    asprintf(&db->fill_table ,"%s", db->model_fill_table[3]);
+    asprintf(&db->where ,"%s=%d",
+             db->model_fill_table[0],
+             user_id);
+    list = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), db);
+    if(flag == 0) {
+        strcpy(json->pers_info.login, list->data);
+    }
+    else if (flag == 1) {
+        strcpy(json->messages_arr[i].login, list->data);
+    }
+    mx_del_list(list, mx_list_size(list));
+    mx_database_query_clean(&db);
+}
+
+
 void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *json, int type, int type_response) {
     t_list *tmp = data;
     char *json_str = NULL;
@@ -162,6 +183,7 @@ void mx_controller_message(t_clients *client, t_json_data *json) {
 
     if (json->new_channel == true)
         mx_controller_new_channel(json);
+    mx_fill_login(json, json->message.client1_id, 0, 0);
     fill_database_message(json);
     data = mx_get_user_id_from_database_channels(json->message.channel_id);
     get_message_id_from_database(json);
