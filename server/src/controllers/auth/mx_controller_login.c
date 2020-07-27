@@ -49,7 +49,7 @@ static void mx_fill_channels(t_json_data *json) {
     mx_database_query_clean(&db);
 }
 
-static void json_login_success(t_list *data, t_main *main) {
+static void json_login_success(t_list *data, t_clients *client) {
     char *new_json = NULL;
 
     t_json_data json = {.type = JS_LOG_IN,
@@ -58,22 +58,11 @@ static void json_login_success(t_list *data, t_main *main) {
     mx_strcpy(json.pers_info.first_name, data->next->data);
     mx_strcpy(json.pers_info.last_name, data->next->next->data);
     strcpy(json.pers_info.login, data->next->next->next->data);
-    mx_strcpy(json.token, main->client->token);
+    mx_strcpy(json.token, client->token);
     mx_fill_channels(&json);
     new_json = mx_json_make_json(JS_LOG_IN, &json);
     mx_logger("JSON write",  new_json + 4);
-    SSL_write(main->client->ssl, new_json , *(int *)new_json + 4);
-    main->wait = main->wait->first;
-    if (main->wait != NULL) {
-        while (main->wait->json_str != NULL) {
-            if (main->wait->user_id == json.user_id) {
-                mx_printstr(main->wait->json_str + 4);
-                SSL_write(main->client->ssl, main->wait->json_str, *(int *)main->wait->json_str + 4);
-            }
-            main->wait = main->wait->next;
-        }
-        main->wait = main->wait->first;
-    }
+    SSL_write(client->ssl, new_json , *(int *)new_json + 4);
     mx_strdel(&new_json);
     for(int i = 0; i < json.channels_arr_size; i++) {
         free(json.channels_arr[i].user_ids);
@@ -81,11 +70,11 @@ static void json_login_success(t_list *data, t_main *main) {
     free(json.channels_arr);
 }
 
-void mx_controller_login(t_json_data *json, t_main *main) {
+void mx_controller_login(t_json_data *json, t_clients *client) {
     t_database_query *db = mx_database_query_create();
 
     if (mx_valid_login(json) == false) {
-        mx_res_js_login_incorrectly_filled_fields(main->client);
+        mx_res_js_login_incorrectly_filled_fields(client);
         return;
     }
     db->model_fill_table = mx_model_user_fill_table();
@@ -97,16 +86,12 @@ void mx_controller_login(t_json_data *json, t_main *main) {
              mx_hmac_sha_256(json->pers_info.login, json->pers_info.password));
     db->list = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), db);
     if (db->list != NULL) {
-        if(mx_valid_login_auth(db->list) == true) {
-            mx_res_js_login_auth(main);
-            return;
-        }
-        main->client->user_id = mx_atoi(db->list->data);
-        main->client->token =  mx_insert_token(db->model_fill_table, main->client->user_id);
-        json_login_success(db->list, main);
+        client->user_id = mx_atoi(db->list->data);
+        client->token =  mx_insert_token(db->model_fill_table, client->user_id);
+        json_login_success(db->list, client);
 
-        mx_strdel(&main->client->token);
+        mx_strdel(&client->token);
     } else
-        mx_res_js_login_unauthorized(main);
+        mx_res_js_login_unauthorized(client);
     mx_database_query_clean(&db);
 }

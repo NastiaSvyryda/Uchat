@@ -33,7 +33,7 @@ static void get_channel_id_from_database(t_json_data *json, t_json_data *json_re
 
 
 
-void mx_controller_edit_message(t_json_data *json, t_main *main) {
+void mx_controller_edit_message(t_json_data *json, t_clients *client) {
     t_list *data = NULL;
     t_json_data json_response = {.type = JS_MES_EDIT_IN,
                                  .message.channel_id = json->message.channel_id,
@@ -41,11 +41,11 @@ void mx_controller_edit_message(t_json_data *json, t_main *main) {
                                  .message.client1_id = json->message.client1_id};
 
     json_response.message.text = mx_strdup(json->message.text);
-    main->client = main->client->first;
+    client = client->first;
     change_message_database(json);
     get_channel_id_from_database(json, &json_response);
     data = mx_get_user_id_from_database_channels(json_response.message.channel_id);
-    mx_send_message_to_channel(data, main, &json_response, JS_MES_EDIT_IN, JS_MES_EDIT_OUT);
+    mx_send_message_to_channel(data, client, &json_response, JS_MES_EDIT_IN, JS_MES_EDIT_OUT);
     mx_strdel(&json_response.message.text);
 
 }

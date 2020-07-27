@@ -11,9 +11,11 @@ t_clients *mx_create_client(void) {
 }
 
 
-void mx_delete_client(t_main **main, int key) {
-    t_clients *temp = (*main)->client, *prev;
+void mx_delete_client(t_clients **client, int key) {
+    (*client) = (*client)->first;
+    t_clients *temp = (*client), *prev;
     t_clients *first = NULL;
+
 
     // If head node itself holds the key to be deleted
     if (temp != NULL && temp->fd == key) {
@@ -26,7 +28,7 @@ void mx_delete_client(t_main **main, int key) {
             temp = temp->next;
         }
         //temp->next->first = NULL;
-        (*main)->client = (*main)->client->next; // Changed head
+        (*client) = (*client)->next; // Changed head
         free(temp);    // free old head
         return;
     }

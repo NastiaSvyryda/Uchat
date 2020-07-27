@@ -1,6 +1,6 @@
 #include "uchat_client.h"
 
-static char *get_text_of_textview(GtkWidget *text_view)
+char *mx_get_text_of_textview(GtkWidget *text_view)
 {
     GtkTextIter start, end;
     GtkTextBuffer *buffer = gtk_text_view_get_buffer((GtkTextView *)text_view);
@@ -14,7 +14,8 @@ static char *get_text_of_textview(GtkWidget *text_view)
 void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer data)
 {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
-    char *message = mx_handle_user_input(get_text_of_textview(mwo->entryMessage));
+    char *message = mx_handle_user_input(
+            mx_get_text_of_textview(mwo->entryMessage));
     if (!mx_validate_message(message, mwo->Window))
         return;
     char *json_str = NULL;

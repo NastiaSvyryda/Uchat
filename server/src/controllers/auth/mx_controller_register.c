@@ -1,10 +1,10 @@
 #include "uchat_server.h"
 
-void mx_controller_register(t_json_data *json, t_main *main) {
+void mx_controller_register(t_json_data *json, t_clients *client) {
     t_database_query *db = mx_database_query_create();
 
     if (mx_valid_register(json) == false) {
-        mx_res_js_register_incorrectly_filled_fields(main);
+        mx_res_js_register_incorrectly_filled_fields(client);
         return;
     }
     db->model_fill_table = mx_model_user_fill_table();
@@ -21,11 +21,11 @@ void mx_controller_register(t_json_data *json, t_main *main) {
                  json->pers_info.login,
                  mx_hmac_sha_256(json->pers_info.login, json->pers_info.password),
                  "datetime('now')");
-        main->client->user_id = mx_create_databases(mx_model_user_database(), mx_model_user_name_table(), db);
-        main->client->token = mx_insert_token(db->model_fill_table, main->client->user_id);
-        mx_res_js_register_success(main, json);
-        mx_strdel(&main->client->token);
+        client->user_id = mx_create_databases(mx_model_user_database(), mx_model_user_name_table(), db);
+        client->token = mx_insert_token(db->model_fill_table, client->user_id);
+        mx_res_js_register_success(client, json);
+        mx_strdel(&client->token);
     } else
-        mx_res_js_register_incorrectly_filled_fields(main);
+        mx_res_js_register_incorrectly_filled_fields(client);
     mx_database_query_clean(&db);
 }

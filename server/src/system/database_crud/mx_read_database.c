@@ -7,10 +7,7 @@ static int callback(void *data, int argc, char **argv, char **azColName) {
     if(argc == 0)
         return 0;
     for (int i = 0; i < argc; ++i)
-        if(mx_strlen(argv[i]) == 0)
-            mx_push_back(*(&list_data), mx_strdup("NULL"));
-        else
-            mx_push_back(*(&list_data), mx_strdup(argv[i]));
+        mx_push_back(*(&list_data), mx_strdup(argv[i]));
     return 0;
 }
 

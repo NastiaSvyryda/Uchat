@@ -27,15 +27,21 @@ void mx_onBack_to_chats(__attribute__((unused)) GtkWidget *button, gpointer data
 //    }
     mwo->channel_info = mwo->channel_info->first;
     //if (mwo->channel_info != NULL) {
-    while (mwo->channel_info != NULL && mwo->channel_info->chat_button != NULL) {
+    while (mwo->channel_info->next != NULL) {
         if (mwo->channel_info->channel_data.channel_id ==
                 mwo->curr_channel_info->channel_data.channel_id) {
             break;
         }
         mwo->channel_info = mwo->channel_info->next;
     }
-    mwo->channel_info->messageList = g_object_ref(mwo->curr_channel_info->messageList);
-    gtk_container_remove(GTK_CONTAINER(mwo->viewPort), mwo->curr_channel_info->messageList);
+
+    GtkTextIter start, end;
+    GtkTextBuffer *buffer = gtk_text_view_get_buffer((GtkTextView *)mwo->entryMessage);
+    gtk_text_buffer_get_bounds(buffer, &start, &end);
+    gtk_text_buffer_delete(buffer, &start, &end);
+    GtkWidget *curr_messageList = g_object_ref(mwo->curr_channel_info->messageList);
+    mwo->channel_info->messageList = g_object_ref(curr_messageList);
+    gtk_container_remove(GTK_CONTAINER(mwo->viewPort), curr_messageList);
     mx_set_component(mwo, mwo->mainWindow);
     //mx_set_chat_component(mwo);
 }
