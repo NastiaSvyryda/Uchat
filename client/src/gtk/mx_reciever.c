@@ -122,15 +122,21 @@ static void fill_message_info_(t_mainWindowObjects *mwo, t_json_data *json) {
     temp_mess->text = mx_strdup(mwo->curr_message);
     temp_mess->next = NULL;
     if (mwo->channel_info->message == NULL) {
+        temp_mess->first = temp_mess;
         mwo->channel_info->message = temp_mess;
-        mwo->channel_info->message->first = mwo->channel_info->message;
         mwo->channel_info->message->mess_row = mx_create_message(mwo->curr_message, mwo, 0); //change signal connectors
         gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), mwo->channel_info->message->mess_row, -1);
     }
     else {
         temp = mwo->channel_info->message;
         mwo->channel_info->message = temp_mess;
-        temp_mess->next = temp;
+        mwo->channel_info->message->next = temp;
+        t_message_list *first = mwo->channel_info->message;
+        while (mwo->channel_info->message != NULL) {
+            mwo->channel_info->message->first = first;
+            mwo->channel_info->message = mwo->channel_info->message->next;
+        }
+        mwo->channel_info->message = first;
         mwo->channel_info->message->mess_row = mx_create_message(mwo->curr_message, mwo, 0); //change signal connectors
         gtk_list_box_insert(GTK_LIST_BOX(mwo->channel_info->messageList), mwo->channel_info->message->mess_row, -1);
     }
@@ -259,7 +265,7 @@ gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((un
                 }
                 gtk_widget_show_all(mwo->addChat_Dialog);
             } else if (json->type ==
-                       JS_MES_HIST) {//доюавить листы смс + mess_in тоже апись в смс лист
+                       JS_MES_HIST) {
 
                 //mwo->channel = 1;
                 mwo->channel_info = mwo->channel_info->first;

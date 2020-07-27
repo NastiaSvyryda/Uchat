@@ -60,7 +60,7 @@ typedef enum e_json_types {
     JS_MES_OUT,      // JSON Type - output message
     JS_GET_USERS,    // JSON Type - get all the users logins and ids
     JS_MES_HIST,     // JSON Type - load channel messages history
-    JS_PERS_INFO_UPD,  // JSON Type - personal info update 
+    JS_PERS_INFO_UPD,  // JSON Type - personal info update
     JS_NUM           // JSON types number
 }            t_json_types;
 
@@ -73,6 +73,7 @@ typedef struct s_personal_data {
 
 typedef struct s_message {
     int client1_id;
+    char login[MX_VARCHAR_LEN + 1];
     int message_id;
     time_t delivery_time;
     char *text;
@@ -195,6 +196,7 @@ void mx_controller_message(t_clients *client, t_json_data *json);
 void mx_controller_edit_message(t_json_data *json, t_clients *client);
 void mx_controller_message_history(t_json_data *json, t_clients *client);
 t_list *mx_get_user_id_from_database_channels(int channel_id);
+void mx_fill_login(t_json_data *json, int user_id, int i, int flag);
 void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *json, int type, int type_response);
 void mx_controller_new_channel(t_json_data *json);
 void mx_controller_user_all(t_clients *client);
@@ -262,3 +264,4 @@ void mx_token_delete(t_clients *client);
 //end systeam
 
 #endif
+

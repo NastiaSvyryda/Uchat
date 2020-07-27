@@ -66,6 +66,7 @@ typedef struct s_personal_data {
 
 typedef struct s_message {
     int client1_id;
+    char login[MX_VARCHAR_LEN + 1];
     int message_id;
     time_t delivery_time;
     char *text;

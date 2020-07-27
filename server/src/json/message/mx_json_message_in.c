@@ -9,7 +9,7 @@ char *mx_json_message_in_request(t_json_data *data) {
 
     asprintf(&tmp, mx_get_json_format_template(JS_MES_IN), JS_MES_IN,
         data->message.message_id, data->message.client1_id,
-        data->message.channel_id, data->message.text,
+        data->message.channel_id, data->message.text, data->pers_info.login,
         data->new_channel ? "true" : "false",
         data->new_channel ? data->new_channel_data.channel_name : "");
     jo = json_tokener_parse(tmp);

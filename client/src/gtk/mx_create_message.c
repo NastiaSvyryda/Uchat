@@ -168,23 +168,30 @@ GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo,
     GtkWidget *button;
     GtkWidget *label;
     GtkWidget *row;
+    GtkWidget *label_login;//
 
-    row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+    row = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
     button = gtk_button_new();
     label = gtk_label_new(text);
     gtk_label_set_line_wrap((GtkLabel *)label, TRUE);
     gtk_label_set_line_wrap_mode((GtkLabel *)label, PANGO_WRAP_WORD_CHAR);
     gtk_container_add(GTK_CONTAINER(button), label);
-    gtk_widget_set_hexpand(button, TRUE);
+//    gtk_widget_set_hexpand(button, TRUE);
     gtk_widget_set_halign(button, GTK_ALIGN_CENTER);
     gtk_widget_set_valign(button, GTK_ALIGN_CENTER);
-    gtk_container_add(GTK_CONTAINER(row), button);
     if (align)
         gtk_widget_set_halign(row, GTK_ALIGN_START);
     else {
+        label_login = gtk_label_new(mwo->login);//
+        gtk_container_add(GTK_CONTAINER(row), label_login);//
+        //gtk_widget_set_hexpand(label_login, TRUE);//
+        gtk_widget_set_halign(label_login, GTK_ALIGN_END);//
+//        gtk_widget_set_valign(label_login, GTK_ALIGN_CENTER);//
+
         gtk_widget_set_halign(row, GTK_ALIGN_END);
         g_object_set_data(G_OBJECT(button), (gchar *)"message_info", mwo->channel_info->message);
         g_signal_connect(button, "button-press-event", G_CALLBACK(mx_on_message_clicked), mwo);
     }
+    gtk_container_add(GTK_CONTAINER(row), button);
     return row;
 }

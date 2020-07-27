@@ -62,9 +62,10 @@ void mx_add_out_message(t_mainWindowObjects *mwo, t_json_data *json)
             mwo->channel_info->next->first = mwo->channel_info->first;
             mwo->channel_info->next->chat_button = NULL;
             mwo->channel_info->next->next = NULL;
+            mwo->channel_info->next->message = NULL;
             mx_strdel(&temp_str);
         }
-        if (flag == 0 || mwo->channel_info->message != NULL) {
+        if (mwo->channel_info->message != NULL) {
             temp_mess = malloc(sizeof(t_message_list));
             temp_mess->text = g_strdup_printf("%s", json->message.text);
             temp_mess->channel_id = json->message.channel_id;
@@ -84,7 +85,13 @@ void mx_add_out_message(t_mainWindowObjects *mwo, t_json_data *json)
             } else {
                 temp = mwo->channel_info->message;
                 mwo->channel_info->message = temp_mess;
-                temp_mess->next = temp;
+                mwo->channel_info->message->next = temp;
+                t_message_list *first = mwo->channel_info->message;
+                while (mwo->channel_info->message != NULL) {
+                    mwo->channel_info->message->first = first;
+                    mwo->channel_info->message = mwo->channel_info->message->next;
+                }
+                mwo->channel_info->message = first;
                 mwo->channel_info->message->mess_row = mx_create_message(
                         mwo->channel_info->message->text, mwo,
                         1); //change signal connectors

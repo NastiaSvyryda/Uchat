@@ -1,5 +1,6 @@
 {
     "client1_id": %d,
+    "login": "%s",
     "message_id": %d,
     "delivery_time": %ld,
     "text": "%s"

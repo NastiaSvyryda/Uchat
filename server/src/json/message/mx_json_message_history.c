@@ -5,7 +5,7 @@ static struct json_object *message(t_message *message) {
     struct json_object *jo;
 
     asprintf(&s, mx_get_json_format_supply_template(JS_MES_HIST),
-             message->client1_id, message->message_id,
+             message->client1_id, message->login, message->message_id,
              message->delivery_time,
              message->text);
     jo = json_tokener_parse(s);
