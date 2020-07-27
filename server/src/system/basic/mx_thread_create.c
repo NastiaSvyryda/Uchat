@@ -17,6 +17,7 @@ void *main_cycle(void *newfd) {
             client = client->first;
             SSL_read(cur_client->ssl, &len, 4);
             if (len == 0) {
+                mx_token_delete(cur_client);
                 mx_delete_client(&client, cur_client->fd);
                 break;
             }

@@ -146,6 +146,7 @@ void mx_valid_sqlite3_failed_data(int rc, sqlite3 *db, char *err_msg);
 int mx_valid_str_isalpha(char *str);
 int mx_valid_register(t_json_data *json);
 bool mx_valid_login(t_json_data *json);
+bool mx_valid_login_auth(t_list *list);
 bool mx_valid_token(int id, char *token);
 bool mx_valid_is_login(char *model_fill_table, t_json_data *json);
 ///end validation
@@ -173,6 +174,7 @@ char *mx_json_message_delete_out_response(t_json_data *data);
 char *mx_json_get_users_response(t_json_data *data);
 char *mx_json_message_history_response(t_json_data *data);
 //Response
+void mx_res_js_login_auth(t_clients *client);
 void mx_res_js_login_unauthorized(t_clients *client);
 void mx_res_js_login_incorrectly_filled_fields(t_clients *client);
 void mx_res_js_register_success(t_clients *client, t_json_data *json_data);
@@ -252,8 +254,9 @@ int mx_open_listener(int port);
 SSL_CTX* mx_init_server_ctx(void);
 void mx_load_certificates(SSL_CTX* ctx, char* CertFile, char* KeyFile);
 char *mx_hmac_sha_256(char *key, char *data);
-char *mx_create_token(int length);
-char *mx_insert_token(char **fill, int id);
+char *mx_token_create(int length);
+char *mx_token_insert(char **fill, int id);
+void mx_token_delete(t_clients *client);
 //end systeam
 
 #endif

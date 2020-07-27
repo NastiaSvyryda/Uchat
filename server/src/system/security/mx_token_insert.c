@@ -1,7 +1,7 @@
 #include "uchat_server.h"
 
-char *mx_insert_token(char **fill, int id) {
-    char *token = mx_create_token(256);
+char *mx_token_insert(char **fill, int id) {
+    char *token = mx_token_create(256);
     t_database_query *db = mx_database_query_create();
 
     asprintf(&db->set, "%s = '%s'",

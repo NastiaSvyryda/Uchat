@@ -86,10 +86,13 @@ void mx_controller_login(t_json_data *json, t_clients *client) {
              mx_hmac_sha_256(json->pers_info.login, json->pers_info.password));
     db->list = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), db);
     if (db->list != NULL) {
+        if(mx_valid_login_auth(db->list) == true) {
+            mx_res_js_login_auth(client);
+            return;
+        }
         client->user_id = mx_atoi(db->list->data);
-        client->token =  mx_insert_token(db->model_fill_table, client->user_id);
+        client->token =  mx_token_insert(db->model_fill_table, client->user_id);
         json_login_success(db->list, client);
-
         mx_strdel(&client->token);
     } else
         mx_res_js_login_unauthorized(client);

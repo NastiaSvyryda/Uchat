@@ -20,8 +20,9 @@ SRC_DIRS = src \
 			src/system \
 			src/system/basic \
 			src/system/database_crud \
-			src/validations \
+			src/validations/basic \
 			src/validations/auth \
+			src/validations/database \
 			src/system/security
 
 SRC_DIR = src

@@ -1,6 +1,6 @@
 #include "uchat_server.h"
 
-char *mx_create_token(int length) {
+char *mx_token_create(int length) {
     int mySeed = 25011984;
     char *string = mx_strdup("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-#?!");
     size_t stringLen = strlen(string);
