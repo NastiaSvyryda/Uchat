@@ -36,9 +36,10 @@ void mx_update_user_info(__attribute__((unused)) GtkWidget *button, gpointer dat
     json->user_id = mwo->user_id;
     strcpy(json->token, mwo->token);
 
-    strcpy(json->pers_info.login, "SLAVA");
-    strcpy(json->pers_info.first_name, "GAVNIUK");
-    strcpy(json->pers_info.last_name, "DAVAI RABOTAI");
+    strcpy(json->pers_info.login, "spleshkov");
+    strcpy(json->pers_info.first_name, "Viacheslav");
+    strcpy(json->pers_info.last_name, "Pleshkov");
+    strcpy(json->pers_info.password, "rootroot");
 
     json_str = mx_json_make_json(JS_PERS_INFO_UPD, json);
 

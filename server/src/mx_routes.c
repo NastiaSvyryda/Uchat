@@ -16,6 +16,8 @@ void mx_routes(t_json_data *json, t_clients *client, t_clients *cur_client) {
             mx_controller_message_history(json, cur_client);
         else if (json->type == JS_GET_USERS)
             mx_controller_user_all(cur_client);
+        else if (json->type == JS_PERS_INFO_UPD)
+            mx_controller_user_edit(json, cur_client);
         else if (json->type == JS_MES_DEL_OUT)
             mx_controller_delete_message(json, client);
     }
