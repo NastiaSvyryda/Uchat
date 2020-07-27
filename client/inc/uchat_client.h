@@ -105,6 +105,7 @@ typedef struct s_json_data {
 }              t_json_data;
 typedef struct s_message_list {
     int message_id;
+    char login[MX_VARCHAR_LEN + 1];
     time_t delivery_time;
     char *text;
     int channel_id;
@@ -176,6 +177,11 @@ typedef struct s_MainWindowObjects {//changed
     GtkWidget *chatList;
     GtkWidget *usersList;
 
+    GtkEntry *edit_name;
+    GtkEntry *edit_surname;
+    GtkEntry *new_pass;
+    GtkEntry *new_pass_r;
+
     gchar *curr_chat;
     char **curr_chat_users;
     int *user_ids;
@@ -224,7 +230,9 @@ void mx_create_login_window(t_mainWindowObjects *main);
 char *mx_get_text_of_textview(GtkWidget *text_view);
 
 void mx_set_component(t_mainWindowObjects *mwo, GtkWidget *gtk_component);
-void mx_set_chat_component(t_mainWindowObjects *mwo);
+void mx_on_message_clicked(__attribute__((unused)) GtkWidget *button, GdkEventButton *event, __attribute__((unused))gpointer data);
+
+char *mx_strtrim_qouts(const char *str);
 // Validation
 char *mx_handle_user_input(const char *s);
 void mx_show_popup(void *parent_window, char *msg);

@@ -40,16 +40,17 @@ void mx_on_butSend_clicked(__attribute__((unused)) GtkWidget *button, gpointer d
         json->new_channel = true;
     }
     else {
-        mwo->channel_info = mwo->channel_info->first;
-        if (mwo->channel_info) {
-            while (mwo->channel_info->next != NULL) {
-                if (mwo->channel_info->channel_data.channel_id ==
-                        mwo->curr_channel_info->channel_data.channel_id)
-                    break;
-                mwo->channel_info = mwo->channel_info->next;
-            }
-        }
-        json->message.channel_id = mwo->channel_info->channel_data.channel_id;
+//        mwo->channel_info = mwo->channel_info->first;
+//        if (mwo->channel_info) {
+//            while (mwo->channel_info->next != NULL) {
+//                if (mwo->channel_info->channel_data.channel_id ==
+//                        mwo->curr_channel_info->channel_data.channel_id)
+//                    break;
+//                mwo->channel_info = mwo->channel_info->next;
+//            }
+//        }
+        if (mwo->curr_channel_info)
+            json->message.channel_id = mwo->curr_channel_info->channel_data.channel_id;
     }
     json->type = JS_MES_OUT;
     json->message.text = strdup(message);

@@ -74,11 +74,22 @@ notebook lable {
     color: aliceblue;
 }
 
+.dialog_notebook:focus, .dialog_notebook {
+    border: none;
+    padding-bottom: 5px;
+}
 image {
-    height: 50px;
-    width: 50px;
-    border: 1px solid black;
     background-color: transparent;
-    color: white;
+    border: none;
+    box-shadow: inset transparent;
+    text-shadow: none;
+    opacity: 1;
+    -gtk-icon-shadow: none;
+    -gtk-icon-effect: none;
+}
+#info_button, #add_chat_button {
     border-color: transparent;
+}
+#info_button:hover, #add_chat_button:hover {
+    border-color: aliceblue;
 }

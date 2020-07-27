@@ -25,9 +25,22 @@ void mx_update_user_info(__attribute__((unused)) GtkWidget *button, gpointer dat
 {
     t_mainWindowObjects *mwo = (t_mainWindowObjects *)data;
 
-//    const gchar *login = gtk_entry_get_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "login"));
-//    const gchar *first_name = gtk_entry_get_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "first_name"));
-//    const gchar *last_name = gtk_entry_get_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "last_name"));
+    //const gchar *login = gtk_entry_get_text((GtkEntry *)gtk_builder_get_object(mwo->builder, "login"));
+    const gchar *first_name = gtk_entry_get_text(mwo->edit_name);
+    const gchar *last_name = gtk_entry_get_text(mwo->edit_name);
+    const gchar *new_pass = gtk_entry_get_text(mwo->new_pass);
+    const gchar *new_pass_r = gtk_entry_get_text(mwo->new_pass_r);
+
+    if (strcmp((char *)new_pass, (char *)new_pass_r) != 0) {
+        mx_show_popup(mwo->Window, "Different passwords!");
+        gtk_widget_destroy(mwo->infoDialog);
+    }
+
+    _Bool valid = mx_validate_password((gchar *)new_pass, mwo->Window) &&
+                  mx_validate_user_name((gchar *)first_name, mwo->Window) &&
+                  mx_validate_user_surname((gchar *)last_name, mwo->Window);//VALID password if no
+    if (!valid)
+        gtk_widget_destroy(mwo->infoDialog);
 
     char *json_str = NULL;
     t_json_data *json = calloc(1, sizeof(t_json_data));
@@ -36,10 +49,9 @@ void mx_update_user_info(__attribute__((unused)) GtkWidget *button, gpointer dat
     json->user_id = mwo->user_id;
     strcpy(json->token, mwo->token);
 
-    strcpy(json->pers_info.login, mwo->login);
-    strcpy(json->pers_info.first_name, "GAVNIUK");
-    strcpy(json->pers_info.last_name, "DAVAI RABOTAI");
-    strcpy(json->pers_info.password, "123456789");
+    strcpy(json->pers_info.login, first_name);
+    strcpy(json->pers_info.last_name, last_name);
+    strcpy(json->pers_info.password, new_pass);
 
     json_str = mx_json_make_json(JS_PERS_INFO_UPD, json);
 
@@ -68,9 +80,15 @@ void mx_on_info_clicked(__attribute__((unused)) GtkWidget *button, gpointer data
         }
         mwo->infoDialog = GTK_WIDGET(
                  gtk_builder_get_object(builder, "dialog_info"));
-        gtk_entry_set_text((GtkEntry *)gtk_builder_get_object(builder, "login"), mwo->login);
-        gtk_entry_set_text((GtkEntry *)gtk_builder_get_object(builder, "first_name"), mwo->first_name);
-        gtk_entry_set_text((GtkEntry *)gtk_builder_get_object(builder, "last_name"), mwo->last_name);
+
+        mwo->edit_name = (GtkEntry *)gtk_builder_get_object(mwo->builder, "first_name");
+        mwo->edit_name = (GtkEntry *)gtk_builder_get_object(mwo->builder, "last_name");
+        mwo->new_pass = (GtkEntry *)gtk_builder_get_object(mwo->builder, "update_password");
+        mwo->new_pass_r = (GtkEntry *)gtk_builder_get_object(mwo->builder, "update_password1");
+
+        //gtk_entry_set_text((GtkEntry *)gtk_builder_get_object(builder, "login"), mwo->login);
+        gtk_entry_set_text(mwo->edit_name, mwo->first_name);
+        gtk_entry_set_text(mwo->edit_surname, mwo->last_name);
         gtk_builder_connect_signals(builder, mwo);
         gtk_window_set_transient_for(GTK_WINDOW(mwo->infoDialog),
                                       mwo->Window);

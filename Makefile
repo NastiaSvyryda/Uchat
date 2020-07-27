@@ -9,15 +9,10 @@ all: install
 install: dep
 
 dep:
+	@git submodule init
+	@git submodule update
 	@make out -C $(CL_DIR)
 	@make out -C $(SV_DIR)
-
-
-# $(CL_NAME):
-# 	# @cp $(CL_DIR)/$(CL_NAME) .
-
-# $(SV_NAME):
-# 	# @cp $(SV_DIR)/$(SV_NAME) .
 
 clean:
 	@make clean -C $(CL_DIR)

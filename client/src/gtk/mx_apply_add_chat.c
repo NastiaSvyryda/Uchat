@@ -7,11 +7,11 @@ void mx_apply_add_chat(__attribute__((unused)) GtkWidget *button, gpointer data)
 
     if (mwo->ids_logins_arr) {
         mwo->add_chat = 0;
-        //gtk_dialog_response(GTK_DIALOG(mwo->addChat_Dialog), GTK_RESPONSE_DELETE_EVENT);
-        mwo->curr_chat = (gchar *) mx_handle_user_input(
-                gtk_entry_get_text(mwo->entryChatName));
+        mwo->curr_chat = (gchar *)gtk_entry_get_text(mwo->entryChatName);
+        if (!mx_validate_chat_name(mwo->curr_chat, GTK_WINDOW(mwo->addChat_Dialog)))
+            gtk_widget_destroy(mwo->addChat_Dialog);
         mwo->curr_chat_users = mx_strsplit(
-                gtk_entry_get_text(mwo->entryChatUsers), ' ');
+                gtk_entry_get_text(mwo->entryChatUsers), ' ');//VALIDATION!
         len = mx_arrlen(mwo->curr_chat_users);
         mwo->user_ids = malloc(sizeof(int) * (len + 1));
         for (int i = 0; i < len; i++) {

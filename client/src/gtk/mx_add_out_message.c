@@ -1,6 +1,6 @@
 #include "uchat_client.h"
 
-static char *strtrim(const char *str) {
+char *mx_strtrim_qouts(const char *str) {
     int len = 0;
     char *new = NULL;
 
@@ -32,7 +32,7 @@ void mx_add_out_message(t_mainWindowObjects *mwo, t_json_data *json)
             mwo->channel_info = mwo->channel_info->next;
         }
         if (flag == 0) {
-            temp_str = strtrim(json->new_channel_data.channel_name);
+            temp_str = mx_strtrim_qouts(json->new_channel_data.channel_name);
             strcpy(mwo->channel_info->channel_data.channel_name, temp_str);
             mwo->channel_info->channel_data.channel_id = json->message.channel_id;
             mwo->channel_info->channel_data.last_mes_time = json->new_channel_data.last_mes_time;
@@ -71,6 +71,7 @@ void mx_add_out_message(t_mainWindowObjects *mwo, t_json_data *json)
             temp_mess->channel_id = json->message.channel_id;
             temp_mess->message_id = json->message.message_id;
             temp_mess->delivery_time = json->message.delivery_time;
+            strcpy(temp_mess->login, json->pers_info.login);
             temp_mess->next = NULL;
             if (mwo->channel_info->message == NULL) {
                 mwo->channel_info->message = temp_mess;
