@@ -11,7 +11,8 @@ static bool check_channels (t_json_data *json) {
             json->new_channel_data.channel_name,
             db->model_fill_table[2],
             json->message.client1_id);
-    db->list = mx_read_database(mx_model_channel_database(), mx_model_channel_name_table(), db);
+    db->list = mx_read_database(mx_model_channel_database(),
+               mx_model_channel_name_table(), db);
     if (db->list == NULL)
         status = false;
     mx_database_query_clean(&db);
@@ -29,7 +30,8 @@ static bool check_users_in_channels (t_json_data *json, int index) {
              json->new_channel_data.user_ids[index],
              db->model_fill_table[2],
              json->new_channel_data.channel_id);
-    db->list = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), db);
+    db->list = mx_read_database(mx_model_user_channel_database(),
+               mx_model_user_channel_name_table(), db);
     if (db->list == NULL)
         status = false;
     mx_database_query_clean(&db);
@@ -46,7 +48,8 @@ void mx_get_channel_id_from_database_channels(t_json_data *json) {
              json->new_channel_data.channel_name,
              db->model_fill_table[2],
              json->message.client1_id);
-    db->list = mx_read_database(mx_model_channel_database(), mx_model_channel_name_table(), db);
+    db->list = mx_read_database(mx_model_channel_database(),
+               mx_model_channel_name_table(), db);
     json->new_channel_data.channel_id = mx_atoi(db->list->data);
     mx_database_query_clean(&db);
 }
@@ -62,7 +65,9 @@ static void fill_database_channels(t_json_data *json) {
         asprintf(&db->value, "\"%s\", %d",
                  json->new_channel_data.channel_name,
                  json->message.client1_id);
-        json->new_channel_data.channel_id = mx_create_databases(mx_model_channel_database(), mx_model_channel_name_table(), db);
+        json->new_channel_data.channel_id = \
+                mx_create_databases(mx_model_channel_database(), \
+                mx_model_channel_name_table(), db);
         mx_database_query_clean(&db);
     }
     else
@@ -86,7 +91,8 @@ static void fill_database_user_channel(t_json_data *json) {
                      json->new_channel_data.user_ids[i],
                      json->new_channel_data.channel_id,
                      "datetime('now')");
-            mx_create_databases(mx_model_user_channel_database(), mx_model_user_channel_name_table(), db);
+            mx_create_databases(mx_model_user_channel_database(), \
+                                mx_model_user_channel_name_table(), db);
             mx_database_query_clean(&db);
         }
     }

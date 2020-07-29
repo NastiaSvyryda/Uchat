@@ -16,8 +16,6 @@ void mx_delete_client(t_clients **client, int key) {
     t_clients *temp = (*client), *prev;
     t_clients *first = NULL;
 
-
-    // If head node itself holds the key to be deleted
     if (temp != NULL && temp->fd == key) {
         SSL_free(temp->ssl);
         close(temp->fd);
@@ -27,26 +25,21 @@ void mx_delete_client(t_clients **client, int key) {
             temp->first = first;
             temp = temp->next;
         }
-        //temp->next->first = NULL;
-        (*client) = (*client)->next; // Changed head
-        free(temp);    // free old head
+        (*client) = (*client)->next;
+        free(temp);
         return;
     }
-    // Search for the key to be deleted, keep track of the
-    // previous node as we need to change 'prev->next'
     while (temp != NULL && temp->fd != key) {
         prev = temp;
         temp = temp->next;
     }
-    // If key was not present in linked list
     if (temp == NULL)
         return;
     SSL_free(temp->ssl);
     close(temp->fd);
     mx_strdel(&temp->token);
-    // Unlink the node from linked list
     prev->next = temp->next;
-    free(temp); // Free memory
+    free(temp);
     temp = NULL;
 }
 

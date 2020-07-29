@@ -25,7 +25,8 @@ void mx_controller_register(t_json_data *json, t_clients *client) {
         client->token = mx_token_insert(db->model_fill_table, client->user_id);
         mx_res_js_register_success(client, json);
         mx_strdel(&client->token);
-    } else
+    }
+    else
         mx_res_js_register_incorrectly_filled_fields(client);
     mx_database_query_clean(&db);
 }

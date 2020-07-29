@@ -1,6 +1,0 @@
-[submodule "client/libs/libmx"]
-	path = client/libs/libmx
-	url = https://github.com/viacheslavpleshkov/unit-factory-ucode-libmx
-[submodule "server/libs/libmx"]
-	path = server/libs/libmx
-	url = https://github.com/viacheslavpleshkov/unit-factory-ucode-libmx

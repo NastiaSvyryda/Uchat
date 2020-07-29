@@ -14,7 +14,8 @@ static void fill_database_message(t_json_data *json) {
              json->message.text,
              "datetime('now')",
              json->message.channel_id);
-    mx_create_databases(mx_model_message_database(), mx_model_message_name_table(), db);
+    mx_create_databases(mx_model_message_database(), \
+                        mx_model_message_name_table(), db);
     mx_database_query_clean(&db);
 }
 
@@ -26,13 +27,11 @@ static void get_message_id_from_database(t_json_data *json) {
              db->model_fill_table[0],
              db->model_fill_table[3]);
     asprintf(&db->where, "%s=%d AND %s='%s' AND %s=%d",
-             db->model_fill_table[1],
-             json->message.client1_id,
-             db->model_fill_table[2],
-             json->message.text,
-             db->model_fill_table[4],
-             json->message.channel_id);
-    db->list = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), db);
+             db->model_fill_table[1], json->message.client1_id,
+             db->model_fill_table[2], json->message.text,
+             db->model_fill_table[4], json->message.channel_id);
+    db->list = mx_read_database(mx_model_message_database(), \
+               mx_model_message_name_table(), db);
     json->message.message_id = mx_atoi(db->list->data);
     json->message.delivery_time = (long)db->list->next->data;
     mx_database_query_clean(&db);
@@ -47,7 +46,8 @@ t_list *mx_get_user_id_from_database_channels(int channel_id) {
     asprintf(&db->where ,"%s=%d",
              db->model_fill_table[2],
              channel_id);
-    list = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), db);
+    list = mx_read_database(mx_model_user_channel_database(), \
+                            mx_model_user_channel_name_table(), db);
     mx_database_query_clean(&db);
     return list;
 }
@@ -61,7 +61,8 @@ void mx_fill_login(t_json_data *json, int user_id, int i, int flag) {
     asprintf(&db->where ,"%s=%d",
              db->model_fill_table[0],
              user_id);
-    list = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), db);
+    list = mx_read_database(mx_model_user_database(), \
+                            mx_model_user_name_table(), db);
     if(flag == 0) {
         strcpy(json->pers_info.login, list->data);
     }
@@ -73,21 +74,15 @@ void mx_fill_login(t_json_data *json, int user_id, int i, int flag) {
 }
 
 
-void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *json, int type, int type_response) {
+void mx_send_message_to_channel(t_list *data, t_clients *client,
+                                t_json_data *json, int type, int type_res) {
     t_list *tmp = data;
     char *json_str = NULL;
 
     client = client->first;
-
     while (client != NULL) {
         data = tmp;
-        mx_printstr("\nclient: ");
-        mx_printint(client->user_id);
-        mx_printstr("\njson: ");
-        mx_printint(json->message.client1_id);
         while (data != NULL) {
-            mx_printstr("\ndata: ");
-            mx_printstr(data->data);
             if (client->user_id != json->message.client1_id
                 && client->user_id == mx_atoi(data->data)) {
                 json->type = type;
@@ -98,9 +93,9 @@ void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *js
             }
             else if (client->user_id == json->message.client1_id
                      && client->user_id == mx_atoi(data->data)) {
-                json->type = type_response;
+                json->type = type_res;
                 json->status = 200;
-                json_str = mx_json_make_json(type_response, json);
+                json_str = mx_json_make_json(type_res, json);
                 mx_logger("JSON write:",  json_str + 4);
                 SSL_write(client->ssl, json_str, mx_strlen(json_str + 4) + 4);
                 break;
@@ -113,70 +108,6 @@ void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *js
             break;
     }
 }
-//    t_list *tmp = data;
-//    char *json_str = NULL;
-//
-//    client = client->first;
-//    while (client != NULL) {
-//        data = tmp;
-//        while (data != NULL) {
-//
-//            if (client->user_id != json->message.client1_id
-//                && client->user_id == mx_atoi(data->data)) {
-//                mx_printstr("zaebis'");
-//                json->type = type;
-//                json_str = mx_json_make_json(type, json);
-//                mx_logger("JSON write:", json_str + 4);
-//                SSL_write(client->ssl, json_str, *(int *)json_str + 4);
-//                break;
-//            } else if (client->user_id == json->message.client1_id
-//                       && client->user_id == mx_atoi(data->data)) {
-//                mx_printstr("pizda");
-//                json->type = type_response;
-//                json->status = 200;
-//                json_str = mx_json_make_json(type_response, json);
-//                mx_logger("JSON write:", json_str + 4);
-//                SSL_write(client->ssl, json_str, *(int *)json_str + 4);
-//            }
-//            else if (i < mx_list_size(data) ){
-//                mx_printstr("GAVNO_IF");
-//                while (temp != NULL) {
-//                    if (temp->user_id == mx_atoi(data->data)) {
-//                        user = true;
-//                        mx_printstr("GAVNO");
-//                        break;
-//                    }
-//                    temp = temp->next;
-//                }
-//                temp = main->client->first;
-//                if (user == false) {
-//                    json->type = type;
-//                    main->wait->json_str
-//
-//                            = mx_json_make_json(type, json);
-//                    mx_printstr("wait:\n");
-//                    mx_printint(mx_atoi(data->data));
-//                    mx_printstr(main->wait->json_str + 4);
-//                    main->wait->user_id = mx_atoi(data->data);
-////                        client->first->wait->first = client->first->wait;
-//                    main->wait->next = malloc(sizeof(t_wait));
-//                    main->wait->next->json_str = NULL;
-//                    main->wait->next->first = main->wait->first;
-//                    main->wait = main->wait->next;
-//                    main->wait->next = NULL;
-//                }
-//                else
-//                    user = false;
-//                i++;
-//            }
-//            data = data->next;
-//        }
-//        if(client->next != NULL)
-//            client = client->next;
-//        else
-//            break;
-//    }
-//}
 
 void mx_controller_message(t_clients *client, t_json_data *json) {
     t_list *data = NULL;

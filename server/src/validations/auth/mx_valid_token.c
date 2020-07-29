@@ -13,7 +13,8 @@ bool mx_valid_token(int id, char *token) {
             id,
             db->model_fill_table[5],
             token);
-    db->list = mx_read_database(mx_model_user_database(), mx_model_user_name_table(), db);
+    db->list = mx_read_database(mx_model_user_database(), \
+                                mx_model_user_name_table(), db);
     if (db->list == NULL || (mx_strcmp(token, "NULL") == 0))
         status = false;
     mx_database_query_clean(&db);

@@ -18,3 +18,4 @@ log.txt
 database.db
 client_unit_tests/
 *.zsh
+mycert.pem

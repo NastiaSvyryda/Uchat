@@ -12,11 +12,12 @@ static void change_message_database(t_json_data *json) {
             json->message.message_id,
             db->model_fill_table[1],
             json->message.client1_id);
-    mx_update_database(mx_model_message_database(), mx_model_message_name_table(), db);
+    mx_update_database(mx_model_message_database(), \
+                        mx_model_message_name_table(), db);
     mx_database_query_clean(&db);
 }
 
-static void get_channel_id_from_database(t_json_data *json, t_json_data *json_response) {
+static void get_channel_id(t_json_data *json, t_json_data *json_res) {
     t_database_query *db = mx_database_query_create();
 
     db->model_fill_table = mx_model_message_fill_table();
@@ -26,8 +27,9 @@ static void get_channel_id_from_database(t_json_data *json, t_json_data *json_re
              json->message.message_id,
              db->model_fill_table[1],
              json->message.client1_id);
-    db->list = mx_read_database(mx_model_message_database(), mx_model_message_name_table(), db);
-    json_response->message.channel_id = mx_atoi(db->list->data);
+    db->list = mx_read_database(mx_model_message_database(), \
+                                mx_model_message_name_table(), db);
+    json_res->message.channel_id = mx_atoi(db->list->data);
     mx_database_query_clean(&db);
 }
 
@@ -35,17 +37,18 @@ static void get_channel_id_from_database(t_json_data *json, t_json_data *json_re
 
 void mx_controller_edit_message(t_json_data *json, t_clients *client) {
     t_list *data = NULL;
-    t_json_data json_response = {.type = JS_MES_EDIT_IN,
-                                 .message.channel_id = json->message.channel_id,
-                                 .message.message_id = json->message.message_id,
-                                 .message.client1_id = json->message.client1_id};
+    t_json_data json_res = {.type = JS_MES_EDIT_IN,
+                            .message.channel_id = json->message.channel_id,
+                            .message.message_id = json->message.message_id,
+                            .message.client1_id = json->message.client1_id
+                            };
 
-    json_response.message.text = mx_strdup(json->message.text);
+    json_res.message.text = mx_strdup(json->message.text);
     client = client->first;
     change_message_database(json);
-    get_channel_id_from_database(json, &json_response);
-    data = mx_get_user_id_from_database_channels(json_response.message.channel_id);
-    mx_send_message_to_channel(data, client, &json_response, JS_MES_EDIT_IN, JS_MES_EDIT_OUT);
-    mx_strdel(&json_response.message.text);
-
+    get_channel_id(json, &json_res);
+    data = mx_get_user_id_from_database_channels(json_res.message.channel_id);
+    mx_send_message_to_channel(data, client, &json_res, \
+                          JS_MES_EDIT_IN, JS_MES_EDIT_OUT);
+    mx_strdel(&json_res.message.text);
 }

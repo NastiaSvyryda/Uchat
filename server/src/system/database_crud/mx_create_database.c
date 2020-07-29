@@ -21,7 +21,8 @@ static int sqlite3_database_sql(char *table, t_database_query *database_query) {
     return last_id;
 }
 
-int mx_create_databases(char *database, char *table, t_database_query *database_query) {
+int mx_create_databases(char *database, char *table, \
+                        t_database_query *database_query) {
     if (strcmp(database, "sqlite3") == 0)
         return sqlite3_database_sql(table, database_query);
     return INT_MIN;

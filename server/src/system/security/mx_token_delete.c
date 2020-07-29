@@ -10,6 +10,7 @@ void mx_token_delete(t_clients *client) {
     asprintf(&db->where, "%s = %i",
              db->model_fill_table[0],
              client->user_id);
-    mx_update_database(mx_model_user_database(), mx_model_user_name_table(), db);
+    mx_update_database(mx_model_user_database(), \
+                        mx_model_user_name_table(), db);
     mx_database_query_clean(&db);
 }

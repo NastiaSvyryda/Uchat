@@ -1,0 +1,166 @@
+* {
+    background: aliceblue;
+    font-family: "Apple SD Gothic Neo";
+    /*font-weight: bolder;*/
+    border-radius: 5px;
+    color: #494d57;
+    outline: 0;
+    box-shadow: none;
+    caret-color: aliceblue;
+}
+scrolledwindow > *{
+    background: transparent;
+    margin: 1px;
+}
+window {
+    border-radius: 0;
+}
+*:active, *:hover, *:focus {
+    box-shadow: none;
+    border-color: #2583c7;
+}
+
+box > label {
+    margin-top: 1.1em;
+    /*color: aliceblue;*/
+    background: none;
+    box-shadow: none;
+    border-width: 1px;
+}
+label {background: transparent}
+button {
+    font-weight: bold;
+    box-shadow: none;
+    border-width: 1px;
+    text-shadow: #494d57 0 0 .5px;
+}
+entry {
+    background-color: #494d57;
+    color: aliceblue;
+    font-weight: bold;
+}
+
+entry:focus {
+    text-shadow: 0 .5px aliceblue;
+}
+
+#scrolled_window_message {
+    box-shadow: none;
+    background-color: #494d57;
+
+}
+textview {
+    padding: 5px;
+    font-weight: bold;
+    background-color: #494d57;
+    box-shadow: none;
+    border: .7px solid white;
+}
+textview text{
+    color: aliceblue;
+    background-color: transparent;
+}
+viewport {
+    background-color: transparent;
+}
+#scrolled_window_chats box > button{
+    min-width: 36.5em;
+    background: rgba(73, 77, 87, 1);
+}
+#scrolled_window_chats box button label {
+
+    color: aliceblue;
+}
+notebook lable {
+    color: aliceblue;
+}
+
+.dialog_notebook:focus, .dialog_notebook {
+    border: none;
+    padding-bottom: 5px;
+}
+.dialog_notebook label {
+    background: transparent;
+}
+.dialog_notebook > header {
+    border: none;
+}
+.dialog_notebook > header > tabs {
+    background: transparent;
+    border: none;
+}
+.dialog_notebook > header > tabs > tab {
+    background: transparent;
+    border: none;
+}
+/*.dialog_notebook > header > tabs > tab:active, .dialog_notebook > header > tabs > tab:focus*/
+.dialog_notebook > header > tabs > tab:checked {
+    background: rgba(73, 77, 87, 1);
+}
+.dialog_notebook > header > tabs > tab:checked label {
+    color: aliceblue;
+}
+image {
+    background-color: transparent;
+    border: none;
+    box-shadow: inset transparent;
+    text-shadow: none;
+    -gtk-icon-shadow: none;
+    -gtk-icon-effect: none;
+}
+#info_button, #add_chat_button, #send_button {
+    border-color: transparent;
+}
+#info_button:hover, #add_chat_button:hover, #send_button:hover {
+    border-color: #2583c7;
+}
+
+#left_button {
+    background-color: aliceblue;
+}
+#right_button {
+    background-color: #494d57;
+    margin-top: 7px;
+}
+#left_button label {
+    color: #494d57;
+}
+#right_button label {
+    color: aliceblue;
+}
+#left_label {
+    font-weight: bolder;
+    margin-top: 2px;
+    margin-left: 1px;
+    text-shadow: 0 1px #2583c7;
+}
+#dialog_add_chat row {
+    margin-bottom: 3px;
+}
+#dialog_add_chat label, #dialog_info label, #dialog_change_message label {
+    font-size: 14px;
+}
+#dialog_add_chat row:selected {
+    background: rgba(73, 77, 87, 1);
+    /*color: #FF0000;*/
+}
+#dialog_add_chat row:selected label {
+    color: aliceblue;
+}
+#dark, #bright {
+    border: transparent;
+}
+#bright {
+    background: rgba(73, 77, 87, 1);
+}
+#bright label {
+    color: aliceblue;
+}
+
+#edit_message_scroll {
+    background: #494d57;
+    margin-bottom: 5px;
+}
+#cancel_edit_message {
+    margin-right: 5px;
+}

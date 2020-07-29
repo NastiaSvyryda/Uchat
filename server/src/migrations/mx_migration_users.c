@@ -16,14 +16,8 @@ static void create_table_for_sqlite3(void) {
                        "%s VARCHAR(255) NOT NULL,"
                        "%s VARCHAR(255) NULL,"
                        "%s DATETIME NOT NULL);",
-                       mx_model_user_name_table(),
-                       fill[0],
-                       fill[1],
-                       fill[2],
-                       fill[3],
-                       fill[4],
-                       fill[5],
-                       fill[6]);
+                       mx_model_user_name_table(),fill[0], fill[1], fill[2],
+                       fill[3], fill[4], fill[5], fill[6]);
     mx_logger("Migration up:",  sql);
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     mx_valid_sqlite3_failed_data(rc, db, err_msg);

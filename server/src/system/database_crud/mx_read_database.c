@@ -39,7 +39,8 @@ t_list *sqlite3_database__read(char *table, t_database_query *database_query) {
     return list;
 }
 
-t_list *mx_read_database(char *database, char *table, t_database_query *database_query) {
+t_list *mx_read_database(char *database, char *table, \
+                            t_database_query *database_query) {
     t_list *data = NULL;
 
     if (strcmp(database, "sqlite3") == 0)

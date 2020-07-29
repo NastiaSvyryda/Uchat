@@ -1,6 +1,6 @@
 #include "uchat_server.h"
 
-static void mx_get_channel_name_from_database_channels(t_json_data *json, int index) {
+static void mx_get_channel_name(t_json_data *json, int index) {
     t_database_query *db = mx_database_query_create();
 
     db->model_fill_table = mx_model_channel_fill_table();
@@ -8,43 +8,52 @@ static void mx_get_channel_name_from_database_channels(t_json_data *json, int in
     asprintf(&db->where, "%s=%d",
              db->model_fill_table[0],
              json->channels_arr[index].channel_id);
-    db->list = mx_read_database(mx_model_channel_database(), mx_model_channel_name_table(), db);
+    db->list = mx_read_database(mx_model_channel_database(), \
+                                mx_model_channel_name_table(), db);
     strcpy(json->channels_arr[index].channel_name, db->list->data);
     mx_database_query_clean(&db);
 }
 
+void mx_fill_json_channels(t_list *channel_id, t_json_data *json) {
+    int j = 0;
+    int k = 0;
+    t_list *user_id = NULL;
+
+    while (channel_id != NULL) {
+        json->channels_arr[k].channel_id = mx_atoi(channel_id->data);
+        user_id = mx_get_user_id_from_database_channels(\
+                    json->channels_arr[k].channel_id);
+        json->channels_arr[k].user_ids_size = mx_list_size(user_id);
+        json->channels_arr[k].user_ids = \
+                    malloc(sizeof(int) * json->channels_arr[k].user_ids_size);
+        j = 0;
+        while (user_id != NULL) {
+            json->channels_arr[k].user_ids[j] = mx_atoi(user_id->data);
+            user_id = user_id->next;
+            j++;
+        }
+        mx_get_channel_name(json, k);
+        mx_del_list(user_id, json->channels_arr[k].user_ids_size);
+        user_id = NULL;
+        channel_id = channel_id->next;
+        k++;
+    }
+}
+
 static void mx_fill_channels(t_json_data *json) {
     t_database_query *db = mx_database_query_create();
-
     t_list *channel_id = NULL;
-    t_list *user_id = NULL;
-    int k = 0;
-    int j = 0;
+
     db->model_fill_table = mx_model_user_channel_fill_table();
     asprintf(&db->fill_table ,"%s", "channel_id");
     asprintf(&db->where ,"%s=%d",
              db->model_fill_table[1],
              json->user_id);
-    channel_id = mx_read_database(mx_model_user_channel_database(), mx_model_user_channel_name_table(), db);
+    channel_id = mx_read_database(mx_model_user_channel_database(), \
+                            mx_model_user_channel_name_table(), db);
     json->channels_arr_size = mx_list_size(channel_id);
     json->channels_arr = malloc(sizeof(t_channel) * json->channels_arr_size);
-    while (channel_id != NULL) {
-         json->channels_arr[k].channel_id = mx_atoi(channel_id->data);
-         user_id = mx_get_user_id_from_database_channels(json->channels_arr[k].channel_id);
-         json->channels_arr[k].user_ids_size = mx_list_size(user_id);
-         json->channels_arr[k].user_ids = malloc(sizeof(int) * json->channels_arr[k].user_ids_size);
-         j = 0;
-         while (user_id != NULL) {
-             json->channels_arr[k].user_ids[j] = mx_atoi(user_id->data);
-             user_id = user_id->next;
-             j++;
-         }
-         mx_get_channel_name_from_database_channels(json, k);
-         mx_del_list(user_id, json->channels_arr[k].user_ids_size);
-         user_id = NULL;
-         channel_id = channel_id->next;
-         k++;
-    }
+    mx_fill_json_channels(channel_id, json);
     mx_del_list(channel_id, json->channels_arr_size);
     mx_database_query_clean(&db);
 }

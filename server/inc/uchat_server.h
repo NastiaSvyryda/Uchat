@@ -181,7 +181,7 @@ void mx_res_js_login_incorrectly_filled_fields(t_clients *client);
 void mx_res_js_register_success(t_clients *client, t_json_data *json_data);
 void mx_res_js_register_incorrectly_filled_fields(t_clients *client);
 void mx_res_js_log_out_success(t_clients *cur_client);
-void mx_res_js_get_message_history(t_clients *client, t_list *list);
+void mx_res_js_get_message_history(t_clients *client, t_list *list, int channel_id);
 void mx_res_js_get_users(t_clients *client, t_list *list);
 void mx_res_js_user_edit_success(t_clients *client);
 ///end JSON
@@ -197,7 +197,7 @@ void mx_controller_edit_message(t_json_data *json, t_clients *client);
 void mx_controller_message_history(t_json_data *json, t_clients *client);
 t_list *mx_get_user_id_from_database_channels(int channel_id);
 void mx_fill_login(t_json_data *json, int user_id, int i, int flag);
-void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *json, int type, int type_response);
+void mx_send_message_to_channel(t_list *data, t_clients *client, t_json_data *json, int type, int type_res);
 void mx_controller_new_channel(t_json_data *json);
 void mx_controller_user_all(t_clients *client);
 void mx_controller_user_edit(t_json_data *json, t_clients *client);

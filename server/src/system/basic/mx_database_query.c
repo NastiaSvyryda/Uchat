@@ -25,7 +25,8 @@ void mx_database_query_clean(t_database_query **database_query) {
         if((*database_query)->where != NULL)
             mx_strdel(&(*database_query)->where);
         if((*database_query)->list != NULL)
-            mx_del_list((*database_query)->list, mx_list_size((*database_query)->list));
+            mx_del_list((*database_query)->list, \
+                        mx_list_size((*database_query)->list));
         free(*database_query);
     }
 }

@@ -6,12 +6,10 @@ void *main_cycle(void *newfd) {
     t_clients *cur_client = client;
     int len = 0;
     char *json_str = NULL;
-    mx_printint(client->fd);
-    mx_printchar('\n');
-    if (SSL_accept(client->ssl) == -1) {
-        mx_logger("Connection", "The connection is not secure");
 
-    } else {
+    if (SSL_accept(client->ssl) == -1)
+        mx_logger("Connection", "The connection is not secure");
+    else {
         while(true) {
             len = 0;
             client = client->first;
@@ -24,7 +22,6 @@ void *main_cycle(void *newfd) {
             json_str = mx_strnew(len);
             mx_SSL_read_to_str(cur_client->ssl, json_str, len);
             mx_logger("JSON parse:", json_str);
-            mx_printstr(json_str);
             json = mx_json_parse(json_str);
             mx_routes(json, client, cur_client);
             if (json != NULL) {

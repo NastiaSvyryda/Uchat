@@ -22,9 +22,8 @@
 #include <openssl/err.h>
 
 //GTK
-
-#define UI_FILE "login.glade"
-#define MX_JSON_TEMPLATE "./client/resources/client_type_%d.json"
+#define UI_FILE "./client/src/gui/sent_gui.glade"
+#define MX_JSON_TEMPLATE "./client/src/json/resources/client_type_%d.json"
 #define MX_JSON_TO_STR_FLAGS JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY
 
 #define MX_TOKEN_LEN 256
@@ -53,9 +52,6 @@ typedef enum e_json_types {
     JS_PERS_INFO_UPD,  // JSON Type - personal info update 
     JS_NUM           // JSON types number
 }            t_json_types;
-
-
-
 
 typedef struct s_personal_data {
     char login[MX_VARCHAR_LEN + 1];
@@ -103,14 +99,14 @@ typedef struct s_json_data {
     t_message *messages_arr;
     int messages_arr_size;
 }              t_json_data;
+
 typedef struct s_message_list {
     int message_id;
     char login[MX_VARCHAR_LEN + 1];
-    time_t delivery_time;
+    //time_t delivery_time;
     char *text;
     int channel_id;
     GtkWidget *mess_row;
-//    int last_message_id;
     struct s_message_list *first;
     struct s_message_list *next;
 }              t_message_list;
@@ -123,7 +119,6 @@ typedef struct s_channel_info {
     struct s_channel_info *first;
     struct s_channel_info *next;
 }               t_channel_info;
-
 
 typedef struct s_login {
     char *type;
@@ -139,7 +134,7 @@ typedef struct s_registre {
     char *surname;
 }               t_registre;
 
-typedef struct s_MainWindowObjects {//changed
+typedef struct s_MainWindowObjects {
     GtkBuilder *builder;
 
     GtkWindow *Window;
@@ -165,7 +160,6 @@ typedef struct s_MainWindowObjects {//changed
     GtkEntry *entrySurname_r;
 
     GtkEntry *entryChatName;
-    GtkEntry *entryChatUsers;
 
     GtkWidget *entryMessage;
 
@@ -185,21 +179,15 @@ typedef struct s_MainWindowObjects {//changed
     gchar *curr_chat;
     char **curr_chat_users;
     int *user_ids;
-    GtkWidget *curr_messageList;
-    GtkWidget *curr_mess_row;
-    char *curr_message;
 
-    GtkCssProvider *provider;
+    char *curr_message;
 
     int visibility;
     int add_chat;
+    int edit_mess;
     int info;
-
-    //int channel;
-
     t_id_login *ids_logins_arr;
     int ids_logins_arr_size;
-
     int fd;
     int user_id;
     char login[MX_VARCHAR_LEN + 1];
@@ -207,11 +195,9 @@ typedef struct s_MainWindowObjects {//changed
     char last_name[MX_MAX_NAME_LEN + 1];
     char token[MX_TOKEN_LEN + 1];
     SSL *ssl;
-    t_message_list *curr_message_info;
     t_channel_info *channel_info;
     t_channel_info *curr_channel_info;
 } t_mainWindowObjects;
-
 
 ///TLS
 int mx_open_connection(const char *hostname, int port);
@@ -220,20 +206,38 @@ void mx_show_certs(SSL* ssl);
 void mx_SSL_read_to_str(SSL *ssl, char *buf, int len);
 ///end TLS
 
-gboolean mx_reciever(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
-void mx_add_out_message(t_mainWindowObjects *mwo, t_json_data *json);
-
+///Row creation
 GtkWidget *mx_create_chat(const gchar *text, struct s_MainWindowObjects *mwo);
 GtkWidget *mx_create_message(const gchar *text, struct s_MainWindowObjects *mwo, int align);
-void mx_create_login_window(t_mainWindowObjects *main);
-
+///end Row creation
+///Receiver
+gboolean mx_receiver(__attribute__((unused)) GIOChannel *chan, __attribute__((unused)) GIOCondition condition, void *data);
+void mx_receiver_login(t_mainWindowObjects *mwo, t_json_data *json);
+void mx_receiver_reg(t_mainWindowObjects *mwo, t_json_data *json);
+void mx_receiver_mes_del(t_mainWindowObjects *mwo, t_json_data *json);
+void mx_receiver_mes_edit(t_mainWindowObjects *mwo, t_json_data *json);
+void mx_receiver_get_users(t_mainWindowObjects *mwo, t_json_data *json);
+void mx_receiver_get_history(t_mainWindowObjects *mwo, t_json_data *json);
+///end receiver
+///Basic
+void mx_create_login_window(t_mainWindowObjects *mwo);
 char *mx_get_text_of_textview(GtkWidget *text_view);
-
+void mx_add_out_message(t_mainWindowObjects *mwo, t_json_data *json);
 void mx_set_component(t_mainWindowObjects *mwo, GtkWidget *gtk_component);
-void mx_on_message_clicked(__attribute__((unused)) GtkWidget *button, GdkEventButton *event, __attribute__((unused))gpointer data);
-
 char *mx_strtrim_qouts(const char *str);
-// Validation
+gint mx_scroll(gpointer data);
+void mx_fill_channel_info_login(t_mainWindowObjects *mwo, t_json_data *json);
+void mx_fill_message_info_out(t_mainWindowObjects *mwo, t_json_data *json);
+///end basic
+///Button handlers
+void mx_on_message_clicked(__attribute__((unused)) GtkWidget *button, GdkEventButton *event, __attribute__((unused))gpointer data);
+void mx_on_chat_clicked(__attribute__((unused)) GtkWidget *button, gpointer data);
+gboolean mx_enter_textview(GtkWidget *Widget, GdkEventKey *key, t_mainWindowObjects *mwo);
+void mx_on_but_send_clicked(__attribute__((unused)) GtkWidget *button, gpointer data);
+gboolean mx_enter_edit_textview(__attribute__((unused))GtkWidget *Widget, GdkEventKey *key, t_mainWindowObjects *mwo);
+void mx_on_edit_message_clicked(__attribute__((unused)) GtkWidget *clicked, gpointer data);
+///end button handlers
+///Validation
 char *mx_handle_user_input(const char *s);
 void mx_show_popup(void *parent_window, char *msg);
 _Bool mx_validate_login(char *str, void *window);
@@ -242,12 +246,8 @@ _Bool mx_validate_chat_name(char *str, void *window);
 _Bool mx_validate_message(char *str, void *window);
 _Bool mx_validate_user_name(char *str, void *window);
 _Bool mx_validate_user_surname(char *str, void *window);
-//gtk
-void mx_update_user_info(__attribute__((unused)) GtkWidget *button, gpointer data);
-
-
-void mx_str_to_file(const char *filepath, const char *data);
-
+///end validation
+///JSON
 char *mx_json_register_request(t_json_data *data);
 char *mx_json_log_in_request(t_json_data *data);
 char *mx_json_log_out_request(t_json_data *data);
@@ -267,5 +267,5 @@ int mx_parse_new_channel(struct json_object *jo, t_json_data *json);
 void mx_parse_logins(struct json_object *u_logins_arr, t_json_data *data);
 void mx_parse_messages(struct json_object *messages_arr, t_json_data *data);
 t_json_data *mx_json_parse(char *s);
-
-#endif //UCHAT_UCHAT_H
+///end JSON
+#endif

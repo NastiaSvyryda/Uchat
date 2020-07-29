@@ -23,6 +23,9 @@ uninstall: clean
 	@make uninstall -C $(SV_DIR)
 	@rm -rf $(CL_NAME)
 	@rm -rf $(SV_NAME)
+	@rm -rf log.txt
+	@rm -rf database.db
+	@rm -rf mycert.pem
 	@printf "$(CL_NAME) \033[31;1muninstalled\033[0m\n"
 	@printf "$(SV_NAME) \033[31;1muninstalled\033[0m\n"
 
@@ -30,3 +33,6 @@ reinstall: uninstall install
 
 db-up: install ./uchat_server  migration-up
 db-ds: install ./uchat_server migration-ds
+
+generate-ssl:
+	@openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout mycert.pem -out mycert.pem

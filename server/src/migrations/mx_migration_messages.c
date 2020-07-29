@@ -16,13 +16,9 @@ static void create_table_for_sqlite3(void) {
                          "%s INTEGER NOT NULL,"
                          "FOREIGN KEY(%s) REFERENCES %s(id),"
                          "FOREIGN KEY(%s) REFERENCES %s(id) );",
-                         mx_model_message_name_table(),
-                         fill[0],
-                         fill[1],
-                         fill[2],
-                         fill[3],
-                         fill[4],
-                         fill[1],
+                         mx_model_message_name_table(),fill[0],
+                         fill[1], fill[2], fill[3],
+                         fill[4], fill[1],
                          mx_model_user_name_table(),
                          fill[4],
                          mx_model_channel_name_table());
