@@ -10,6 +10,7 @@ void mx_receiver_reg(t_mainWindowObjects *mwo, t_json_data *json) {
         gtk_label_set_text(GTK_LABEL(mwo->label_login),
                            (const gchar *) mwo->login);
         mx_set_component(mwo, mwo->mainWindow);
+        mx_show_popup(mwo->Window, "Click + to start a new chat.");
     }
     if (json->status == 412)
         mx_show_popup(mwo->Window, "Such user already exist!");

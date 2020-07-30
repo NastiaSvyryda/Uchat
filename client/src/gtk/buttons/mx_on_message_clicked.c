@@ -1,13 +1,13 @@
 #include "uchat_client.h"
 
-gboolean mx_enter_edit_textview(__attribute__((unused))GtkWidget *Widget,
-                                GdkEventKey *key, t_mainWindowObjects *mwo) {
-    if (key->keyval == GDK_KEY_Return || key->keyval == GDK_KEY_KP_Enter) {
-        mx_on_edit_message_clicked(NULL, mwo);
-        return TRUE;
-    }
-    return FALSE;
-}
+//gboolean mx_enter_edit_textview(__attribute__((unused))GtkWidget *Widget,
+//                                GdkEventKey *key, t_mainWindowObjects *mwo) {
+//    if (key->keyval == GDK_KEY_Return || key->keyval == GDK_KEY_KP_Enter) {
+//        mx_on_edit_message_clicked(NULL, mwo);
+//        return TRUE;
+//    }
+//    return FALSE;
+//}
 
 static void init_dialog_edit(t_mainWindowObjects *mwo) {
     GtkBuilder *build = gtk_builder_new();
@@ -21,8 +21,8 @@ static void init_dialog_edit(t_mainWindowObjects *mwo) {
     gtk_window_set_resizable (GTK_WINDOW (mwo->change_mess_Dialog), FALSE);
     mwo->entry_edit_message = GTK_WIDGET(
             gtk_builder_get_object(build, "edite_message_text_view"));
-    g_signal_connect(mwo->entry_edit_message, "key_press_event",
-            G_CALLBACK(mx_enter_edit_textview), mwo);
+//    g_signal_connect(mwo->entry_edit_message, "key_press_event",
+//            G_CALLBACK(mx_enter_edit_textview), mwo);
     buf = gtk_text_buffer_new (NULL);
     gtk_text_buffer_set_text (buf, mwo->curr_channel_info->message->text,
             (gint)mx_strlen(mwo->curr_channel_info->message->text));
